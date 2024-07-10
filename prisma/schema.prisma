@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Model untuk menyimpan informasi pengguna yang melakukan registrasi
+model UserModel {
+  id       String  @id @default(uuid())
+  Genders  String  @db.Char(100)
+  Email    String  @db.VarChar(100)
+  Username String  @db.VarChar(100)
+  // Token    String? @db.VarChar(100)
+  Password String  @db.VarChar(100)
+
+  User_Contacts_Id             User_Contacts[]
+  Add_Member_Grup_From_Contact Grup_List_Member_Model[] @relation("Add_Grup_Member_From_Contact")
+
+  @@map("user")
+}
+
+// Model untuk menyimpan daftar kontak user
+model User_Contacts {
+  User_Id     UserModel @relation(fields: [Contacts_Id], references: [id])
+  Contacts_Id String    @id @default(uuid())
+
+  Sender_Rechiever_Message_Id Personal_Chat_Model[]
+
+  @@map("contact_List")
+}
+
+// Model untuk melakukan operasi CRUD pada pesan obrolan pribadi
+model Personal_Chat_Feature_Model {
+  Personal_Messages_Id String @id @default(uuid())
+
+  Sender_Rechiever_Message_Id Personal_Chat_Model[]
+
+  @@map("personal_Chat_Feature")
+}
+
+// Model untuk menyimpan obrolan pribadi
+model Personal_Chat_Model {
+  Existing_Personal_Contact_Id User_Contacts @relation(fields: [Existing_Contact_Id], references: [Contacts_Id])
+  Existing_Contact_Id          String        @id @default(uuid())
+
+  Sender_Rechiever_Personal_Message_Id Personal_Chat_Feature_Model @relation(fields: [Personal_Message_Id], references: [Personal_Messages_Id])
+  Personal_Message_Id                  String                      @db.VarChar(255)
+
+  My_Messages             String    @db.Text()
+  Messages_To_All         String    @db.Text()
+  // Delete_Personal_Message DateTime? @updatedAt
+  Delete_Personal_Message DateTime? @default(now())   
+  Update_Personal_Message DateTime? @default(now())   
+  Create_Personal_Message DateTime? @default(now())   
+
+  @@map("personal_Chat")
+}
+
+// Model untuk melakukan operasi CRUD pada obrolan grup
+model Grup_Chat_Feature_Model {
+  Grup_Messages_Id String @id @default(uuid())
+
+  Grup_Sender_Rechiever_Message_Id Grup_Chat_Information_Model[]
+
+  @@map("Grup_Chat_Feature")
+}
+
+// Model untuk menyimpan informasi grup obrolan
+model Grup_Chat_Information_Model {
+  Chat_Grup_Id_References Grup_Chat_Feature_Model @relation(fields: [Chat_Grup_Id], references: [Grup_Messages_Id])
+  Chat_Grup_Id            String
+
+  // Kolom untuk mengisi informasi grup
+  Grup_Chat_Information_Id String               @id @default(uuid())
+  Grup_Name                String               @db.VarChar(40)
+  Grup_Description         String?              @db.VarChar(255)
+  Role_member              String               @db.VarChar(255)
+  Grup_Picture_Profile     Unsupported("blob")?
+
+  // Kolom untuk menyimpan menyimpan dan mengelola obrolan grup
+  Messages_Admin_And_Member String    @db.Text()
+  Messages_To_All           String    @db.Text()
+  Delete_Grup_Message       DateTime? @default(now())   
+  Update_Grup_Message       DateTime? @default(now())   
+  Create_Grup_Message       DateTime? @default(now())   
+
+  @@map("grup_chat_information")
+}
+
+// Model untuk menyimpan kontak kontak yang dimasukkan dalam grup
+model Grup_List_Member_Model {
+  List_Id_Grup_Members_References UserModel @relation("Add_Grup_Member_From_Contact", fields: [List_Id_Grup_Members], references: [id])
+  List_Id_Grup_Members            String    @id @default(uuid())
+
+  @@map("grup_list_member")
+}
