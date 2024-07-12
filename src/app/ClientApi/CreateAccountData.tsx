@@ -11,11 +11,12 @@ export default function CreateAccountData()
   const [EmailData,setEmailData] = useState<string>("")
   const [UsernameData,setUsernameData] = useState<string>("")
   const [PasswordData,setPasswordData] = useState<string>("")
+  const [IdData,setIdData] = useState<string>("")
 
   return (
    <>
    <div className="flex justify-center my-11">
-      <form action={InsertNewAccountInformation}>
+      {/* <form action={InsertNewAccountInformation}> */}
           <input type="text" placeholder="Jenis kelamin" name="Gender" value={GenderData} onChange={e => setGenderData(e.target.value)} required/>
           <br />
           <br />
@@ -28,8 +29,11 @@ export default function CreateAccountData()
           <input type="text" placeholder="Password" name="Password" value={PasswordData} onChange={e => setPasswordData(e.target.value)} required/>
           <br />
           <br />
+          <input type="text" placeholder="id" name="id" value={IdData} onChange={e => (e.target.value)} required/>
+          <br />
+          <br />
           <button type="submit">Simpan</button>
-      </form>
+      {/* </form> */}
     </div>
    </>
   )

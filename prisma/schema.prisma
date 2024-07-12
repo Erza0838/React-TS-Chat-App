@@ -15,7 +15,7 @@ datasource db {
 
 // Model untuk menyimpan informasi pengguna yang melakukan registrasi
 model UserModel {
-  id       String  @id @default(uuid())
+  id       String  @id @default(uuid()) 
   Genders  String  @db.Char(100)
   Email    String  @db.VarChar(100)
   Username String  @db.VarChar(100)
