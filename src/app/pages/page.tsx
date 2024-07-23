@@ -1,14 +1,12 @@
 "use client"
 import React,{ useState } from "react"
-import Link from "next/link"
+import ValidatNeweAccount from "@/Components/ValidateNewAccount"
 
-const ValidateAccount = () =>
+export default function RenderValidationAccountPage()
 {
-    return (
+    return(
         <>
-        <h1 className="text-white">Login Page</h1>
+            <ValidatNeweAccount></ValidatNeweAccount>
         </>
     )
 }
-
-export default ValidateAccount

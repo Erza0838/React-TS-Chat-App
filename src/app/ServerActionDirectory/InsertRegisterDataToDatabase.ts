@@ -5,57 +5,49 @@ import { redirect } from "next/navigation"
 import Link from "next/link"
 import ValidateAccount from "@/Components/ValidateNewAccount"
 import { cookies } from "next/headers"
+import { permanentRedirect } from "next/navigation"
 
 // Eksperimen JWT
 import jwt from "jsonwebtoken"
 import { encrypt } from "@/lib/UpdateSession"
 import { decrypt } from "@/lib/UpdateSession"
+import VerifiedRegisterToken from "./ValidateLoginAccount"
+import SecretToken from "@/lib/UpdateSession"
+import { NextRequest } from "next/server"
+import { Middleware } from "@/Middleware"
 
 export default async function InsertNewAccountInformation(data: FormData)
 { 
-  const SecretToken = process.env.JWT_SECRET_KEY
-  try 
+  // const request: NextRequest 
+  const rawFormData = 
   { 
-    const rawFormData = 
-    { 
-      GenderData: data.get("Gender") as string,
-      EmailData: data.get("Email") as string,
-      UsernameData: data.get("Username") as string,
-      PasswordData: await bcrypt.hash(data.get("Password") as string, 10), 
-    }
+    GenderData: data.get("Gender") as string,
+    EmailData: data.get("Email") as string,
+    UsernameData: data.get("Username") as string,
+    PasswordData: await bcrypt.hash(data.get("Password") as string, 10), 
+  }
 
-    const JwtPayload = 
+    const expires = new Date(Date.now() + 10 * 1000)
+    const session = await encrypt({rawFormData})
+    const SaveDataToCookie = cookies().set("session",session,
     {
-      token: jwt.sign(
-      {
-        GenderPayload: rawFormData.GenderData,
-        EmailPayload: rawFormData.EmailData,
-        UsernamePayload: rawFormData.UsernameData,
-        PasswordPayload: rawFormData.PasswordData
+        expires,
+        httpOnly:true,
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+    })
+    
+    console.log("=== Data Encrypt  ===")
+    console.log(session)
 
-      },SecretToken as string)
-    }
+    console.log("===  Token register ===")
+    console.log(SecretToken)
 
-    if(JwtPayload.token)
-    { 
-      const expires = new Date(Date.now() + 10 * 1000)
-      const session = await encrypt({rawFormData})
-      let SaveDataToCookie = cookies().set("session",session,{expires,httpOnly:true})
-      console.log("===Data cookie===")
-      console.log(SaveDataToCookie)
-      // const EncodeRegisterData = jwt.decode(JwtPayload.token) as {[key: string]: string}
-      // console.log(EncodeRegisterData)
-      // console.log(`Data token register : ${JwtPayload.token}`)
+    // console.log("===Data decode===")
+    // console.log(decrypt(session))
 
-      // console.log("=======")
-      // console.log(decrypt(JwtPayload.token)) 
-      // cookies().set("session", JwtPayload, {})
-      // const SaveSession = cookies().get("session")?.value
-      // if(!SaveSession)
-      // {
-      //   return null
-      // }
-    }
+    // console.log("=== Cookie ===")
+    // console.log(cookies().get("session")?.value)
 
     const insert = await prisma.userModel.create(
     {
@@ -67,11 +59,14 @@ export default async function InsertNewAccountInformation(data: FormData)
           Password: rawFormData.PasswordData, 
       }
     })
-  } 
-  catch (error) 
-  {
-    console.log(error)  
-  }
+    
+    if(SecretToken)
+    {
+      if(rawFormData != null)
+      {
+        // permanentRedirect("/pages")
+        Middleware 
+        // redirect("/pages")
+      }
+    }
 }
-
-// 
