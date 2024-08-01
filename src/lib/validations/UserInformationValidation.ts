@@ -1,25 +1,33 @@
 import { z } from "zod"
 
-const AccountDataValidation = z.object(
+// export const AccountDataValidation = z.object(
+export const AccountDataValidationSchema = z.object(
 {
-    GenderFill: z.string(
+    GenderFill: z.string().trim().min(8, 
                 {
-                    required_error: "Gender tidak boleh kosong"
-                })
-                .min(4, "Gender minimal 4 karakter")
-                .max(8, {message:"Gender maksimal 8 karakter" }),
-    EmailFill: z.string(
+                    message: "Gender minimal 9 karakter"
+                }).max(9,
                 {
-                    required_error: "Email tidak boleh kosong!"
-                }).min(4, {message: "Panjang Email minimal 4 karakter"}),
-    UsernameFill: z.string(
+                    message: "Gender maksimal 9 karakter"
+                }),
+    EmailFill: z.string().trim().min(4, 
                 {
-                    required_error: "Username tidak boleh kosong!"
-                }).min(2, {message: "Panjang Username minimal 2 karakter"}),
-    PasswordFill: z.string(
+                    message: "Email minimal 4 karakter"
+                }),
+    UsernameFill: z.string().trim().min(4, 
                 {
-                    required_error: "Password tidak boleh kosong!"
-                }).min(6, {message: "Panjang Password minimal 6 karakter"}),
-})
+                    message: "Username minimal 4 karakter"
+                }).max(30,
+                {
+                    message: "Username maksimal 30 karakter"
+                }),
+    PasswordFill: z.string().trim().min(4, 
+                {
+                    message: "Password minimal 4 karakter"
+                }).max(30,
+                {
+                    message: "Password maksimal 30 karakter"
+                }),
+})    
 
-export type ValidateRegisterData  = z.infer<typeof AccountDataValidation> 
+// export type RegisterValidation = z.infer<typeof AccountDataValidationSchema>

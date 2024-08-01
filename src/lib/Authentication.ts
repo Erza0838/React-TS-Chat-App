@@ -13,7 +13,6 @@ interface UserJwtPayload
 
 export const getJwtSecretKey = () => 
 {
-    const SecretToken = process.env.JWT_SECRET_KEY
     if(!SecretToken || SecretToken.length === 0)
     {
         throw new Error("ENV belum diatur")
@@ -33,22 +32,3 @@ export const verifyAuth = async (token:string) =>
         throw new Error("Token sudah hangus")       
     }
 }
-
-// const JwtKey = new TextEncoder().encode(SecretToken) 
-// export async function encrypt(payload: JwtPayload)
-// {
-//     return await new SignJWT(payload)
-//     .setProtectedHeader({ alg: "HS256" })
-//     .setIssuedAt()
-//     .setExpirationTime("2h")
-//     .sign(JwtKey)
-// }
-
-// export async function decrypt(input: string): Promise<JWTVerifyResult<JwtPayload>>
-// {
-//     const payload = await jwtVerify(input,JwtKey, 
-//     {
-//         algorithms: ["HS256"],
-//     }) 
-//     return payload 
-// }
