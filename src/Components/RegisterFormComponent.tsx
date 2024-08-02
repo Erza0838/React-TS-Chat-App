@@ -1,21 +1,15 @@
 "use client"
-import React, { useEffect, useState } from "react"
 import "../app/globals.css"
+import React from "react"
 import { useRouter } from "next/navigation"
 import { InsertNewAccountInformation } from "@/app/ServerActionDirectory/InsertRegisterDataToDatabase"
-import { AccountDataValidationSchema } from "@/lib/validations/UserInformationValidation"
-import bcrypt from "bcrypt"
+import { NewAccountDataValidationSchema } from "@/lib/validations/UserInformationValidation"
 import toast from "react-hot-toast"
 
 export default function RegisterFormComponent()
 {   
-  const [GenderData,setGenderData] = useState<string>("")
-  const [EmailData,setEmailData] = useState<string>("")
-  const [UsernameData,setUsernameData] = useState<string>("")
-  const [PasswordData,setPasswordData] = useState<string>("")
   const router = useRouter()
-
-  const ClientActionValidation = async (formData: FormData) => 
+  const RegisterPageClientActionValidation = async (formData: FormData) => 
   { 
     const RegisterDataClientSide = 
     { 
@@ -24,15 +18,15 @@ export default function RegisterFormComponent()
         UsernameFill: formData.get("Username") as string,
         PasswordFill: formData.get("Password") as string, 
     }
-    const ValidationResult = AccountDataValidationSchema.safeParse(RegisterDataClientSide)
+    const ValidationResult = NewAccountDataValidationSchema.safeParse(RegisterDataClientSide)
     if(!ValidationResult.success)
     {
-        let ErrorMessage = ""
+        let RegisterErrorMessage = ""
         ValidationResult.error.issues.forEach((issue) => 
         {
-            ErrorMessage = ErrorMessage + issue.path[0] + ":" + issue.message + ". "
+            RegisterErrorMessage = RegisterErrorMessage + issue.path[0] + ":" + issue.message + ". "
         })
-        toast.error(ErrorMessage)
+        toast.error(RegisterErrorMessage)
         return
     }
     const response = await InsertNewAccountInformation(ValidationResult.data)
@@ -45,16 +39,15 @@ export default function RegisterFormComponent()
   </div>
    <div className="flex justify-center mt-28">
       <div className="flex justify-center bg-cyan-900 w-96 h-96 rounded">
-          {/* <form action={InsertNewAccountInformation} className="flex flex-col gap-8 mt-10"> */}
-          <form action={ClientActionValidation} className="flex flex-col gap-8 mt-10">
-              <select name="Gender" className="outline-none pl-2" value={GenderData} onChange={e => setGenderData(e.target.value)} >
+          <form action={RegisterPageClientActionValidation} className="flex flex-col gap-8 mt-10">
+              <select name="Gender" className="outline-none pl-2">
                 <option></option>
                 <option>Laki laki</option>
                 <option>Perempuan</option>
               </select>
-              <input type="email" className="outline-none pl-2" placeholder="Email" name="Email" autoComplete="off" value={EmailData} onChange={e => setEmailData(e.target.value)}/>
-              <input type="text" className="outline-none pl-2" placeholder="Username" name="Username" autoComplete="off" value={UsernameData} onChange={e => setUsernameData(e.target.value)}/>
-              <input type="password" className="outline-none pl-2" placeholder="Password" name="Password" autoComplete="off" value={PasswordData} onChange={e => setPasswordData(e.target.value)}/>
+              <input type="email" className="outline-none pl-2" placeholder="Email" name="Email" autoComplete="off"/>
+              <input type="text" className="outline-none pl-2" placeholder="Username" name="Username" autoComplete="off"/>
+              <input type="password" className="outline-none pl-2" placeholder="Password" name="Password" autoComplete="off"/>
                 <div className="flex flex-row">
                   <p className="text-white">Login jika sudah punya akun</p>
                 </div>
