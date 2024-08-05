@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { InsertNewAccountInformation } from "@/app/ServerActionDirectory/InsertRegisterDataToDatabase"
 import { NewAccountDataValidationSchema } from "@/lib/validations/UserInformationValidation"
 import toast from "react-hot-toast"
+import Link from "next/link"
 
 export default function RegisterFormComponent()
 {   
@@ -49,15 +50,15 @@ export default function RegisterFormComponent()
               <input type="text" className="outline-none pl-2" placeholder="Username" name="Username" autoComplete="off"/>
               <input type="password" className="outline-none pl-2" placeholder="Password" name="Password" autoComplete="off"/>
                 <div className="flex flex-row">
-                  <p className="text-white">Login jika sudah punya akun</p>
+                  <Link href={"/pages"} className="text-white">Login jika sudah punya akun</Link>
                 </div>
               <div className="flex flex-row gap-8 translate-y-2">
                 <button type="submit" className="text-cyan-900 inline-block bg-white w-20 rounded">
                   Register
                 </button>
-                <button className="text-cyan-900 inline-block bg-white w-20 rounded" onClick={() => router.push("/pages")}>
+                {/* <button className="text-cyan-900 inline-block bg-white w-20 rounded" onClick={() => router.push("/pages")}>
                   Login
-                </button>
+                </button> */}
               </div>
           </form>
       </div>

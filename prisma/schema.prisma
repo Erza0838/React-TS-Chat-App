@@ -19,8 +19,7 @@ model UserModel {
   Genders  String  @db.Char(100)
   Email    String  @db.VarChar(100)
   Username String  @db.VarChar(100)
-  // Token    String? @db.VarChar(100)
-  Password String  @db.VarChar(100)
+  Password String  @db.VarChar(100) @unique
 
   User_Contacts_Id             User_Contacts[]
   Add_Member_Grup_From_Contact Grup_List_Member_Model[] @relation("Add_Grup_Member_From_Contact")

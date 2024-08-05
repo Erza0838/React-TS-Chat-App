@@ -2,98 +2,56 @@
 import SecretToken from "@/lib/UpdateSession"
 import { LoginDataValidationSchema } from "@/lib/validations/UserInformationValidation"
 import { prisma } from "../Database"
-import toast from "react-hot-toast"
+import bcrypt from "bcrypt"
 
 // export const VerifiedNewAccount = async (LoginDataClientSide: unknown) =>
-// export const VerifiedNewAccount = async (Prevstate: any,LoginDataClientSide: FormData) =>
 export default async function VerifiedNewAccount(LoginDataClientSide: FormData) 
 {   
-    // const ValidateLoginData = LoginDataValidationSchema.safeParse(
-    // {
-    //     ValidateEmailFill: LoginData.get("EmailVerification"),
-    //     ValidatePasswordFill: LoginData.get("PasswordVerification")
-    // })
-    // const FindLoginDataInDatabase = await prisma.userModel.findMany({
-    //     where: { Password: ValidateLoginData.data?.ValidatePasswordFill},
-    //     select: 
-    //     {
-    //         Email: true,
-    //         Password: true
-    //     }
-    // })
-    // if(ValidateLoginData.data?.ValidateEmailFill !== FindLoginDataInDatabase as unknown)
-    // {
-    //     console.log("Password salah")
-    // }
-    // else 
-    // {
-    //     console.log(FindLoginDataInDatabase)
-    // }
-
-    // const ServerSideLoginValidationResult = LoginDataValidationSchema.safeParse(LoginDataClientSide)
-    // if(!ServerSideLoginValidationResult.success)
-    // {
-    //     let AuthenticationErrorMessage = ""
-    //     ServerSideLoginValidationResult.error.issues.forEach((issue) => 
-    //     {
-    //         AuthenticationErrorMessage = AuthenticationErrorMessage + issue.path[0] + ":" + issue.message + "."
-    //     })
-    //     return 
-    //     {
-    //         errors: LoginDataClientSide
-    //     }
-    // }
-    // try 
-    // {
-    //     const FindLoginDataInDatabase = await prisma.userModel.findMany({
-    //         where: { Password: ServerSideLoginValidationResult .data?.ValidatePasswordFill},
-    //         select: 
-    //         {
-    //             Email: true,
-    //             Password: true
-    //         }
-    //     })
-    //     if(ServerSideLoginValidationResult.success)
-    //     {
-    //         if()
-    //         {
-    
-    //         }
-    //     }
-    //     console.log(FindLoginDataInDatabase)   
-    // } 
-    // catch (error)
-    // {
-    //     console.log(error)
-    // }
-
-    const ValidateLoginData = LoginDataValidationSchema.safeParse(
+    const ValidateLoginData = 
     {
-        ValidateEmailFill: LoginDataClientSide.get("EmailVerification"),
-        ValidatePasswordFill: LoginDataClientSide.get("PasswordVerification")
-    })
-    const FindLoginDataInDatabase = await prisma.userModel.findMany({
-        where: { Password: ValidateLoginData.data?.ValidatePasswordFill},
+        ValidateEmail: LoginDataClientSide.get("EmailVerification") as string,
+        ValidatePassword: LoginDataClientSide.get("PasswordVerification") as string
+    }
+
+    const FindLoginPasswordInDatabase = await prisma.userModel.findMany
+    ({
+        where: { Password: ValidateLoginData.ValidatePassword} ,
+        select: 
+        {
+            Email: true,
+            Password: true
+        }
+    }) 
+    const FindEmailInDatabase = await prisma.userModel.findMany
+    ({  
+        where: { Email: ValidateLoginData.ValidateEmail },
         select: 
         {
             Email: true,
             Password: true
         }
     })
-    if(ValidateLoginData.success)
+    if(FindEmailInDatabase != null)
     {
-        console.log("Data user login : ")
-        console.log("")
-        console.log("")
-        console.log("")
-        console.log(FindLoginDataInDatabase)
+        console.log("Tampilkan email sesuai input :")
+        console.log(FindEmailInDatabase)
     }
-    else 
-    {   
-        console.log(ValidateLoginData.error?.issues)
-        // return 
-        // {
-        //     errors: ValidateLoginData.error?.issues
-        // }
+    if(FindEmailInDatabase == null)
+    {
+        console.log("Email tidak ada")
     }
+    
+    // Jika password dari tag input tidak sama dengan password yang ada di database
+    // if(ValidateLoginData.ValidatePassword !== FindEmailInDatabase as unknown)
+    // {
+    // }
+    // if(ValidateLoginData.ValidatePassword === FindEmailInDatabase as unknown)
+    // {   
+    //     console.log("Email sudah terdaftar")
+    //     console.log("Data dari database sesuai email: ")
+    //     console.log(FindEmailInDatabase) 
+    //     return {
+    //         sucses: "Email benar"
+    //     }
+    // }
 }       

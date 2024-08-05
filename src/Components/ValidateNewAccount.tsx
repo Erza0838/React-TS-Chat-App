@@ -2,13 +2,13 @@
 import "../app/globals.css"
 import React,{ useState } from "react"
 // import { VerifiedNewAccount } from "@/app/ServerActionDirectory/ValidateLoginData"
-import VerifiedNewAccount from "@/app/ServerActionDirectory/ValidateLoginData"
 import { LoginDataValidationSchema } from "@/lib/validations/UserInformationValidation"
-import toast from "react-hot-toast"
+import LoginFormComponent from "./LoginFormComponent"
+import { prisma } from "@/app/Database"
 
-const ValidateAccount = () =>
+export const ValidateAccount = async () =>
 {    
-    // eksperimen Client side validation
+    // Eksperimen ke 1 Client side validation
     // const LoginPageClientActionValidation = async (LoginFormData: FormData) => 
     // {   
     //     const LoginDataClientSide = 
@@ -30,23 +30,12 @@ const ValidateAccount = () =>
     //     const response = await VerifiedNewAccount(LoginValidationResult.data)
     // }
 
+    // Eksperimen ke 2 Client side validation
+    
+    // const FindLoginDataInDatabase = await prisma.userModel.findMany()   
     return (
         <>
-        <div className="flex justify-center translate-y-12">    
-            <h1 className="text-white">Login Page</h1>
-        </div>
-        <div className="flex justify-center mt-28">
-            <div className="flex justify-center bg-cyan-900 w-96 h-80 rounded">
-                {/* <form action={LoginPageClientActionValidation} className="flex flex-col gap-12 mt-10"> */}
-                <form action={VerifiedNewAccount} className="flex flex-col gap-12 mt-10">
-                    <input type="email" className="outline-none pl-2" placeholder="Email" name="EmailVerification" autoComplete="off" required/>
-                    <input type="password" className="outline-none pl-2" placeholder="Password" name="PasswordVerification" autoComplete="off" required/>
-                    <button type="submit" className="text-cyan-900 inline-block bg-white rounded">
-                        Login
-                    </button>
-                </form>
-            </div>
-        </div>
+            <LoginFormComponent></LoginFormComponent>
         </>
     )
 }
