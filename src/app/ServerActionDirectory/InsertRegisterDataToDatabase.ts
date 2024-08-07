@@ -34,8 +34,7 @@ export const InsertNewAccountInformation = async (RegisterDataClientSide: unknow
   }
   catch (error)
   {
-    return 
-    {
+    return {
       error: ServerValidationResult.error?.issues
     }   
   }

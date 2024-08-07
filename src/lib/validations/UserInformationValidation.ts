@@ -38,14 +38,4 @@ export const LoginDataValidationSchema = z.object(
     {
         message: "Email minimal 4 karakter"
     }),
-    ValidatePasswordFill: z.string
-    ({
-        invalid_type_error: "Password salah"   
-    }).trim().min(4, 
-    {
-        message: "Password minimal 4 karakter"
-    }).max(30,
-    {
-        message: "Password maksimal 30 karakter"
-    })
 })

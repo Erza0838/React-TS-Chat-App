@@ -31,6 +31,10 @@ export default function RegisterFormComponent()
         return
     }
     const response = await InsertNewAccountInformation(ValidationResult.data)
+    // if(response?.error)
+    // {
+    //   toast.error()
+    // }
   }
 
   return (
