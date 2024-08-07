@@ -14,7 +14,6 @@ export function getEnvVariable(key: EnvVariableKey): string
     return value
 }
 
-// export function getErrorResponse(status: number = 500,message: string,errors: ZodError | null = null)
 export function getErrorResponse(status: number = 500,message: string,errors: ZodError)
 {
     return new NextResponse(

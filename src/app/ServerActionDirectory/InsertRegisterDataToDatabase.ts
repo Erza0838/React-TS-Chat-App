@@ -4,11 +4,9 @@ import bcrypt from "bcrypt"
 import { cookies } from "next/headers"
 import { encrypt } from "@/lib/UpdateSession"
 import SecretToken from "@/lib/UpdateSession"
-import { redirect } from "next/navigation"
 import { NewAccountDataValidationSchema } from "@/lib/validations/UserInformationValidation"
 
 export const InsertNewAccountInformation = async (RegisterDataClientSide: unknown) =>
-// export const InsertNewAccountInformation = async (RegisterDataClientSide: FormData) =>
 { 
   const ServerValidationResult = NewAccountDataValidationSchema.safeParse(RegisterDataClientSide)
   let session = await encrypt(ServerValidationResult)
@@ -21,8 +19,8 @@ export const InsertNewAccountInformation = async (RegisterDataClientSide: unknow
 
   try
   {
-    await prisma.userModel.create(
-    { 
+    await prisma.userModel.create
+    ({ 
       data: 
       { 
           Genders: ServerValidationResult.data?.GenderFill as string,

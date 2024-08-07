@@ -12,7 +12,6 @@ export async function encrypt(payload: JwtPayload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("2h")
-    // .setExpirationTime("1m")
     .setJti(nanoid())       
     .sign(JwtKey)
 }
@@ -27,4 +26,3 @@ export async function decrypt(input: string): Promise<JWTVerifyResult<JwtPayload
 }
 
 export default SecretToken
-// export default JwtKey
