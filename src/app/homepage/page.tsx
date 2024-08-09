@@ -1,11 +1,16 @@
-import React from 'react'
+"use client"
+import React from "react"
+import SidebarComponents from "@/Components/SidebarComponents"
+import ShowContactComponent from "@/Components/ShowContactComponent"
+import ShowEachContactChatPage from "@/Components/ShowEachContactChatComponent"
 
-export default function Home() {
+export default function Home() 
+{
   return (
-    <div>
-      <h1 className="text-white">
-        Tambah kontak
-      </h1>
+    <div className="flex flex-row">
+      <SidebarComponents></SidebarComponents>
+      <ShowContactComponent></ShowContactComponent>
+      {/* <ShowEachContactChatPage></ShowEachContactChatPage> */}
     </div>
   )
 }

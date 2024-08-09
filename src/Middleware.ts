@@ -7,8 +7,6 @@ export default async function middleware(request: NextRequest)
 
     if(request.nextUrl.pathname.startsWith("/pages") && Token != null)
     {   
-        console.log("Halaman register dan token dari register user : ") 
-        console.log(Token)
         return
         // redirect("/pages")
         // return NextResponse.redirect(new URL("/pages",request.url))

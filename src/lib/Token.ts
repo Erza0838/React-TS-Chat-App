@@ -1,9 +1,6 @@
-import { getEnvVariable } from "./Helper"
-import { KeyLike } from "crypto"
 import { JWTPayload, JWTVerifyOptions, JWTVerifyResult, SignJWT,jwtVerify } from "jose"
 import jose from "jose"
 
-// Eksperimen sign in token
 export default async function SignJWTFc(payload: JWTPayload) 
 {   
     try 
