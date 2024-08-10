@@ -16,9 +16,17 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
-      dropShadow: 
+      width: 
       {
-        
+        "96": "75vw"
+      },
+      // width: 
+      // {
+      //   "96": "100vw"
+      // },
+      gap:
+      {
+        "40": "82vh"
       }
     },
   },
