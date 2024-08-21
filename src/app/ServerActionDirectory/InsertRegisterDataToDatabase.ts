@@ -3,7 +3,7 @@ import { prisma } from "../Database"
 import bcrypt from "bcrypt"
 import { cookies } from "next/headers"
 import { encrypt } from "@/lib/UpdateSession"
-import SecretToken from "@/lib/UpdateSession"
+// import { decrypt } from "@/lib/UpdateSession"
 import { NewAccountDataValidationSchema } from "@/lib/validations/UserInformationValidation"
 
 export const InsertNewAccountInformation = async (RegisterDataClientSide: unknown) =>
@@ -29,6 +29,8 @@ export const InsertNewAccountInformation = async (RegisterDataClientSide: unknow
           Password: await bcrypt.hash(ServerValidationResult.data?.PasswordFill as string,10) 
       }
     })
+    // const cookieData = await decrypt(session)
+    // console.log("decrypt data : " + cookieData)
   }
   catch (error)
   {

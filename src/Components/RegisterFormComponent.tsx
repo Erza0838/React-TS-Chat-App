@@ -29,12 +29,8 @@ export default function RegisterFormComponent()
         })
         toast.error(RegisterErrorMessage)
         return
-    }
+      }
     const response = await InsertNewAccountInformation(ValidationResult.data)
-    // if(response?.error)
-    // {
-    //   toast.error()
-    // }
   }
 
   return (
@@ -43,7 +39,7 @@ export default function RegisterFormComponent()
     <h1 className="text-white">Halaman register</h1>
   </div>
    <div className="flex justify-center mt-28">
-      <div className="flex justify-center bg-cyan-900 w-96 h-96 rounded">
+      <div className="flex justify-center bg-cyan-900 w-80 h-96 rounded">
           <form action={RegisterPageClientActionValidation} className="flex flex-col gap-8 mt-10">
               <select name="Gender" className="outline-none pl-2">
                 <option></option>
@@ -54,15 +50,12 @@ export default function RegisterFormComponent()
               <input type="text" className="outline-none pl-2" placeholder="Username" name="Username" autoComplete="off"/>
               <input type="password" className="outline-none pl-2" placeholder="Password" name="Password" autoComplete="off"/>
                 <div className="flex flex-row">
-                  <Link href={"/pages"} className="text-white">Login jika sudah punya akun</Link>
+                  <Link href={"/login"} className="text-white">Login jika sudah punya akun</Link>
                 </div>
               <div className="flex flex-row gap-8 translate-y-2">
                 <button type="submit" className="text-cyan-900 inline-block bg-white w-20 rounded">
                   Register
                 </button>
-                {/* <button className="text-cyan-900 inline-block bg-white w-20 rounded" onClick={() => router.push("/pages")}>
-                  Login
-                </button> */}
               </div>
           </form>
       </div>

@@ -1,5 +1,5 @@
 "use client"
-import React, { HtmlHTMLAttributes } from 'react'
+import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faUserCircle} from "@fortawesome/free-solid-svg-icons"
 import SearchContactComponent from "@/Components/SearchContactComponent"
@@ -10,16 +10,16 @@ export default function ShowContactComponent()
   {
     const PersonalChatPageNameAndPictureHeader: HTMLElement | null = document.getElementById("NameAndPictureHeader")
     const PersonalChatInputMessages: HTMLElement | null = document.getElementById("InputMessages")
-    // const PersonalChatBackground: HTMLElement | null = document.body
+    const PersonalChatBackground: HTMLElement | null = document.body
     if(PersonalChatPageNameAndPictureHeader != null && PersonalChatInputMessages != null)
     {
         PersonalChatPageNameAndPictureHeader.style.display = "inline"
         PersonalChatInputMessages.style.display = "inline"
     }
-    // if(PersonalChatBackground != null)
-    // {
-    //     PersonalChatBackground.style.backgroundColor = "black"
-    // }
+    if(PersonalChatBackground != null)
+    {
+        PersonalChatBackground.style.backgroundColor = "black"
+    }
   }
   return (
     <>  
@@ -28,23 +28,10 @@ export default function ShowContactComponent()
                 <h4 className="text-zinc-400 font-bold">Obrolan</h4>
                 <SearchContactComponent></SearchContactComponent>
                 <div className="flex flex-col gap-6 my-5" onClick={ShowPersonalChat}>
-                    <div className="flex flex-row gap-10 cursor-pointer">
-                        <FontAwesomeIcon icon={faUserCircle} style={{color: "#ffffff"}} className="w-10 aspect-square"/>
-                        <p className="text-white translate-y-2">Zeva</p>
-                    </div>
-                    <div className="flex flex-row gap-10 cursor-pointer">
-                        <FontAwesomeIcon icon={faUserCircle} style={{color: "#ffffff"}} className="w-10 aspect-square"/>
-                        <p className="text-white translate-y-2">Zeva</p>
-                    </div>
-                    <div className="flex flex-row gap-10 cursor-pointer">
-                        <FontAwesomeIcon icon={faUserCircle} style={{color: "#ffffff"}} className="w-10 aspect-square"/>
-                        <p className="text-white translate-y-2">Zeva</p>
-                    </div>
                 </div>
             </div>
         </div>
         <div className="flex flex-col gap-40 mx-72 overflow-hidden">
-        {/* <div className="flex flex-col gap-40 mx-72"> */}
             <div className="bg-slate-800 hidden h-14 w-96" id="NameAndPictureHeader">
                 <div className="flex flex-row">
                     <FontAwesomeIcon icon={faUserCircle} style={{color: "#ffffff"}} className="w-5 cursor-pointer"/>

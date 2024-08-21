@@ -14,8 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
-      {/* <body className={`${inter.className} bg-stone-800`}> */}
-      <body className={`${inter.className} bg-slate-400 overflow-y-hidden`}>
+      <body className={`${inter.className} bg-black overflow-y-hidden`}>
         {children}
         <Toaster position="top-center"></Toaster>
       </body>

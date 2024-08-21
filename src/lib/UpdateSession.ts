@@ -16,13 +16,13 @@ export async function encrypt(payload: JwtPayload)
     .sign(JwtKey)
 }
 
-export async function decrypt(input: string): Promise<JWTVerifyResult<JwtPayload>>
-{
-    const payload = await jwtVerify(input,JwtKey, 
-    {
-        algorithms: ["HS256"],
-    }) 
-    return payload 
-}
+// export async function decrypt(input: string): Promise<JWTVerifyResult<JwtPayload>>
+// {
+//     const payload = await jwtVerify(input,JwtKey, 
+//     {
+//         algorithms: ["HS256"],
+//     }) 
+//     return payload 
+// }
 
 export default SecretToken

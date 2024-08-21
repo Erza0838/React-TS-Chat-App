@@ -1,5 +1,4 @@
 "use server"
-// import {Data} from "@prisma/client"
 
 export default async function GetProfileData()
 {

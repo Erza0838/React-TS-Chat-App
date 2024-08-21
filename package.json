@@ -23,7 +23,7 @@
     "jose": "^5.6.3",
     "jsonwebtoken": "^9.0.2",
     "nanoid": "^5.0.7",
-    "next": "14.2.4",
+    "next": "^14.2.4",
     "next-auth": "^4.24.7",
     "react": "^18",
     "react_ts_chat_app": "file:",
@@ -32,11 +32,13 @@
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.2.1",
     "socket.io": "^4.7.5",
+    "swr": "^2.2.5",
     "uuid": "^10.0.0",
     "zod": "^3.23.8",
     "zod-form-data": "^2.0.2"
   },
   "devDependencies": {
+    "@types/next": "^9.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

@@ -10,7 +10,6 @@ export default function Home()
     <div className="flex flex-row">
       <SidebarComponents></SidebarComponents>
       <ShowContactComponent></ShowContactComponent>
-      {/* <ShowEachContactChatPage></ShowEachContactChatPage> */}
     </div>
   )
 }
