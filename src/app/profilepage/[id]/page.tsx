@@ -1,11 +1,25 @@
-// "use client"
+"use client"
 import React from 'react'
-import ProfilePageComponent from '@/Components/ProfilePageComponent'
+// import SidebarComponents from './SidebarComponents'
+import { UserModel } from '@prisma/client'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faClone, faMessage, faSquarePlus, faUserCircle } from '@fortawesome/free-solid-svg-icons'
+import Link from 'next/link'
+import ShowDetailsProfileComponent from '@/Components/ShowDetailsProfileComponent'
+import SidebarComponents from '@/Components/SidebarComponents'
 
-export default function profile() {
+interface GetUserDataFromDatabase
+{
+  UserData: UserModel
+}
+
+export default function ProfilePageComponent() 
+{ 
   return (
-    <>
-        <ProfilePageComponent></ProfilePageComponent>
-    </>
+    <div className="flex flex-row">
+      <SidebarComponents></SidebarComponents>
+      <ShowDetailsProfileComponent params={{id:""}}></ShowDetailsProfileComponent>
+    </div>
   )
 }
+

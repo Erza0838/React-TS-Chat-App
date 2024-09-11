@@ -3,11 +3,23 @@ import React from 'react'
 import { SidebarElement } from '@/app/SidebarElement'
 import { UserModel } from '@prisma/client'
 
+interface Model 
+{
+  model: UserModel
+}
+
 export default function SidebarComponents() 
 { 
   return (
     <>  
-      <SidebarElement UserData={{Username:"", Email: "", Genders: "", id: "", Password: ""}}></SidebarElement>
+      <SidebarElement UserData=
+      {{
+        id: "",
+        Genders: "",
+        Email: "",
+        Username: "",
+        Password: ""
+      }}></SidebarElement>
     </>
   )
 }

@@ -12,18 +12,18 @@ const SelectUserDataById = async () =>
 }
 
 // export default function Sidebar({params} : {params:{id: string}})
-export const Sidebar = async () => {
-const GetUserDataFromDatabase = await SelectUserDataById()
-return (
-    <div className="">
+export const Sidebar = async () =>
+{
+    const GetUserDataFromDatabase = await SelectUserDataById()
+    return (
         <div className="">
-            {GetUserDataFromDatabase.map((Key,Index) => 
-            (
-                <SidebarElement UserData={Key}>
-
-                </SidebarElement>
-            ))}
+            <div className="">
+                {GetUserDataFromDatabase.map((UserDataFromDatabase: UserModel) => 
+                (
+                    <SidebarElement UserData={UserDataFromDatabase}>
+                    </SidebarElement>
+                ))}
+            </div>
         </div>
-    </div>
-  )
+    )
 }

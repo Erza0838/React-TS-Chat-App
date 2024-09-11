@@ -50,11 +50,7 @@ export default function ShowDetailsProfileComponent({params} : {params:{id: stri
   {
     const response = await fetch(`/api/detailsprofile/${id}`)
     const json = await response.json() 
-    return 
-    // console.log("Data yang akan diupdate:" + json)
-    // UpdateCurrentUsername(json.Username)
-    // UpdateCurrentEmail(json.Email)
-    // UpdateCurrentGender(json.Gender)
+    return json
   }
   return (
     <div className="inline-block bg-cyan-950 h-lvh w-72 overflow-auto touch-pan-x absolute left-16">
@@ -71,19 +67,5 @@ export default function ShowDetailsProfileComponent({params} : {params:{id: stri
             </div>
         </div>
     </div>
-    // <div className="inline-block bg-cyan-950 h-lvh w-72 overflow-auto touch-pan-x absolute left-16">
-    //     <div className="flex flex-col gap-4 mx-3 my-6">
-    //         <h4 className="text-zinc-400 font-bold">Profile anda</h4>
-    //         <div className="flex flex-col gap-6 my-5">
-    //               <form onSubmit={UpdateProfileData}>
-    //                 <div className="flex flex-col col-span-4 gap-9">
-    //                   <input type="text" value={CurrentUsername} onChange={ (event) => {event.target.value}} className="text-white"/>
-    //                   <input type="email" value={CurrentEmail} onChange={ (event) => {event.target.value}} className="text-white"/>
-    //                   <input type="text" value={CurrentGender} onChange={ (event) => {event.target.value}} className="text-white"/>
-    //                 </div>
-    //               </form>
-    //         </div>
-    //     </div>
-    // </div>
   )
 }

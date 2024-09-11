@@ -2,20 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
-export const GET = async (request: NextRequest, { params }: { params: { id: string } }) => 
+export const GET = async (request: NextRequest, context: { params: { id: string } }) => 
 {
-    const UserProfileId = params.id || ""
+    const UserProfileId = context.params.id || ""
     const GetUserProfileById = await prisma.userModel.findFirst
     ({
-        where: 
-        {
+        where: {
             id: UserProfileId
         },
-        select:
-        {
+        select: {
             Email: true,
-            Username: true
+            Username: true,
+            Genders: true
         }
     })
-    return NextResponse.json({GetUserProfileById})
+    return NextResponse.json({ GetUserProfileById })
+    // return NextResponse.json({UserProfileId})
 }

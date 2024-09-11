@@ -20,13 +20,13 @@ const config: Config = {
       {
         "96": "75vw"
       },
-      // width: 
-      // {
-      //   "96": "100vw"
-      // },
       gap:
       {
         "40": "82vh"
+      },
+      spacing: 
+      {
+        "minus-y-translate": "-5vh"
       }
     },
   },
