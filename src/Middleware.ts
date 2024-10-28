@@ -1,35 +1,19 @@
-// "use server"
 import { NextRequest, NextResponse } from "next/server"
-import { UserModel } from "@prisma/client"
-// import { decrypt } from "./lib/UpdateSession"
-interface ValueData {
-    data : UserModel
-}
-export default async function middleware(request: NextRequest,data: ValueData)
+import { getToken } from "next-auth/jwt"
+
+export default async function middleware(request: NextRequest)
 {    
     const Token = request.cookies.get("session")?.value
-    if(request.nextUrl.pathname.startsWith("/login") && Token != null)
-    {   
-        return NextResponse.redirect(new URL("/homepage",request.url))
-    }
-    if(request.nextUrl.pathname.startsWith("/login"))
-    {
-        location.reload()
-    }
-    if(request.nextUrl.pathname.startsWith("/homepage") && Token == null)
-    {
-        return NextResponse.redirect(new URL("/",request.url))
-    }
-
-    // if(request.nextUrl.pathname.startsWith("/profilepage"))
+    const res = NextResponse.next()
+    // if(request.nextUrl.pathname.startsWith("/login") && Token != null)
     // {   
-    //     if(Token != undefined)
-    //     {
-    //         const cookieData = await decrypt(Token)
-    //         console.log("Data cookie halaman profile:" + cookieData)
-    //     }
+    //     return NextResponse.redirect(new URL(`/homepage`,request.url))
     // }
-    return NextResponse.next()
+    // if(request.nextUrl.pathname.startsWith("/homepage") && Token == null)
+    // {
+    //     return NextResponse.redirect(new URL("/",request.url))
+    // }
+    // return NextResponse.next()
 }
 
 export const RouteConfig = 

@@ -1,11 +1,12 @@
-"use-client"
+"use client"
 import React from 'react'
-import ValidateAccount from '@/Components/ValidateNewAccount'
+import LoginFormComponent from '@/Components/LoginFormComponent'
 
-export default function Login() {
+export default function Login() 
+{
   return (
     <>
-      <ValidateAccount></ValidateAccount>
+      <LoginFormComponent></LoginFormComponent>
     </>
   )
 }

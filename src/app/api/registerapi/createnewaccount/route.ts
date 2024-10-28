@@ -4,17 +4,6 @@ import { cookies } from "next/headers"
 import bcrypt from "bcrypt"
 import { encrypt } from "@/lib/UpdateSession"
 
-interface NewAccountDataProops 
-{
-    params: 
-    {
-        Email: string,
-        Username: string,
-        Gender: string,
-        Password: string
-    }
-}
-
 export const POST = async (request: NextRequest) => 
 {   
     const {Genders,Email,Username,Password} = await request.json()
@@ -27,19 +16,12 @@ export const POST = async (request: NextRequest) =>
             Password: bcrypt.hashSync(Password, 10) 
         }
     })
-    let session = await encrypt(InsertNewAccount)
-    const SaveDataToCookie = cookies().set("session",session,
-    {
-        httpOnly: true,
-        path: "/",
-        secure: process.env.NODE_ENV === "production"
-    })
-    if(Object.keys(InsertNewAccount) != null && InsertNewAccount.id != null) 
-    {
-        return {
-            success: "Akun berhasil dibuat",
-            userid: InsertNewAccount.id
-        }
-    }
-    return NextResponse.json({InsertNewAccount,SaveDataToCookie})   
+    // let session = await encrypt(InsertNewAccount)
+    // const SaveDataToCookie = cookies().set("session",session,
+    // {
+    //     httpOnly: true,
+    //     path: "/",
+    //     secure: process.env.NODE_ENV === "production"
+    // })
+    return NextResponse.json({InsertNewAccount})   
 }

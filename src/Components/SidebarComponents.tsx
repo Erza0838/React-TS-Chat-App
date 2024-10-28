@@ -1,25 +1,13 @@
 "use client"
 import React from 'react'
 import { SidebarElement } from '@/app/SidebarElement'
-import { UserModel } from '@prisma/client'
+import { prisma } from '@/app/Database'
 
-interface Model 
-{
-  model: UserModel
-}
-
-export default function SidebarComponents() 
+export async function SidebarComponents() 
 { 
   return (
     <>  
-      <SidebarElement UserData=
-      {{
-        id: "",
-        Genders: "",
-        Email: "",
-        Username: "",
-        Password: ""
-      }}></SidebarElement>
+      <SidebarElement></SidebarElement>
     </>
   )
 }

@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import SidebarComponents from './SidebarComponents'
+import { SidebarComponents } from './SidebarComponents'
 import ShowDetailsProfileComponent from "./ShowDetailsProfileComponent"
 import { SidebarElement } from '@/app/SidebarElement'
 import { UserModel } from '@prisma/client'

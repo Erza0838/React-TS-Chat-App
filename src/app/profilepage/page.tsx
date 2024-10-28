@@ -9,31 +9,14 @@ import { authOptions } from '@/lib/authOptions'
 
 const ProfilePageComponent = async () =>
 { 
-  try 
-  {
-    console.log("Auth options:",JSON.stringify(authOptions))  
-    const session = await getServerSession(authOptions)
-    console.log("Data dari session : " + JSON.stringify(session))
-
-    if(!session)
-    { 
-      console.log("Data session kosong")
-    }
-    else 
-    {
-      return(
-        <>
-          <h1 className="text-white">Nama : {session?.user?.name}</h1>
-        </>
-      )
-    }
-  } 
-  catch (error) 
-  {
-    console.log("Error session : " + error)
-    return <h1 className="text-white">Profile error</h1>
-  }
+  const session = await getServerSession(authOptions)
+  console.log("Data dari session : " + session)
+  return(
+    <>
+      <h1 className="text-white">Nama : {session?.user?.name}</h1>
+      <h1 className="text-white">Email : {session?.user?.email}</h1>
+    </>
+  )
 }
 
 export default ProfilePageComponent
-
