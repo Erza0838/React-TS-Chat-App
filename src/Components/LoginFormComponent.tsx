@@ -1,6 +1,6 @@
 "use client"
 import "../app/globals.css"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import toast from 'react-hot-toast'
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -18,7 +18,6 @@ import { Button } from '@/Components/ui/button'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from "next/link"
-import { error } from "console"
 
 const formSchema = z.object(
 {
@@ -36,9 +35,7 @@ const formSchema = z.object(
 })
 
 export default function LoginFormComponent() 
-{    
-    const [Email,SetEmail] = useState<string>("")
-    const [Password,SetPassword] = useState<string>("")
+{   
     const [isLoading,setLoading] = useState<boolean>(false)
     const router = useRouter()
 
@@ -61,16 +58,23 @@ export default function LoginFormComponent()
             {   
                 callbackUrl: "/homepage",
                 redirect: false,
-                Email: values.Email,
-                Password: values.Password
+                email: values.Email,
+                password: values.Password,
             })    
             if(!response?.error)
             {
                 router.push("/homepage")
             }
             if(response?.error)
-            {
-                throw new Error(response.error)   
+            {   
+                if(response.error === "CredentialsSign") 
+                {
+                    toast.error("Email atau password salah!")
+                }
+                else 
+                {
+                    toast.error("Terjadi kesalahan saat login")
+                }
             }
             if(!response?.ok) 
             {

@@ -1,6 +1,6 @@
 "use client"
 import "../app/globals.css"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import toast from "react-hot-toast"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
@@ -15,22 +15,20 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select"
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "./ui/select"
 import { Button } from "./ui/button"
-import { useRouter } from "next/navigation"
-import { getServerSession } from "next-auth"
 
 const formSchema = z.object(
 {
   Genders: z.string().trim().min(8, 
   {
-        message: "Gender minimal 9 karakter"
+        message: "Gender minimal 8 karakter"
   }).max(9,
   {
     message: "Gender maksimal 9 karakter"
@@ -63,12 +61,7 @@ const formSchema = z.object(
 
 export default function RegisterFormComponent()
 {   
-  const [Genders,SetGender] = useState<string>("")
-  const [Email,SetEmail] = useState<string>("")
-  const [Username,SetUsername] = useState<string>("")
-  const [Password,SetPassword] = useState<string>("")
   const [isLoading,setLoading] = useState<boolean>(false)
-  const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>
   ({
