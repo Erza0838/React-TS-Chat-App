@@ -6,32 +6,17 @@ import SearchContactComponent from "@/Components/SearchContactComponent"
 
 export default function ShowContactComponent() 
 {
-  function ShowPersonalChat()
-  {
-    const PersonalChatPageNameAndPictureHeader: HTMLElement | null = document.getElementById("NameAndPictureHeader")
-    const PersonalChatInputMessages: HTMLElement | null = document.getElementById("InputMessages")
-    const PersonalChatBackground: HTMLElement | null = document.body
-    if(PersonalChatPageNameAndPictureHeader != null && PersonalChatInputMessages != null)
-    {
-        PersonalChatPageNameAndPictureHeader.style.display = "inline"
-        PersonalChatInputMessages.style.display = "inline"
-    }
-    if(PersonalChatBackground != null)
-    {
-        PersonalChatBackground.style.backgroundColor = "black"
-    }
-  }
   return (
     <>  
         <div className="inline-block bg-cyan-950 h-lvh w-72 overflow-auto touch-pan-x absolute left-16">
             <div className="flex flex-col gap-4 mx-3 my-6">
                 <h4 className="text-zinc-400 font-bold">Obrolan</h4>
                 <SearchContactComponent></SearchContactComponent>
-                <div className="flex flex-col gap-6 my-5" onClick={ShowPersonalChat}>
+                <div className="flex flex-col gap-6 my-5">
                 </div>
             </div>
         </div>
-        <div className="flex flex-col gap-40 mx-72 overflow-hidden">
+        {/* <div className="flex flex-col gap-40 mx-72 overflow-hidden">
             <div className="bg-slate-800 hidden h-14 w-96" id="NameAndPictureHeader">
                 <div className="flex flex-row">
                     <FontAwesomeIcon icon={faUserCircle} style={{color: "#ffffff"}} className="w-5 cursor-pointer"/>
@@ -45,7 +30,7 @@ export default function ShowContactComponent()
                     </form>
                 </div>
             </div>    
-        </div>
+        </div> */}
     </>
   )
 }

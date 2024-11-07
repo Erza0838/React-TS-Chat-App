@@ -1,4 +1,4 @@
-import { NextAuthOptions } from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { compare, compareSync } from "bcrypt"
 import { PrismaClient } from "@prisma/client"
@@ -8,8 +8,19 @@ import bcrypt from "bcrypt"
 
 const prisma = new PrismaClient()
 
-export const authOptions: NextAuthOptions = 
-{   
+// export const authOptions: NextAuthOptions = 
+const handler = NextAuth(
+{       
+    session: 
+    {
+        strategy: "jwt",
+        maxAge: 60 * 60 * 24
+    },
+    secret: process.env.NEXTAUTH_SECRET,
+    pages: 
+    {
+        signIn: "/login"
+    },
     providers: 
     [
         CredentialsProvider({
@@ -18,7 +29,7 @@ export const authOptions: NextAuthOptions =
             credentials: 
             {
                 email: {label: "email",type: "email",placeholder: "email"},
-                password: {label: "password", type: "pass",placeholder:"password"},
+                password: {label: "password", type: "password",placeholder:"password"},
                 
             },
             async authorize(credentials) 
@@ -27,6 +38,7 @@ export const authOptions: NextAuthOptions =
                 {
                     return null
                 }
+                console.log("Data credential : " + JSON.stringify(credentials))
                 try 
                 {
                     // Call your authentication function
@@ -34,7 +46,7 @@ export const authOptions: NextAuthOptions =
                         where: 
                         {
                             Email: credentials.email
-                        } ,
+                        },
                         select: 
                         {
                             Email: true,
@@ -44,30 +56,25 @@ export const authOptions: NextAuthOptions =
                         }
                     })
 
-                    // Periksa email dan password dari database
-                    const FindAuthorizeEmail = await prisma.userModel.findFirst({
+                    const FindPassword = await prisma.userModel.findUnique({
                         where: 
-                        {
-                            Email: credentials.email
-                        } 
-                    })
-                    const FindAuthorizePassword = await prisma.userModel.findFirst({
-                        where: 
-                        {
+                        { 
                             Password: credentials.password
-                        } 
+                        },
+                        select: 
+                        {
+                            Password: true
+                        }
                     })
-                    if(!FindAuthorizeEmail) 
+                    
+                    if(!FindPassword) 
                     {
-                        console.error(`Email : ${credentials.email} tidak ditemukan`)
-                    } 
-                    if(!FindAuthorizePassword) 
-                    {
-                        console.error(`Password : ${credentials.password} tidak ditemukan`)
-                    } 
+                        throw new Error(`Password ${credentials.password} tidak ditemukan`);
+                    }
 
                     if(!user)
-                    {
+                    {   
+                        console.log("User tidak ada")
                         return null
                     }       
                     const isPasswordValid = await bcrypt.compare(credentials?.password || "",user?.Password)
@@ -76,7 +83,7 @@ export const authOptions: NextAuthOptions =
                     {   
                         return {
                             id: user?.id,
-                            Email: user?.Email, 
+                            email: user?.Email, 
                             name: user?.Username
                         }
                     }   
@@ -89,43 +96,25 @@ export const authOptions: NextAuthOptions =
             }
         })
     ],
-    secret: process.env.NEXTAUTH_URL,
-    adapter: PrismaAdapter(prisma) as Adapter,
-    // debug: process.env.NODE_ENV === "production",
-    debug: true,
-    session: 
-    {   
-        strategy: "jwt",
-        maxAge: 24 * 60 * 60
-    },
-    pages: 
+    callbacks:
     {
-        signIn: "/login"
-    },
-    callbacks: 
-    {
-        async jwt({token,user}) 
-        {
-            if(user) 
-            {
-                token.id = user.id,
-                token.email = user.email,
-                token.name = user.name
-            }
+        async jwt({token,trigger,account,profile,user,session}) 
+        {   
+            // console.log("JWT callback : ", 
+            // {
+            //     token,trigger,account,profile,user,session
+            // })
             return token
         },
-        async session({session,token}) 
+        async session({token,user,session,newSession,trigger}) 
         {   
-            if(token)
-            {
-                session.user = 
-                {
-                    ...session.user,
-                    email: token.email,
-                    name: token.name
-                }
-            }
+            // console.log("Session callback : ", 
+            // {
+            //     token,user,session,newSession,trigger
+            // })
             return session
         }
     }
-}   
+})
+
+export {handler as GET, handler as POST}

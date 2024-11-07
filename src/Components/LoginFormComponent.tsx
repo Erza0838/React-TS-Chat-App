@@ -15,17 +15,17 @@ import {
   FormMessage,
 } from "@/Components/ui/form"
 import { Button } from '@/Components/ui/button'
-import { signIn } from 'next-auth/react'
+import { signIn } from "next-auth/react"
 import { useRouter } from 'next/navigation'
 import Link from "next/link"
 
 const formSchema = z.object(
 {
-    Email: z.string().trim().min(4, 
+    email: z.string().trim().min(4, 
     {
         message: "Email minimal 4 karakter"
     }),
-    Password: z.string().trim().min(4, 
+    password: z.string().trim().min(4, 
     {
         message: "Password minimal 4 karakter"
     }).max(30,
@@ -44,8 +44,8 @@ export default function LoginFormComponent()
         resolver: zodResolver(formSchema),
         defaultValues: 
         {
-            Email: "",
-            Password: ""
+            email: "",
+            password: ""
         }
     })
 
@@ -58,36 +58,33 @@ export default function LoginFormComponent()
             {   
                 callbackUrl: "/homepage",
                 redirect: false,
-                email: values.Email,
-                password: values.Password,
+                email: values.email,
+                password: values.password,
             })    
-            if(!response?.error)
+
+            if(!response) 
             {
-                router.push("/homepage")
+                throw new Error("No response from auth server")
             }
+
             if(response?.error)
-            {   
-                if(response.error === "CredentialsSign") 
+            {                           
+                if(response.error === "CredentialsSignin") 
                 {
                     toast.error("Email atau password salah!")
                 }
-                else 
-                {
-                    toast.error("Terjadi kesalahan saat login")
-                }
+                // else 
+                // {
+                //     toast.error("Terjadi kesalahan saat login")
+                // }
             }
-            if(!response?.ok) 
-            {
-                throw new Error("Network response error")   
-            }
-            if(response?.ok)
-            {
-                toast.success("Akun terdaftar!")
-            }
+            toast.success("Login berhasil!")
+            router.push("/homepage")
         } 
-        catch (error) 
+        catch(error: any) 
         {
-            console.log(error)
+            console.error(error)
+            toast.error("Terjadi kesalahan pada sistem")
         }
         finally
         {
@@ -106,7 +103,7 @@ export default function LoginFormComponent()
                     <form onSubmit={form.handleSubmit(onsubmit)} className="space-y-8">
                     <FormField
                         control={form.control}
-                        name="Email"
+                        name="email"
                         render={({ field }) => (
                             <FormItem>
                             <FormLabel>Email</FormLabel>
@@ -118,7 +115,7 @@ export default function LoginFormComponent()
                         )}/>
                         <FormField
                             control={form.control}
-                            name="Password"
+                            name="password"
                             render={({ field }) => (
                                 <FormItem>
                                 <FormLabel>Password</FormLabel>
