@@ -13,7 +13,7 @@ export const POST = async (request: NextRequest) =>
             Genders: Genders,
             Email: Email,
             Username: Username,
-            Password: bcrypt.hashSync(Password, 10) 
+            Password: bcrypt.hashSync(Password, 10)
         }
     })
     // let session = await encrypt(InsertNewAccount)

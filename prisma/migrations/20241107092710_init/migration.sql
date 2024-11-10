@@ -5,15 +5,28 @@ CREATE TABLE `user` (
     `Email` VARCHAR(100) NOT NULL,
     `Username` VARCHAR(100) NOT NULL,
     `Password` VARCHAR(100) NOT NULL,
+    `UserProfilePicture` VARCHAR(255) NULL,
 
+    UNIQUE INDEX `user_Password_key`(`Password`),
     PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `UserDescription` (
+    `UserDescriptionId` VARCHAR(191) NOT NULL,
+    `UserDescription` VARCHAR(255) NOT NULL,
+    `UserId` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    PRIMARY KEY (`UserDescriptionId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `contact_List` (
     `Contacts_Id` VARCHAR(191) NOT NULL,
 
-    PRIMARY KEY (`Contacts_Id`)
+    UNIQUE INDEX `contact_List_Contacts_Id_key`(`Contacts_Id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -50,7 +63,7 @@ CREATE TABLE `grup_chat_information` (
     `Grup_Name` VARCHAR(40) NOT NULL,
     `Grup_Description` VARCHAR(255) NULL,
     `Role_member` VARCHAR(255) NOT NULL,
-    `Grup_Picture_Profile` blob NULL,
+    `GrupProfilePicture` VARCHAR(255) NULL,
     `Messages_Admin_And_Member` TEXT NOT NULL,
     `Messages_To_All` TEXT NOT NULL,
     `Delete_Grup_Message` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -66,6 +79,9 @@ CREATE TABLE `grup_list_member` (
 
     PRIMARY KEY (`List_Id_Grup_Members`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `UserDescription` ADD CONSTRAINT `UserDescription_UserId_fkey` FOREIGN KEY (`UserId`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `contact_List` ADD CONSTRAINT `contact_List_Contacts_Id_fkey` FOREIGN KEY (`Contacts_Id`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

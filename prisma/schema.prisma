@@ -16,23 +16,35 @@ datasource db {
 // Model untuk menyimpan informasi pengguna yang melakukan registrasi
 model UserModel {
   // id       String  @id @default(uuid()) 
-  id       String  @id @default(cuid()) 
-  Genders  String  @db.Char(100)
-  Email    String  @db.VarChar(100)
-  Username String  @db.VarChar(100)
-  Password String  @db.VarChar(100) @unique
+  id                 String  @id @default(cuid())
+  Genders            String  @db.Char(100)
+  Email              String  @db.VarChar(100)
+  Username           String  @db.VarChar(100)
+  Password           String  @unique @db.VarChar(100)
+  UserProfilePicture String? @db.VarChar(255)
   // ProfilePicture Unsupported("blob")?
 
+  UserDescription_Reference    UserDescription[]
   User_Contacts_Id             User_Contacts[]
   Add_Member_Grup_From_Contact Grup_List_Member_Model[] @relation("Add_Grup_Member_From_Contact")
 
   @@map("user")
 }
 
+model UserDescription {
+  UserDescriptionId String   @id @default(cuid())
+  UserDescription   String   @db.VarChar(255)
+  UserId            String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  UserIdReference UserModel @relation(fields: [UserId], references: [id])
+}
+
 // Model untuk menyimpan daftar kontak user
 model User_Contacts {
   User_Id     UserModel @relation(fields: [Contacts_Id], references: [id])
-  Contacts_Id String    @id @default(uuid())
+  Contacts_Id String    @unique
 
   Sender_Rechiever_Message_Id Personal_Chat_Model[]
 
@@ -59,9 +71,9 @@ model Personal_Chat_Model {
   My_Messages             String    @db.Text()
   Messages_To_All         String    @db.Text()
   // Delete_Personal_Message DateTime? @updatedAt
-  Delete_Personal_Message DateTime? @default(now())   
-  Update_Personal_Message DateTime? @default(now())   
-  Create_Personal_Message DateTime? @default(now())   
+  Delete_Personal_Message DateTime? @default(now())
+  Update_Personal_Message DateTime? @default(now())
+  Create_Personal_Message DateTime? @default(now())
 
   @@map("personal_Chat")
 }
@@ -81,18 +93,18 @@ model Grup_Chat_Information_Model {
   Chat_Grup_Id            String
 
   // Kolom untuk mengisi informasi grup
-  Grup_Chat_Information_Id String               @id @default(uuid())
-  Grup_Name                String               @db.VarChar(40)
-  Grup_Description         String?              @db.VarChar(255)
-  Role_member              String               @db.VarChar(255)
-  Grup_Picture_Profile     Unsupported("blob")?
+  Grup_Chat_Information_Id String  @id @default(uuid())
+  Grup_Name                String  @db.VarChar(40)
+  Grup_Description         String? @db.VarChar(255)
+  Role_member              String  @db.VarChar(255)
+  GrupProfilePicture       String? @db.VarChar(255)
 
   // Kolom untuk menyimpan menyimpan dan mengelola obrolan grup
   Messages_Admin_And_Member String    @db.Text()
   Messages_To_All           String    @db.Text()
-  Delete_Grup_Message       DateTime? @default(now())   
-  Update_Grup_Message       DateTime? @default(now())   
-  Create_Grup_Message       DateTime? @default(now())   
+  Delete_Grup_Message       DateTime? @default(now())
+  Update_Grup_Message       DateTime? @default(now())
+  Create_Grup_Message       DateTime? @default(now())
 
   @@map("grup_chat_information")
 }

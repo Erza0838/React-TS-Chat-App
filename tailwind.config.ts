@@ -27,6 +27,10 @@ const config: Config = {
   		spacing: {
   			'minus-y-translate': '-5vh'
   		},
+		translate: 
+		{
+			// "5/7" : "-10vh"
+		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

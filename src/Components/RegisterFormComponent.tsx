@@ -16,13 +16,15 @@ import
   FormLabel,
   FormMessage,
 } from "./ui/form"
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "./ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/Components/ui/select"
 import { Button } from "./ui/button"
 
 const formSchema = z.object(
@@ -131,12 +133,11 @@ export default function RegisterFormComponent()
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input type="text" {...field} className="text-base"/>
+                      <Input type="text" {...field} className="font-medium"/>
                     </FormControl>
                   <FormMessage />
                 </FormItem>
-              )}
-            />
+              )}/>
             <FormField
               control={form.control}
               name="Email"
@@ -144,12 +145,11 @@ export default function RegisterFormComponent()
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input {...field}/>
+                      <Input {...field} className="font-medium"/>
                     </FormControl>
                   <FormMessage />
                 </FormItem>
-              )}
-            />
+              )}/>
             <FormField
               control={form.control}
               name="Password"
@@ -157,12 +157,11 @@ export default function RegisterFormComponent()
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field}/>
+                      <Input type="password" {...field} className="font-medium"/>
                     </FormControl>
                   <FormMessage />
                 </FormItem>
-              )}
-            />
+              )}/>
             <FormField
               control={form.control}
               name="Genders"
@@ -174,8 +173,22 @@ export default function RegisterFormComponent()
                     </FormControl>
                   <FormMessage />
                 </FormItem>
-              )}
-            />
+              )}/>
+              {/* <Select name="Genders" aria-controls={form.control}>
+                <SelectTrigger>
+                  <SelectValue></SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="Laki laki" className="font-medium">
+                      Laki laki
+                    </SelectItem>
+                    <SelectItem value="Perempuan" className="font-medium">
+                      Perempuan
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select> */}
             <div className="flex flex-row">
               <Link href={"/login"} className="text-white">Login jika sudah punya akun</Link>
             </div>
