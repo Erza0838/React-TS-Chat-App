@@ -44,6 +44,10 @@ const ProfilePageComponent = () =>
   const session = useSession()
   const AutoFocusInputNameRef = useRef<HTMLInputElement>(null)
   const DisplayNoneInputNameRef = useRef<HTMLInputElement>(null)
+  const AutoFocusInputEmailRef = useRef<HTMLInputElement>(null)
+  const DisplayNoneInputEmailRef = useRef<HTMLInputElement>(null)
+  const AutoFocusInputInformationRef = useRef<HTMLInputElement>(null)
+  const DisplayNoneInputInformationRef = useRef<HTMLInputElement>(null)
 
   // State untuk mouse event
   let [EditNameClickEvent,setEditNameClickEvent] = useState<boolean>(false)
@@ -109,7 +113,25 @@ const ProfilePageComponent = () =>
   {
     if(DisplayNoneInputNameRef.current) 
     {
-        DisplayNoneInputNameRef.current.style.display = "none"
+      DisplayNoneInputNameRef.current.style.display = "none"
+    } 
+    return null
+  }
+
+  function SetDisplayNoneInputEmail()
+  {
+    if(DisplayNoneInputEmailRef.current) 
+    {
+      DisplayNoneInputEmailRef.current.style.display = "none"
+    } 
+    return null
+  }
+
+  function SetDisplayNoneInputInformation()
+  {
+    if(DisplayNoneInputInformationRef.current) 
+    {
+      DisplayNoneInputInformationRef.current.style.display = "none"
     } 
     return null
   }
@@ -136,7 +158,9 @@ const ProfilePageComponent = () =>
   function ChangeChecklistIconInEmailInput() 
   {
     if(EditEmailClickEvent === true) 
-    {
+    { 
+      AutoFocusInputEmailRef.current?.focus()
+      SetDisplayNoneInputEmail()
       return <FontAwesomeIcon 
               icon={faCheck} 
               style={{color: "#ffffff"}}
@@ -151,9 +175,11 @@ const ProfilePageComponent = () =>
   }
 
   function ChangeChecklistIconInInformationInput() 
-  {
+  { 
     if(EditInformationClickEvent === true) 
     {
+      AutoFocusInputInformationRef.current?.focus()
+      SetDisplayNoneInputInformation()    
       return <FontAwesomeIcon 
               icon={faCheck} 
               style={{color: "#ffffff"}}
@@ -252,12 +278,58 @@ const ProfilePageComponent = () =>
       {
         return <input type="text"
                 name="" 
-                className="focus:outline-none px-1 py-1 min-w-24 text-white bg-stone-950 focus:border-b-4 border-b-cyan-700" 
+                className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
                 value={session?.data?.user?.name ?? ""}   
                 onKeyDown={DisabledEditName}
                 onKeyUp={DisabledChecklistIconInInputName} 
                 ref={AutoFocusInputNameRef}/>     
       }
+  }
+
+  function ShowTagInputEmail()
+  {   
+      if(EditEmailClickEvent === false) 
+      { 
+        return <input type="text"
+                name="" 
+                className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
+                value={session?.data?.user?.name ?? ""}   
+                onKeyDown={DisabledEditEmail}
+                onKeyUp={DisabledChecklistIconInInputEmail}
+                ref={AutoFocusInputEmailRef}/>    
+      }
+      if(EditEmailClickEvent === true) 
+      {
+        return <input type="text"
+                name="" 
+                className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
+                value={session?.data?.user?.name ?? ""}   
+                onKeyDown={DisabledEditEmail}
+                onKeyUp={DisabledChecklistIconInInputEmail} 
+                ref={AutoFocusInputEmailRef}/>     
+      }
+  }
+
+  function ShowTagInputInformation() 
+  {
+    if(EditInformationClickEvent === false) 
+    {
+      return <input type="text" 
+              name="" 
+              className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700"  
+              onKeyDown={DisabledEditInformation}
+              onKeyUp={DisabledChecklistIconInInputInformation}
+              ref={AutoFocusInputInformationRef}/>
+    }
+    if(EditInformationClickEvent === true) 
+    {
+      return <input type="text" 
+              name="" 
+              className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700"  
+              onKeyDown={DisabledEditInformation}
+              onKeyUp={DisabledChecklistIconInInputInformation}
+              ref={AutoFocusInputInformationRef}/>
+    }
   }
   
   return(
@@ -274,7 +346,7 @@ const ProfilePageComponent = () =>
                 {ShowTagInputName()}
                 <input type="text"
                         name="" 
-                        className="focus:outline-none px-1 py-1 -translate-y-9 min-w-24 text-white bg-red-400 focus:border-b-4 border-b-cyan-700" 
+                        className="focus:outline-none px-1 py-1 -translate-y-9 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
                         value={session?.data?.user?.name ?? ""}   
                         disabled
                         onKeyDown={DisabledEditName}
@@ -289,14 +361,15 @@ const ProfilePageComponent = () =>
           <div className="flex flex-row">
             <div className="flex flex-col gap-2">
               <h4 className="text-zinc-400 font-bold">Email</h4>
+              {ShowTagInputEmail()}
               <input type="text"
                      name="" 
-                     className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
+                     className="focus:outline-none px-1 py-1 -translate-y-9 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
                      value={session.data?.user?.email ?? ""}
-                     autoFocus
-                     disabled={!EditEmailClickEvent}
+                     disabled
                      onKeyDown={DisabledEditEmail}
-                     onKeyUp={DisabledChecklistIconInInputEmail}/>
+                     onKeyUp={DisabledChecklistIconInInputEmail}
+                     ref={DisplayNoneInputEmailRef}/>
             </div>
             <div className="flex flex-row translate-y-10 translate-x-10">
               {ShowEditIconInInputEmail()}
@@ -306,13 +379,14 @@ const ProfilePageComponent = () =>
           <div className="flex flex-row">
             <div className="flex flex-col gap-2">
               <h4 className="text-zinc-400 font-bold">Info</h4>
+              {ShowTagInputInformation()}
               <input type="text" 
                      name="" 
-                     className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
-                     value={""} 
-                     disabled={!EditInformationClickEvent}
+                     className="focus:outline-none px-1 py-1 -translate-y-9 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
+                     disabled
                      onKeyDown={DisabledEditInformation}
-                     onKeyUp={DisabledChecklistIconInInputInformation}/>
+                     onKeyUp={DisabledChecklistIconInInputInformation}
+                     ref={DisplayNoneInputInformationRef}/>
             </div>
             <div className="flex flex-row translate-y-10 translate-x-10">
               {ShowEditIconInInputInformation()} 
