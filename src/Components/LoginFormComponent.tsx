@@ -6,42 +6,29 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Input } from "@/Components/ui/input"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/Components/ui/form"
 import { Button } from '@/Components/ui/button'
 import { signIn } from "next-auth/react"
 import { useRouter } from 'next/navigation'
 import Link from "next/link"
-
-const formSchema = z.object(
+import 
 {
-    email: z.string().trim().min(4, 
-    {
-        message: "Email minimal 4 karakter"
-    }),
-    password: z.string().trim().min(4, 
-    {
-        message: "Password minimal 4 karakter"
-    }).max(30,
-    {      
-        message: "Password maksimal 30 karakter"
-    })
-})
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/Components/ui/form"
+import { LoginDataValidationSchema } from "@/lib/validations/UserInformationValidation"
 
 export default function LoginFormComponent() 
 {   
     const [isLoading,setLoading] = useState<boolean>(false)
     const router = useRouter()
 
-    const form = useForm<z.infer<typeof formSchema>>
+    const form = useForm<z.infer<typeof LoginDataValidationSchema>>
     ({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(LoginDataValidationSchema),
         defaultValues: 
         {
             email: "",
@@ -49,7 +36,7 @@ export default function LoginFormComponent()
         }
     })
 
-    async function onsubmit(values: z.infer<typeof formSchema>) 
+    async function onsubmit(values: z.infer<typeof LoginDataValidationSchema>) 
     {
         setLoading(true)
         try 
@@ -73,10 +60,6 @@ export default function LoginFormComponent()
                 {
                     toast.error("Email atau password salah!")
                 }
-                // else 
-                // {
-                //     toast.error("Terjadi kesalahan saat login")
-                // }
             }
             toast.success("Login berhasil!")
             router.push("/homepage")
@@ -131,6 +114,9 @@ export default function LoginFormComponent()
                         <Button type="submit" disabled={isLoading}>
                             {isLoading ? "Loading..." : "Login"}
                         </Button>
+                        {/* <button type="submit" disabled={isLoading}>
+                            {isLoading ? "Loading..." : "Login"}
+                        </button> */}
                     </form>
                 </Form>
             </div>

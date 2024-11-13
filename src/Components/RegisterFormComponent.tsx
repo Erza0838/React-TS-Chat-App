@@ -26,49 +26,16 @@ import {
   SelectValue,
 } from "@/Components/ui/select"
 import { Button } from "./ui/button"
-
-const formSchema = z.object(
-{
-  Genders: z.string().trim().min(8, 
-  {
-        message: "Gender minimal 8 karakter"
-  }).max(9,
-  {
-    message: "Gender maksimal 9 karakter"
-  }),
-  Email: z.string().trim().min(4, 
-  {
-    message: "Email minimal 4 karakter"
-  })
-  .email("Email tidak valid")
-  .max(30,
-  {
-    message: "Email maksimal 30 karakter"
-  }),
-  Username: z.string().trim().min(4, 
-  {
-    message: "Username minimal 4 karakter"
-  }).max(30,
-  {
-    message: "Username maksimal 30 karakter"
-  }),
-  Password: z.string().trim().min(4, 
-  {
-    message: "Password minimal 4 karakter"
-  }).max(30,
-  {      
-    message: "Password maksimal 30 karakter"
-  })
-  }
-)
+import { NewAccountDataValidationSchema } from "@/lib/validations/UserInformationValidation"
 
 export default function RegisterFormComponent()
 {   
   const [isLoading,setLoading] = useState<boolean>(false)
+  const [UpdateUsername,SetUpdateUsername] = useState<string>("")
 
-  const form = useForm<z.infer<typeof formSchema>>
+  const form = useForm<z.infer<typeof NewAccountDataValidationSchema>>
   ({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(NewAccountDataValidationSchema),
     defaultValues: 
     {
       Genders: "",
@@ -78,7 +45,7 @@ export default function RegisterFormComponent()
     }
   })
   
-  async function onSubmit(values: z.infer<typeof formSchema>)
+  async function onSubmit(values: z.infer<typeof NewAccountDataValidationSchema>)
   {
     setLoading(true)
     try 
@@ -133,7 +100,7 @@ export default function RegisterFormComponent()
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input type="text" {...field} className="font-medium"/>
+                      <Input type="text" {...field} className="font-medium" value={"hana"} onChange={e => e.target.value}/>
                     </FormControl>
                   <FormMessage />
                 </FormItem>

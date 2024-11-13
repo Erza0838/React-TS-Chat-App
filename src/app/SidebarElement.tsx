@@ -134,7 +134,7 @@ export const SidebarElement = () =>
   }
 
   return (
-    <div className="inline-block bg-cyan-700 h-lvh z-10 drop-shadow-2xl">
+    <div className="inline-block bg-cyan-800 h-lvh z-10 drop-shadow-2xl">
         <div className="flex flex-col gap-10 mx-6 my-3">           
             {/* Icon obrolan */}
             {ChatIcon()}            

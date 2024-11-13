@@ -1,4 +1,4 @@
-import { INVALID, z } from "zod"
+import { z } from "zod"
 
 export const NewAccountDataValidationSchema = z.object(
 {
@@ -31,11 +31,25 @@ export const NewAccountDataValidationSchema = z.object(
 
 export const LoginDataValidationSchema = z.object(
 {
-    ValidateEmailFill: z.string
-    ({
-        invalid_type_error: "Email tidak terdaftar"   
-    }).trim().min(4, 
+    email: z.string().trim().min(4, 
     {
         message: "Email minimal 4 karakter"
     }),
+    password: z.string().trim().min(4, 
+    {
+        message: "Password minimal 4 karakter"
+    }).max(30,
+    {      
+        message: "Password maksimal 30 karakter"
+    })
+})
+
+export const UpdateUsernameValidationSchema = z.object(
+{
+    username: z.string().trim().min(1, 
+    {
+        message: "username minimal 1 karakter"
+    }).max(20,{
+        message: "username maksimal 20 karakter"
+    })
 })

@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { Adapter } from "next-auth/adapters"
 import bcrypt from "bcrypt"
+import { User } from "lucide-react"
 
 const prisma = new PrismaClient()
 
@@ -77,31 +78,34 @@ const handler = NextAuth(
     ],
     callbacks:
     {
-        async jwt({token,trigger,account,profile,user,session}) 
+        async jwt({token,account,user,trigger,session}) 
         {   
-            console.log("JWT callback : ", 
+            if(trigger === "update") 
             {
-                token,trigger,account,profile,user,session
-            })
+                return {...token,...session.user}
+            }
             if(user) 
-            {
+            {   
                 token.email = user.email,
                 token.name = user.name
+                token.sub = user.id
             }
-            return token
+            // return token
+            return { ...token, ...user }
         },
-        async session({token, session}) 
+        async session({token,session,user,trigger}) 
         {   
-            console.log("Session callback : ", 
-            {
-                token,session
-            })
-            if (token) {
+            if(token) 
+            {   
                 session.user = {
                     email: token.email,
                     name: token.name,
-                    
+                    id: token.sub
                 }
+                // session.user = {
+                //     email: token.email,
+                //     name: token.name
+                // }
             }
             return session
         }

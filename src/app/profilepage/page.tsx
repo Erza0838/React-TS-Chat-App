@@ -1,9 +1,9 @@
 "use client"
-import React, { ChangeEvent, useState } from 'react'
+import React, { useState } from 'react'
 import { UserModel } from '@prisma/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getServerSession } from 'next-auth/next'
-import { signOut, useSession } from 'next-auth/react'
+import { getSession, signOut, useSession } from 'next-auth/react'
 import { SessionProviderProps } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import { useEffect } from 'react'
@@ -12,6 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import z from "zod"
 import { Input } from '@/Components/ui/input'
 import { useRef } from 'react'
+import toast from 'react-hot-toast'
 
 // Import component
 import 
@@ -33,15 +34,19 @@ import
   SelectTrigger,
   SelectValue,
 } from "@/Components/ui/select"
-import { faUserCircle,faEdit,faCheck } from '@fortawesome/free-solid-svg-icons'
+import { faUserCircle,faEdit,faCheck,faClipboard } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '@/Components/ui/button'
 import { SidebarElement } from '../SidebarElement'
 import InputProfileHandler from '@/EventHandler/ProfilepageEventHandler/InputProfileHandler'
 // Baris akhir import component
+import { UpdateUsernameValidationSchema } from '@/lib/validations/UserInformationValidation'
+import { reloadSession } from '@/lib/ReloadSession'
 
 const ProfilePageComponent = () =>
 { 
-  const session = useSession()
+  const {data: session, update} = useSession()
+  // const session = await getSession()
+
   const AutoFocusInputNameRef = useRef<HTMLInputElement>(null)
   const DisplayNoneInputNameRef = useRef<HTMLInputElement>(null)
   const AutoFocusInputEmailRef = useRef<HTMLInputElement>(null)
@@ -55,7 +60,58 @@ const ProfilePageComponent = () =>
   let [EditInformationClickEvent,setEditInformationClickEvent] = useState<boolean>(false)
   const [ChecklistIconInNameInput,setChecklistIconInNameInput] = useState<boolean>(false)
 
+  // State untuk tag input update profile
+  const [UpdateUsername,SetUpdateUsername] = useState<string>("")
+  const [UpdateEmail,SetUpdateEmail] = useState<string>("")
+  const [UpdatInformation,SetUpdateInformation] = useState<string>("")
+
   let [Focus,setFocus] = useState<boolean>(false)
+
+  const UpdateUsernameProfileForm = useForm<z.infer<typeof UpdateUsernameValidationSchema>>
+  ({
+    resolver: zodResolver(UpdateUsernameValidationSchema),
+    defaultValues: 
+    {
+      username: "",
+    }
+  })
+
+  async function OnSubmitUpdateUsername(values: z.infer<typeof UpdateUsernameValidationSchema>) 
+  {
+    try 
+    {
+      const response = await fetch("/api/profileapi/updateusernameprofile",
+      {
+          headers:
+          {
+            "Content-Type": "application/json"
+          },
+          method: "PUT",
+          // method: "POST",
+          body: JSON.stringify(values)
+      })  
+      const UpdateUsernameProfile = await response.json()
+      if(UpdateUsernameProfile.error) 
+      {
+        toast.error(UpdateUsernameProfile.error)
+        return
+      }
+      update({
+        ...session,
+        user: 
+        {
+          ...session?.user,
+          username: values.username
+        }
+      })
+      reloadSession()
+      toast.success("Username diubah")
+    } 
+    catch(error) 
+    {
+      console.log(error)
+    }    
+  }
 
   const DisabledEditName = (event: React.KeyboardEvent<HTMLInputElement>) =>
   {
@@ -86,7 +142,7 @@ const ProfilePageComponent = () =>
   {
     switch(event.key) 
     {
-      case "Escape" : EditNameClickEvent = false
+      case "Escape" : setEditNameClickEvent(false)
         break
     }
   }
@@ -142,10 +198,12 @@ const ProfilePageComponent = () =>
     {
       AutoFocusInputNameRef.current?.focus()
       SetDisplayNoneInputName()
-      return <FontAwesomeIcon 
+      return <Button type="submit" style={{backgroundColor: "rgb(8 51 68)"}}>  
+              <FontAwesomeIcon 
               icon={faCheck} 
               style={{color: "#ffffff"}}
               className="cursor-pointer"/>
+            </Button>
     }
     if(EditNameClickEvent === false) 
     {
@@ -198,14 +256,14 @@ const ProfilePageComponent = () =>
     setEditNameClickEvent(ClickEditNamestate)
   }
 
-  function ClickEditEmail(state: boolean)
+  function ClickEditEmail(ClickEditEmailState: boolean)
   {
-    setEditEmailClickEvent(true)
+    setEditEmailClickEvent(ClickEditEmailState)
   }
 
-  function ClickEditInformation(state: boolean)
+  function ClickEditInformation(ClickEditInformationState: boolean)
   {
-    setEditInformationClickEvent(true)
+    setEditInformationClickEvent(ClickEditInformationState)
   }
 
   function ShowEditIconInInputName() 
@@ -234,7 +292,7 @@ const ProfilePageComponent = () =>
               icon={faEdit} 
               style={{color: "#ffffff"}}
               className="cursor-pointer"
-              onClick={() => ClickEditEmail(EditEmailClickEvent)}/>
+              onClick={() => ClickEditEmail(!EditEmailClickEvent)}/>
     } 
     if(EditEmailClickEvent === true)
     {  
@@ -252,7 +310,7 @@ const ProfilePageComponent = () =>
               icon={faEdit} 
               style={{color: "#ffffff"}}
               className="cursor-pointer"
-              onClick={() => ClickEditInformation(EditInformationClickEvent)}/>
+              onClick={() => ClickEditInformation(!EditInformationClickEvent)}/>
     } 
     if(EditInformationClickEvent === true)
     {  
@@ -264,50 +322,94 @@ const ProfilePageComponent = () =>
 
   function ShowTagInputName()
   {   
-      if(EditNameClickEvent === false) 
+    if(EditEmailClickEvent === false) 
       { 
-        return <input type="text"
-                name="" 
-                className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
-                value={session?.data?.user?.name ?? ""}   
-                onKeyDown={DisabledEditName}
-                onKeyUp={DisabledChecklistIconInInputName}
-                ref={AutoFocusInputNameRef}/>    
+        return <form onSubmit={ async (event: React.FormEvent<HTMLFormElement>) => 
+                                      { 
+                                        event.preventDefault()
+                                        await OnSubmitUpdateUsername(UpdateUsernameProfileForm.getValues())
+                                      }}>
+                  <div className="flex flex-row gap-2">
+                    <input type="text" 
+                          name="username" 
+                          className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
+                          defaultValue={session?.user?.name ?? ""}   
+                          onKeyDown={DisabledEditName}
+                          onKeyUp={DisabledChecklistIconInInputName} 
+                          ref={AutoFocusInputNameRef}
+                          onChange={e => SetUpdateUsername(e.target.value)}/>                                          
+                    <Button type="submit" style={{backgroundColor: "rgb(8 51 68)"}}>  
+                      <FontAwesomeIcon 
+                          icon={faCheck} 
+                          style={{color: "#ffffff"}}
+                          className="cursor-pointer"/>
+                    </Button>
+                  </div>
+              </form>
       }
-      if(EditNameClickEvent === true) 
-      {
-        return <input type="text"
-                name="" 
-                className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
-                value={session?.data?.user?.name ?? ""}   
-                onKeyDown={DisabledEditName}
-                onKeyUp={DisabledChecklistIconInInputName} 
-                ref={AutoFocusInputNameRef}/>     
+      if(EditEmailClickEvent === true) 
+      { 
+        return <form onSubmit={ async (event: React.FormEvent<HTMLFormElement>) => 
+                                      { 
+                                        event.preventDefault()
+                                        await OnSubmitUpdateUsername(UpdateUsernameProfileForm.getValues())
+                                      }}>
+                  <div className="flex flex-row gap-2">
+                    <input type="text" 
+                          name="username" 
+                          className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
+                          defaultValue={session?.user?.name ?? ""}   
+                          onKeyDown={DisabledEditName}
+                          onKeyUp={DisabledChecklistIconInInputName} 
+                          ref={AutoFocusInputNameRef}
+                          onChange={e => SetUpdateUsername(e.target.value)}/>     
+                    <Button type="submit" style={{backgroundColor: "rgb(8 51 68)"}}>  
+                      <FontAwesomeIcon 
+                          icon={faCheck} 
+                          style={{color: "#ffffff"}}
+                          className="cursor-pointer"/>
+                    </Button>
+                  </div>
+                </form>
       }
   }
 
   function ShowTagInputEmail()
   {   
-      if(EditEmailClickEvent === false) 
-      { 
-        return <input type="text"
-                name="" 
-                className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
-                value={session?.data?.user?.name ?? ""}   
-                onKeyDown={DisabledEditEmail}
-                onKeyUp={DisabledChecklistIconInInputEmail}
-                ref={AutoFocusInputEmailRef}/>    
-      }
-      if(EditEmailClickEvent === true) 
-      {
-        return <input type="text"
-                name="" 
-                className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
-                value={session?.data?.user?.name ?? ""}   
-                onKeyDown={DisabledEditEmail}
-                onKeyUp={DisabledChecklistIconInInputEmail} 
-                ref={AutoFocusInputEmailRef}/>     
-      }
+    if(EditEmailClickEvent === false) 
+    { 
+      return <form onSubmit={ async (event: React.FormEvent<HTMLFormElement>) => 
+                                    { 
+                                      event.preventDefault()
+                                      await OnSubmitUpdateUsername(UpdateUsernameProfileForm.getValues())
+                                    }}>
+              <input type="text" 
+                     name="username" 
+                     className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
+                     defaultValue={session?.user?.name ?? ""}   
+                     onKeyDown={DisabledEditName}
+                     onKeyUp={DisabledChecklistIconInInputName} 
+                     ref={AutoFocusInputNameRef}
+                     onChange={e => SetUpdateUsername(e.target.value)}/>     
+            </form>
+    }
+    if(EditEmailClickEvent === true) 
+    { 
+      return <form onSubmit={ async (event: React.FormEvent<HTMLFormElement>) => 
+                                    { 
+                                      event.preventDefault()
+                                      await OnSubmitUpdateUsername(UpdateUsernameProfileForm.getValues())
+                                    }}>
+              <input type="text" 
+                    name="username" 
+                    className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
+                    defaultValue={session?.user?.name ?? ""}   
+                    onKeyDown={DisabledEditName}
+                    onKeyUp={DisabledChecklistIconInInputName} 
+                    ref={AutoFocusInputNameRef}
+                    onChange={e => SetUpdateUsername(e.target.value)}/>     
+              </form>
+    }
   }
 
   function ShowTagInputInformation() 
@@ -315,27 +417,29 @@ const ProfilePageComponent = () =>
     if(EditInformationClickEvent === false) 
     {
       return <input type="text" 
-              name="" 
+              name="username" 
               className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700"  
               onKeyDown={DisabledEditInformation}
               onKeyUp={DisabledChecklistIconInInputInformation}
-              ref={AutoFocusInputInformationRef}/>
+              ref={AutoFocusInputInformationRef}
+              onChange={e => SetUpdateInformation(e.target.value)}/>
     }
     if(EditInformationClickEvent === true) 
     {
       return <input type="text" 
-              name="" 
+              name="username" 
               className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700"  
               onKeyDown={DisabledEditInformation}
               onKeyUp={DisabledChecklistIconInInputInformation}
-              ref={AutoFocusInputInformationRef}/>
+              ref={AutoFocusInputInformationRef}
+              onChange={e => SetUpdateInformation(e.target.value)}/>
     }
   }
   
   return(
     <>
       <SidebarElement></SidebarElement>
-      <div className="inline-block bg-cyan-950 h-lvh w-80 overflow-auto touch-pan-x absolute left-16">
+      <div className="inline-block bg-cyan-950 h-lvh w-80 overflow-auto touch-pan-x absolute left-16  overflow-y-hidden">
         <div className="flex flex-col gap-7 mx-3 my-6">
           <div className="flex flex-col">
             <h2 className="text-white font-bold">Profie</h2>
@@ -343,17 +447,15 @@ const ProfilePageComponent = () =>
           <div className="flex flex-row">
             <div className="flex flex-col gap-2">
               <h4 className="text-zinc-400 font-bold">Nama</h4>
-                {ShowTagInputName()}
-                <input type="text"
-                        name="" 
-                        className="focus:outline-none px-1 py-1 -translate-y-9 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
-                        value={session?.data?.user?.name ?? ""}   
-                        disabled
-                        onKeyDown={DisabledEditName}
-                        onKeyUp={DisabledChecklistIconInInputName}
-                        ref={DisplayNoneInputNameRef}/>    
+              {ShowTagInputName()}
+              <input type="text" 
+                     name="username" 
+                     className="focus:outline-none px-1 py-1 -translate-y-6 min-w-24 text-white bg-orange-600 focus:border-b-4"
+                     defaultValue={session?.user?.name ?? ""}   
+                     disabled
+                     onChange={e => SetUpdateUsername(e.target.value)}/>     
             </div>  
-            <div className="flex flex-row translate-y-10 translate-x-10">
+            <div className="flex flex-row translate-y-10 translate-x-6">
               {ShowEditIconInInputName()}
               {ChangeChecklistIconInNameInput()}
             </div>
@@ -363,17 +465,34 @@ const ProfilePageComponent = () =>
               <h4 className="text-zinc-400 font-bold">Email</h4>
               {ShowTagInputEmail()}
               <input type="text"
-                     name="" 
-                     className="focus:outline-none px-1 py-1 -translate-y-9 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
-                     value={session.data?.user?.email ?? ""}
+                     className="focus:outline-none px-1 py-1 -translate-y-9 min-w-24 text-white bg-red-500 focus:border-b-4 border-b-cyan-700" 
                      disabled
                      onKeyDown={DisabledEditEmail}
                      onKeyUp={DisabledChecklistIconInInputEmail}
-                     ref={DisplayNoneInputEmailRef}/>
+                     ref={DisplayNoneInputEmailRef}
+                     defaultValue={session?.user?.email ?? ""}
+                     onChange={e => SetUpdateEmail(e.target.value)}/>
             </div>
             <div className="flex flex-row translate-y-10 translate-x-10">
               {ShowEditIconInInputEmail()}
               {ChangeChecklistIconInEmailInput()}
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className="flex flex-col gap-2">
+              <h4 className="text-zinc-400 font-bold">Id</h4>
+              <input type="text" 
+                      name=''
+                      disabled
+                      className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950"
+                      value={session?.user?.id ?? ""}
+                      readOnly/>
+            </div>
+            <div className="flex flex-row translate-y-10 translate-x-10">
+              <FontAwesomeIcon 
+                icon={faClipboard} 
+                style={{color: "#ffffff"}}
+                className="cursor-pointer"/>
             </div>
           </div>
           <div className="flex flex-row">
@@ -386,14 +505,15 @@ const ProfilePageComponent = () =>
                      disabled
                      onKeyDown={DisabledEditInformation}
                      onKeyUp={DisabledChecklistIconInInputInformation}
-                     ref={DisplayNoneInputInformationRef}/>
+                     ref={DisplayNoneInputInformationRef}
+                     onChange={e => SetUpdateInformation(e.target.value)}/>
             </div>
             <div className="flex flex-row translate-y-10 translate-x-10">
               {ShowEditIconInInputInformation()} 
               {ChangeChecklistIconInInformationInput()}
             </div>
           </div>
-          <div className="flex flex-col gap-3">
+          {/* <div className="flex flex-col gap-3 -translate-y-3">
             <h3 className="text-zinc-400 font-bold">Pilih info</h3>
             <Select>
               <SelectTrigger className="w-[180px]">
@@ -410,7 +530,7 @@ const ProfilePageComponent = () =>
                 </SelectGroup>
               </SelectContent>
             </Select>
-          </div>  
+          </div>   */}
         </div>
       </div>
     </>
