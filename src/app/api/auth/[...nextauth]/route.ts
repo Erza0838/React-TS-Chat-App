@@ -7,7 +7,9 @@ import { Adapter } from "next-auth/adapters"
 import bcrypt from "bcrypt"
 import { User } from "lucide-react"
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+    log: ["query","info","warn","error"]
+})
 
 const handler = NextAuth(
 {   
@@ -35,7 +37,6 @@ const handler = NextAuth(
                 {
                     return null
                 }
-                console.log("Data credential : " + credentials)
                 try 
                 {
                     // Call your authentication function
@@ -54,11 +55,18 @@ const handler = NextAuth(
                     })
 
                     if(!user) 
-                    {
+                    {   
+                        console.log("User email : " + credentials.email + "tidak ada") 
                         return null
                     }
+
+                    if(user) 
+                    {
+                        console.log("Query user : " + JSON.stringify(user))
+                        console.log("Credential user : " + JSON.stringify(credentials))
+                    }
                     
-                    const isPasswordValid = await bcrypt.compare(credentials?.password,user?.Password)
+                    const isPasswordValid = await bcrypt.compare(credentials?.password, user?.Password)
                     if(isPasswordValid && user)
                     {   
                         return {
@@ -67,7 +75,7 @@ const handler = NextAuth(
                             name: user?.Username
                         }
                     }   
-                    return null
+                    return user
                 }
                 catch(error) 
                 {
@@ -86,12 +94,17 @@ const handler = NextAuth(
             }
             if(user) 
             {   
-                token.email = user.email,
-                token.name = user.name
-                token.sub = user.id
+                token.email = user.email as string | undefined
+                token.name = user.name as string | undefined
+                token.sub = user.id as string | undefined
+                console.log("User object: ", user)
             }
-            // return token
-            return { ...token, ...user }
+            if(!user) 
+            {
+                console.log("User object kosong")
+            }
+            console.log("JWT token : " + JSON.stringify(token))
+            return token
         },
         async session({token,session,user,trigger}) 
         {   
@@ -100,13 +113,10 @@ const handler = NextAuth(
                 session.user = {
                     email: token.email,
                     name: token.name,
-                    id: token.sub
+                    id: token.sub 
                 }
-                // session.user = {
-                //     email: token.email,
-                //     name: token.name
-                // }
             }
+            console.log("Session object : " + JSON.stringify(session))
             return session
         }
     }

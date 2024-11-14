@@ -48,7 +48,7 @@ export const UpdateUsernameValidationSchema = z.object(
 {
     username: z.string().trim().min(1, 
     {
-        message: "username minimal 1 karakter"
+        message: "username tidak boleh kosong"
     }).max(20,{
         message: "username maksimal 20 karakter"
     })
