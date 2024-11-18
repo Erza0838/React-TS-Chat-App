@@ -121,7 +121,6 @@ const ProfilePageComponent = () =>
     }
   }
   // Baris akhir validasi zod username
-
   const DisabledEditName = (event: React.KeyboardEvent<HTMLInputElement>) =>
   {
     switch(event.key) 
@@ -336,11 +335,10 @@ const ProfilePageComponent = () =>
       return <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-row gap-2">
                   <input type="text" 
-                        id="username" 
-                        className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
-                        defaultValue={session?.user?.name ?? ""}   
-                        onKeyDown={DisabledEditName}
-                        onKeyUp={DisabledChecklistIconInInputName} 
+                         className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
+                         defaultValue={session?.user?.name ?? ""}   
+                         onKeyDown={DisabledEditName}
+                         onKeyUp={DisabledChecklistIconInInputName} 
                         // ref={AutoFocusInputNameRef}
                         {...register("username")}/>                                          
                   <Button type="submit" style={{backgroundColor: "rgb(8 51 68)"}}>  
@@ -360,11 +358,10 @@ const ProfilePageComponent = () =>
       return <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex flex-row gap-2">
                   <input type="text" 
-                        id="username" 
-                        className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
-                        defaultValue={session?.user?.name ?? ""}   
-                        onKeyDown={DisabledEditName}
-                        onKeyUp={DisabledChecklistIconInInputName} 
+                         className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
+                         defaultValue={session?.user?.name ?? ""}   
+                         onKeyDown={DisabledEditName}
+                         onKeyUp={DisabledChecklistIconInInputName} 
                         // onChange={e => SetUpdateUsername(e.target.value)}
                         // ref={AutoFocusInputNameRef}
                         {...register("username")}/>                                          

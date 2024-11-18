@@ -5,11 +5,9 @@ import { getServerSession } from "next-auth"
 // export const PUT = async (request: NextRequest,response: NextResponse) =>
 export const POST = async (request: NextRequest,response: NextResponse) =>
 {   
-    const {username,userId} = await request.json()
+    const {username} = await request.json()
     const session = await getServerSession()
     console.log("Username dari request body : " + JSON.stringify(username))
-    console.log("Id dari request body : " + JSON.stringify(userId))
-    console.log("ID dari session : " + session?.user.id)
     console.log("Username dari session : " + session?.user.name)
     try 
     {   
@@ -26,13 +24,20 @@ export const POST = async (request: NextRequest,response: NextResponse) =>
         })
         if(!DoesUsernameValid) 
         {
-            return NextResponse.json({error: "User tidak ditemukan"},{status: 400})   
+            return NextResponse.json({error: "User : " + session?.user.name + " tidak ada"},{status: 400})   
         }
 
         if(!session) 
         {
             return NextResponse.json({error: "Login gagal"},{status: 400})
         }
+
+        if(!session.user.id) 
+        {
+            // return NextResponse.json({error: "Id tidak ditemukan"},{status: 400})
+            console.log("Id tidak ditemukan")
+        }
+        
 
         const UpdateUsername = await prisma.userModel.update({
             where: 

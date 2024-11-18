@@ -6,6 +6,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import { Adapter } from "next-auth/adapters"
 import bcrypt from "bcrypt"
 import { User } from "lucide-react"
+import { getServerSession } from "next-auth"
 
 const prisma = new PrismaClient({
     log: ["query","info","warn","error"]
@@ -60,12 +61,6 @@ const handler = NextAuth(
                         return null
                     }
 
-                    if(user) 
-                    {
-                        console.log("Query user : " + JSON.stringify(user))
-                        console.log("Credential user : " + JSON.stringify(credentials))
-                    }
-                    
                     const isPasswordValid = await bcrypt.compare(credentials?.password, user?.Password)
                     if(isPasswordValid && user)
                     {   
@@ -94,19 +89,27 @@ const handler = NextAuth(
             }
             if(user) 
             {   
-                token.email = user.email as string | undefined
-                token.name = user.name as string | undefined
-                token.sub = user.id as string | undefined
-                console.log("User object: ", user)
+                token.email = user.email 
+                token.name = user.name 
+                token.sub = user.id 
+                // token.user = {
+                //     email: token.email,
+                //     name: token.name,
+                //     id: token.sub 
+                // }
             }
-            if(!user) 
+            console.log('jwt callback', 
             {
-                console.log("User object kosong")
-            }
-            console.log("JWT token : " + JSON.stringify(token))
+                token,
+                trigger,
+                user,
+                session,
+            })
+            const sessionId = await getServerSession()
+            console.log("Session id : " + sessionId?.user.id)    
             return token
         },
-        async session({token,session,user,trigger}) 
+        async session({token,session}) 
         {   
             if(token) 
             {   
@@ -116,9 +119,13 @@ const handler = NextAuth(
                     id: token.sub 
                 }
             }
-            console.log("Session object : " + JSON.stringify(session))
+            console.log("Session callback", 
+            {
+                token,
+                session
+            })
             return session
-        }
+        },
     }
 })
 
