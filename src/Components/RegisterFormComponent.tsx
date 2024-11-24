@@ -100,7 +100,7 @@ export default function RegisterFormComponent()
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input type="text" {...field} className="font-medium" value={"hana"} onChange={e => e.target.value}/>
+                      <Input type="text" {...field} className="font-medium" onChange={e => e.target.value} autoFocus/>
                     </FormControl>
                   <FormMessage />
                 </FormItem>

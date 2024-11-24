@@ -1,10 +1,8 @@
 "use client"
 import { faClone, faMessage, faSquarePlus, faUserCircle, faGear,faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { UserModel } from "@prisma/client"
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 
 export const SidebarElement = () =>
 { 

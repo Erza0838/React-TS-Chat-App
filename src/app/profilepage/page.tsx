@@ -1,43 +1,18 @@
 "use client"
 import React, { useState } from 'react'
-import { UserModel } from '@prisma/client'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { getServerSession } from 'next-auth/next'
-import { getSession, signOut, useSession } from 'next-auth/react'
-import { SessionProviderProps } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import { useEffect } from 'react'
 import { useForm } from "react-hook-form"
+import { SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import z from "zod"
-import { Input } from '@/Components/ui/input'
 import { useRef } from 'react'
 import toast from 'react-hot-toast'
-
-// Import component
-import 
-{
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/Components/ui/form"
-import
-{
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/Components/ui/select"
 import { faUserCircle,faEdit,faCheck,faClipboard } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '@/Components/ui/button'
 import { SidebarElement } from '../SidebarElement'
-import InputProfileHandler from '@/EventHandler/ProfilepageEventHandler/InputProfileHandler'
 // Baris akhir import component
 import { UpdateUsernameValidationSchema } from '@/lib/validations/UserInformationValidation'
 import { reloadSession } from '@/lib/ReloadSession'
@@ -45,7 +20,6 @@ import { reloadSession } from '@/lib/ReloadSession'
 const ProfilePageComponent = () =>
 { 
   const {data: session, update} = useSession()
-  // const session = await getSession()
 
   const AutoFocusInputNameRef = useRef<HTMLInputElement>(null)
   const DisplayNoneInputNameRef = useRef<HTMLInputElement>(null)
@@ -65,8 +39,26 @@ const ProfilePageComponent = () =>
   const [UpdateEmail,SetUpdateEmail] = useState<string>("")
   const [UpdatInformation,SetUpdateInformation] = useState<string>("")
 
-  let [Focus,setFocus] = useState<boolean>(false)
-  
+
+  // const AutoFocusInputRef = () =>
+  // {
+  //   const setFocus = () =>
+  //   {
+  //     const element = AutoFocusInputNameRef.current
+  //     element && element.focus()
+  //   }
+  //   return [setFocus,AutoFocusInputNameRef] as const 
+  // }
+
+  useEffect(() => 
+  {
+    if(session && session.user.name) 
+    {
+      SetUpdateUsername(session.user.name)
+    }
+    // AutoFocusInputNameRef.current && AutoFocusInputNameRef.current?.focus()
+  },[session])
+
   // Validasi zod username
   type UpdateUsernameFormValues = z.infer<typeof UpdateUsernameValidationSchema>
 
@@ -79,48 +71,64 @@ const ProfilePageComponent = () =>
     return { register, handleSubmit, formState } 
   }
   const {register,handleSubmit,formState: {errors}} = UpdateUsernameProfileForm()
-  const onSubmit = async (data: UpdateUsernameFormValues) => 
+  
+  const SubmitNewUsername:SubmitHandler<UpdateUsernameFormValues>  = async (data: UpdateUsernameFormValues) => 
   {
     console.log("Submitted data: ",data)
     try 
-    {
+    {                                              
       const response = await fetch("/api/profileapi/updateusernameprofile",
       {
-        method: "POST",
+        method: "PUT",
         headers: 
         {
           "Content-Type":"application/json"
         },
-        body: JSON.stringify(data.username)
+        body: JSON.stringify(data.Username)
       }) 
       if(!response.ok) 
       {
           throw new Error("Network response error")
       }
       const result = await response.json()
-      console.log("Respon server : " + result)
       if(result.error) 
       {
         toast.error(result.error)
         return
       }
-        // update({
-        //   ...session,
-        //   user: 
-        //   {
-        //     ...session?.user,
-        //     username: 
-        //   }
-        // })
-        // reloadSession()
-        toast.success("Username diubah!")
+      if(session && session.user) 
+      {
+        try 
+        {
+          await update({
+            ...session,
+            user: 
+            {
+              ...session?.user,
+              name: data.Username
+            }
+          })
+          SetUpdateUsername(data.Username)
+          reloadSession() 
+        } 
+        catch (error) 
+        {
+          console.log("Error update session : " + error) 
+          toast.error("Update username gagal")
+        }
+      }
     } 
     catch(error) 
     {
       console.error("Error submit form : " + error)
     }
+    finally
+    {
+      toast.success("Username diubah!")
+    }
   }
   // Baris akhir validasi zod username
+  
   const DisabledEditName = (event: React.KeyboardEvent<HTMLInputElement>) =>
   {
     switch(event.key) 
@@ -178,6 +186,7 @@ const ProfilePageComponent = () =>
     if(DisplayNoneInputNameRef.current) 
     {
       DisplayNoneInputNameRef.current.style.display = "none"
+      // DisplayNoneInputNameRef.current.style.borderBottomWidth = "1px solid white"
     } 
     return null
   }
@@ -204,20 +213,15 @@ const ProfilePageComponent = () =>
   {
     if(EditNameClickEvent === true) 
     {
-      AutoFocusInputNameRef.current?.focus()
+      AutoFocusInputNameRef.current && AutoFocusInputNameRef.current?.focus()
+      // AutoFocusInputRef
       SetDisplayNoneInputName()
-      return <Button type="submit" style={{backgroundColor: "rgb(8 51 68)"}}>  
-              <FontAwesomeIcon 
-              icon={faCheck} 
-              style={{color: "#ffffff"}}
-              className="cursor-pointer"/>
-            </Button>
     }
     if(EditNameClickEvent === false) 
     {
       return <FontAwesomeIcon 
-              icon={faCheck} 
-              className="hidden"/>
+                icon={faCheck} 
+                className="hidden"/>
     }
   }
 
@@ -279,16 +283,16 @@ const ProfilePageComponent = () =>
     if(EditNameClickEvent === false)
     {  
       return <FontAwesomeIcon 
-              icon={faEdit} 
-              style={{color: "#ffffff"}}
-              className="cursor-pointer"
-              onClick={() => ClickEditName(!EditNameClickEvent)}/>
+                icon={faEdit} 
+                style={{color: "#ffffff"}}
+                className="cursor-pointer z-20 bg-cyan-950 translate-y-1"
+                onClick={() => ClickEditName(!EditNameClickEvent)}/>
     } 
     if(EditNameClickEvent === true)
     {  
       return <FontAwesomeIcon 
-              icon={faEdit} 
-              className="hidden"/>
+                icon={faEdit} 
+                className="hidden"/>
     } 
   }
 
@@ -332,15 +336,37 @@ const ProfilePageComponent = () =>
   {   
     if(EditNameClickEvent === false) 
     { 
-      return <form onSubmit={handleSubmit(onSubmit)}>
+      return <form onSubmit={handleSubmit(SubmitNewUsername)}>
                 <div className="flex flex-row gap-2">
                   <input type="text" 
                          className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
-                         defaultValue={session?.user?.name ?? ""}   
-                         onKeyDown={DisabledEditName}
-                         onKeyUp={DisabledChecklistIconInInputName} 
+                         value={UpdateUsername}
+                         {...register("Username")}
+                        //  ref={AutoFocusInputNameRef}
+                         onChange={(e) => SetUpdateUsername(e.target.value)}/>                                          
+                  <Button type="submit" style={{backgroundColor: "rgb(8 51 68)"}}>  
+                  {/* <Button type="submit" style={{backgroundColor: "orange"}}>   */}
+                    <FontAwesomeIcon 
+                        icon={faCheck} 
+                        style={{color: "#ffffff"}}
+                        className="cursor-pointer"/>
+                  </Button>
+                </div>
+                <div className="flex flex-row">
+                  {errors.Username && <span className="text-red-500">{errors.Username.message}</span>}
+                </div>  
+            </form>
+    }
+    if(EditNameClickEvent === true) 
+    { 
+      return <form onSubmit={handleSubmit(SubmitNewUsername)}>
+                <div className="flex flex-row gap-2">
+                  <input type="text" 
+                        className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
+                        value={UpdateUsername}
+                        {...register("Username")}
                         // ref={AutoFocusInputNameRef}
-                        {...register("username")}/>                                          
+                        onChange={(e) => SetUpdateUsername(e.target.value)}/>                                          
                   <Button type="submit" style={{backgroundColor: "rgb(8 51 68)"}}>  
                     <FontAwesomeIcon 
                         icon={faCheck} 
@@ -349,31 +375,7 @@ const ProfilePageComponent = () =>
                   </Button>
                 </div>
                 <div className="flex flex-row">
-                  {errors.username && <span className="text-red-500">{errors.username.message}</span>}
-                </div>  
-            </form>
-    }
-    if(EditNameClickEvent === true) 
-    { 
-      return <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex flex-row gap-2">
-                  <input type="text" 
-                         className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
-                         defaultValue={session?.user?.name ?? ""}   
-                         onKeyDown={DisabledEditName}
-                         onKeyUp={DisabledChecklistIconInInputName} 
-                        // onChange={e => SetUpdateUsername(e.target.value)}
-                        // ref={AutoFocusInputNameRef}
-                        {...register("username")}/>                                          
-                  <Button type="submit" style={{backgroundColor: "rgb(8 51 68)",color: "white"}}>  
-                    <FontAwesomeIcon 
-                        icon={faCheck} 
-                        style={{color: "#ffffff"}}
-                        className="cursor-pointer"/>
-                  </Button>
-                </div>
-                <div className="flex flex-row">
-                  {errors.username && <span className="text-red-500">{errors.username.message}</span>}
+                  {errors.Username && <span className="text-red-500">{errors.Username.message}</span>}
                 </div>  
             </form>
     }
@@ -386,10 +388,7 @@ const ProfilePageComponent = () =>
       return <input type="text" 
                     name="username" 
                     className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
-                    defaultValue={session?.user?.name ?? ""}   
-                    onKeyDown={DisabledEditName}
-                    onKeyUp={DisabledChecklistIconInInputName} 
-                    ref={AutoFocusInputNameRef}
+                    value={session?.user?.email ?? ""}    
                     onChange={e => SetUpdateUsername(e.target.value)}/>     
     }
     if(EditEmailClickEvent === true) 
@@ -397,10 +396,7 @@ const ProfilePageComponent = () =>
       return <input type="text" 
                     name="username" 
                     className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
-                    defaultValue={session?.user?.name ?? ""}   
-                    onKeyDown={DisabledEditName}
-                    onKeyUp={DisabledChecklistIconInInputName} 
-                    ref={AutoFocusInputNameRef}
+                    value={session?.user?.email ?? ""}   
                     onChange={e => SetUpdateUsername(e.target.value)}/>     
     }
   }
@@ -441,28 +437,18 @@ const ProfilePageComponent = () =>
             <div className="flex flex-col gap-2">
               <h4 className="text-zinc-400 font-bold">Nama</h4>
               {ShowTagInputName()}
-              {/* <form onSubmit={handleSubmit(onSubmit)}>
-                  <div className="flex flex-row gap-2">
-                    <input type="text"
-                           className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
-                           disabled
-                           defaultValue={session?.user.name ?? ""}
-                           onKeyDown={DisabledEditName}
-                           onKeyUp={DisabledChecklistIconInInputName}
-                           {...register("username"), {onChange: e => SetUpdateUsername(e.target.value)}}/>
-                     <Button type="submit" style={{backgroundColor: "rgb(8 51 68)"}}>  
-                      <FontAwesomeIcon 
-                          icon={faCheck} 
-                          style={{color: "#ffffff"}}
-                          className="cursor-pointer"/>
-                    </Button>
-                  </div>
-                  <div className="flex flex-row">
-                    {errors.username && <span className="text-red-500">{errors.username.message}</span>}
-                  </div>
-              </form> */}
+              <div className="flex flex-row gap-2 -translate-y-12">
+                <input type="text" 
+                      className="focus:outline-none px-1 py-2 min-w-24 text-white bg-cyan-700 focus:border-b-4"
+                      value={UpdateUsername}
+                      disabled
+                      // onKeyDown={DisabledEditInformation}
+                      // onKeyUp={DisabledChecklistIconInInputInformation}
+                      // ref={DisplayNoneInputNameRef}
+                      onChange={(e) => SetUpdateUsername(e.target.value)}/>
+              </div>
             </div>  
-            <div className="flex flex-row translate-y-10 translate-x-6">
+            <div className="flex flex-row translate-y-10 -translate-x-8">
               {ShowEditIconInInputName()}
               {ChangeChecklistIconInNameInput()}
             </div>
@@ -476,7 +462,6 @@ const ProfilePageComponent = () =>
                      disabled
                      onKeyDown={DisabledEditEmail}
                      onKeyUp={DisabledChecklistIconInInputEmail}
-                     ref={DisplayNoneInputEmailRef}
                      defaultValue={session?.user?.email ?? ""}
                      onChange={e => SetUpdateEmail(e.target.value)}/>
             </div>

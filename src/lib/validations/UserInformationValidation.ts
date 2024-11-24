@@ -46,10 +46,16 @@ export const LoginDataValidationSchema = z.object(
 
 export const UpdateUsernameValidationSchema = z.object(
 {
-    username: z.string().trim().min(1, 
+    Username: z.string().trim().min(1, 
     {
         message: "username tidak boleh kosong"
     }).max(20,{
         message: "username maksimal 20 karakter"
-    })
+    }),
+    // Email: z.string().trim().min(4, 
+    // {
+    //     message: "Email tidak boleh kosong"
+    // }).max(20,{
+    //     message: "Email maksimal 20 karakter"
+    // })
 })
