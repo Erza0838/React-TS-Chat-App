@@ -10,17 +10,24 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import z from "zod"
 import { useRef } from 'react'
 import toast from 'react-hot-toast'
-import { faUserCircle,faEdit,faCheck,faClipboard } from '@fortawesome/free-solid-svg-icons'
+import { faUserCircle,faEdit,faCheck,faClipboard,faSmile } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '@/Components/ui/button'
 import { SidebarElement } from '../SidebarElement'
+
 // Baris akhir import component
+import EmojiPicker from '@/Components/ui/EmojiPicker'
+import EmojiComponent from '@/Components/ui/Emoji'
 import { UpdateUsernameValidationSchema } from '@/lib/validations/UserInformationValidation'
 import { reloadSession } from '@/lib/ReloadSession'
+
+// Bagian untuk import Array 
+import { Emoji } from '@/Helper/ProfilePage/EmojiList'
 
 const ProfilePageComponent = () =>
 { 
   const {data: session, update} = useSession()
 
+  // useRef untuk input tag
   const AutoFocusInputNameRef = useRef<HTMLInputElement>(null)
   const DisplayNoneInputNameRef = useRef<HTMLInputElement>(null)
   const AutoFocusInputEmailRef = useRef<HTMLInputElement>(null)
@@ -28,27 +35,66 @@ const ProfilePageComponent = () =>
   const AutoFocusInputInformationRef = useRef<HTMLInputElement>(null)
   const DisplayNoneInputInformationRef = useRef<HTMLInputElement>(null)
 
+  // useRef untuk update button
+  const SubmitNewUsernameWithEnterKeyRef = useRef<HTMLButtonElement>(null)
+
+  // State untuk tombol emoji
+  const [ShowEmojiComponent,SetShowEmojiComponent] = useState<boolean>(false)
+
   // State untuk mouse event
   let [EditNameClickEvent,setEditNameClickEvent] = useState<boolean>(false)
   let [EditEmailClickEvent,setEditEmailClickEvent] = useState<boolean>(false)
   let [EditInformationClickEvent,setEditInformationClickEvent] = useState<boolean>(false)
   const [ChecklistIconInNameInput,setChecklistIconInNameInput] = useState<boolean>(false)
+  const [SelectedEmoji,SetSelectedEmoji] = useState<string>("")
+
+  console.log("Emoji : " + SelectedEmoji)
+
+  // // useRef untuk tombol emoji
+  const ShowEmojiPickerRef = useRef<HTMLDivElement>(null)
+
+  // Bagian function untuk emoji
+  // Function untuk menghilangkan emoji picker
+  function HideEmojiPickerWithEscKey(event: React.KeyboardEvent<SVGSVGElement>) 
+  {
+    switch(event.key) 
+    { 
+      case "Escape" : 
+      {
+          if(ShowEmojiPickerRef.current) 
+          {
+            ShowEmojiPickerRef.current.style.display = "none"
+          }
+      }
+      break
+    }
+  }
+
+  const ChoseEmoji = (ClickEmoji: string) =>
+    {
+      SetSelectedEmoji(ClickEmoji)
+    }
+
+  // Function untuk menampilkan emoji picker
+  function ShowEmojiPicker()
+  {
+    if(ShowEmojiComponent === true) 
+    {   
+      return <div className="flex flex-row justify-center bg-white w-44 h-16 absolute left-80 top-8 z-10 rounded-sm">        
+              {Emoji.unicode.map((emoji,index) => 
+              ( 
+                <p key={index} dangerouslySetInnerHTML={{__html: emoji}} className="cursor-pointer bg-cyan-700" onClick={() => ChoseEmoji(emoji)}/> 
+              ))}
+            </div>
+    }
+  }
+  // Baris akhir function emoji
 
   // State untuk tag input update profile
   const [UpdateUsername,SetUpdateUsername] = useState<string>("")
   const [UpdateEmail,SetUpdateEmail] = useState<string>("")
   const [UpdatInformation,SetUpdateInformation] = useState<string>("")
-
-
-  // const AutoFocusInputRef = () =>
-  // {
-  //   const setFocus = () =>
-  //   {
-  //     const element = AutoFocusInputNameRef.current
-  //     element && element.focus()
-  //   }
-  //   return [setFocus,AutoFocusInputNameRef] as const 
-  // }
+  // const [Emoji,SetEmoji] = useState<string>("")
 
   useEffect(() => 
   {
@@ -56,8 +102,8 @@ const ProfilePageComponent = () =>
     {
       SetUpdateUsername(session.user.name)
     }
-    // AutoFocusInputNameRef.current && AutoFocusInputNameRef.current?.focus()
   },[session])
+
 
   // Validasi zod username
   type UpdateUsernameFormValues = z.infer<typeof UpdateUsernameValidationSchema>
@@ -84,7 +130,10 @@ const ProfilePageComponent = () =>
         {
           "Content-Type":"application/json"
         },
-        body: JSON.stringify(data.Username)
+        body: JSON.stringify({
+          Username: data.Username,
+          Emoji: SelectedEmoji
+        })
       }) 
       if(!response.ok) 
       {
@@ -105,7 +154,8 @@ const ProfilePageComponent = () =>
             user: 
             {
               ...session?.user,
-              name: data.Username
+              name: data.Username,
+              emoji: SelectedEmoji
             }
           })
           SetUpdateUsername(data.Username)
@@ -129,11 +179,16 @@ const ProfilePageComponent = () =>
   }
   // Baris akhir validasi zod username
   
+  // Bagian keyboard event "ESC" untuk mengembalikan input disable
   const DisabledEditName = (event: React.KeyboardEvent<HTMLInputElement>) =>
   {
     switch(event.key) 
     {
       case "Escape" : setEditNameClickEvent(false)
+                      if(DisplayNoneInputNameRef.current) 
+                      {
+                        DisplayNoneInputNameRef.current.style.display = "block"   
+                      }
         break
     }
   }
@@ -153,7 +208,9 @@ const ProfilePageComponent = () =>
         break
     }
   }
+  // Bagian akhir keyboard event "ESC" input disable
 
+  // Bagian keyboard event "ESC" untuk menghilangkan tombol edit
   const DisabledChecklistIconInInputName = (event: React.KeyboardEvent<HTMLInputElement>) => 
   {
     switch(event.key) 
@@ -180,13 +237,28 @@ const ProfilePageComponent = () =>
         break
     }
   }
+  // Bagian akhir keyboard event "ESC" tombol edit
 
+  // Function untuk mengirim data terbaru menggunakan tombol Enter
+  const SendNewUserNameToApiWithEnterKey = (event: React.KeyboardEvent<HTMLInputElement>) =>
+  {
+    switch(event.key) 
+    {
+      case "Enter" : if(SubmitNewUsernameWithEnterKeyRef.current) 
+                      {
+                        SubmitNewUsernameWithEnterKeyRef.current.focus()
+                      }
+        break
+    }
+  }
+  // SendNewUserNameToApiWithEnterKey()
+
+  // Function untuk menghilangkan input disable
   function SetDisplayNoneInputName()
   {
     if(DisplayNoneInputNameRef.current) 
     {
       DisplayNoneInputNameRef.current.style.display = "none"
-      // DisplayNoneInputNameRef.current.style.borderBottomWidth = "1px solid white"
     } 
     return null
   }
@@ -208,17 +280,16 @@ const ProfilePageComponent = () =>
     } 
     return null
   }
+  // Bagian akhir function
   
   function ChangeChecklistIconInNameInput() 
   {
     if(EditNameClickEvent === true) 
     {
-      AutoFocusInputNameRef.current && AutoFocusInputNameRef.current?.focus()
-      // AutoFocusInputRef
       SetDisplayNoneInputName()
     }
     if(EditNameClickEvent === false) 
-    {
+    { 
       return <FontAwesomeIcon 
                 icon={faCheck} 
                 className="hidden"/>
@@ -229,12 +300,7 @@ const ProfilePageComponent = () =>
   {
     if(EditEmailClickEvent === true) 
     { 
-      AutoFocusInputEmailRef.current?.focus()
       SetDisplayNoneInputEmail()
-      return <FontAwesomeIcon 
-              icon={faCheck} 
-              style={{color: "#ffffff"}}
-              className="cursor-pointer"/>
     }
     if(EditEmailClickEvent === false) 
     {
@@ -261,6 +327,10 @@ const ProfilePageComponent = () =>
               icon={faCheck} 
               className="hidden"/>
     }
+  }
+
+  function ClickEmojiButton(ClickEmojiButtonState: boolean) {
+    SetShowEmojiComponent(ClickEmojiButtonState)
   }
 
   function ClickEditName(ClickEditNamestate: boolean)
@@ -334,45 +404,39 @@ const ProfilePageComponent = () =>
 
   function ShowTagInputName()
   {   
-    if(EditNameClickEvent === false) 
-    { 
-      return <form onSubmit={handleSubmit(SubmitNewUsername)}>
-                <div className="flex flex-row gap-2">
-                  <input type="text" 
-                         className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
-                         value={UpdateUsername}
-                         {...register("Username")}
-                        //  ref={AutoFocusInputNameRef}
-                         onChange={(e) => SetUpdateUsername(e.target.value)}/>                                          
-                  <Button type="submit" style={{backgroundColor: "rgb(8 51 68)"}}>  
-                  {/* <Button type="submit" style={{backgroundColor: "orange"}}>   */}
-                    <FontAwesomeIcon 
-                        icon={faCheck} 
-                        style={{color: "#ffffff"}}
-                        className="cursor-pointer"/>
-                  </Button>
-                </div>
-                <div className="flex flex-row">
-                  {errors.Username && <span className="text-red-500">{errors.Username.message}</span>}
-                </div>  
-            </form>
-    }
     if(EditNameClickEvent === true) 
     { 
       return <form onSubmit={handleSubmit(SubmitNewUsername)}>
                 <div className="flex flex-row gap-2">
                   <input type="text" 
-                        className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
-                        value={UpdateUsername}
-                        {...register("Username")}
-                        // ref={AutoFocusInputNameRef}
-                        onChange={(e) => SetUpdateUsername(e.target.value)}/>                                          
-                  <Button type="submit" style={{backgroundColor: "rgb(8 51 68)"}}>  
-                    <FontAwesomeIcon 
-                        icon={faCheck} 
+                         className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-700 focus:border-b-4 font-serif md:font-serif"
+                         value={UpdateUsername + SelectedEmoji}
+                        //  value={UpdateUsername}
+                         {...register("Username")}
+                         onChange={(e) => SetUpdateUsername(e.target.value)}
+                         onKeyDown={DisabledEditName}
+                         onKeyUp={SendNewUserNameToApiWithEnterKey}
+                         autoFocus={true}/>                        
+                  {/* <span>{SelectedEmoji}</span> */}
+                  <div className="flex flex-row gap-1 absolute left-64" style={{backgroundColor: "rgb(8 51 68)"}}>
+                    <FontAwesomeIcon
+                        icon={faSmile}
                         style={{color: "#ffffff"}}
-                        className="cursor-pointer"/>
-                  </Button>
+                        className="cursor-pointer box-border translate-y-3 bg-red-500 w-5 h-5"
+                        onClick={() => ClickEmojiButton(!ShowEmojiComponent)}
+                        onKeyUp={HideEmojiPickerWithEscKey}
+                        tabIndex={0}
+                        aria-hidden='false'/>
+                    <Button 
+                      type="submit" 
+                      style={{backgroundColor: "rgb(8 51 68)"}} 
+                      ref={SubmitNewUsernameWithEnterKeyRef}>  
+                        <FontAwesomeIcon 
+                            icon={faCheck} 
+                            style={{color: "#ffffff"}}
+                            className="cursor-pointer box-border"/>
+                    </Button>
+                  </div>
                 </div>
                 <div className="flex flex-row">
                   {errors.Username && <span className="text-red-500">{errors.Username.message}</span>}
@@ -427,6 +491,7 @@ const ProfilePageComponent = () =>
   
   return(
     <>
+      {ShowEmojiPicker()}
       <SidebarElement></SidebarElement>
       <div className="inline-block bg-cyan-950 h-lvh w-80 overflow-auto touch-pan-x absolute left-16  overflow-y-hidden">
         <div className="flex flex-col gap-7 mx-3 my-6">
@@ -437,18 +502,16 @@ const ProfilePageComponent = () =>
             <div className="flex flex-col gap-2">
               <h4 className="text-zinc-400 font-bold">Nama</h4>
               {ShowTagInputName()}
-              <div className="flex flex-row gap-2 -translate-y-12">
+              <div className="flex flex-row gap-2">
                 <input type="text" 
-                      className="focus:outline-none px-1 py-2 min-w-24 text-white bg-cyan-700 focus:border-b-4"
-                      value={UpdateUsername}
-                      disabled
-                      // onKeyDown={DisabledEditInformation}
-                      // onKeyUp={DisabledChecklistIconInInputInformation}
-                      // ref={DisplayNoneInputNameRef}
-                      onChange={(e) => SetUpdateUsername(e.target.value)}/>
+                       className="focus:outline-none px-1 py-2 min-w-24 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
+                       value={UpdateUsername}
+                       disabled
+                       ref={DisplayNoneInputNameRef}
+                       onChange={(e) => SetUpdateUsername(e.target.value)}/>
               </div>
             </div>  
-            <div className="flex flex-row translate-y-10 -translate-x-8">
+            <div className="flex flex-row translate-y-10 translate-x-14">
               {ShowEditIconInInputName()}
               {ChangeChecklistIconInNameInput()}
             </div>

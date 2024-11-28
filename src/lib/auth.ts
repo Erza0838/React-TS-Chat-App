@@ -95,10 +95,15 @@ export const authOptions: NextAuthOptions =
                 session.user = {
                     email: token.email,
                     name: token.name,
-                    id: token.sub 
+                    id: token.sub,
                 }
             }
+            // session.user.emoji = user.emoji;
             return session
         },
+        // async session(session, user) {
+        //     session.user.emoji = user.emoji;
+        //     return session;
+        // },
     }
 }
