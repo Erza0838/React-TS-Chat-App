@@ -21,12 +21,11 @@ export const PUT = async (request: NextRequest,response: NextResponse) =>
                 Username: true
             }
         })
-        if(!DoesUsernameValid) 
-        {   
-            console.error("User : " + session?.user.name + " tidak ada")
-            return NextResponse.json({error: "User : " + session?.user.name + " tidak ada"},{status: 400})   
-        }
-
+        // if(!DoesUsernameValid) 
+        // {   
+        //     console.error("User : " + session?.user.name + " tidak ada")
+        //     return NextResponse.json({error: "User : " + session?.user.name + " tidak ada"},{status: 400})   
+        // }
         if(!session) 
         {
             console.error("Unauthorized")

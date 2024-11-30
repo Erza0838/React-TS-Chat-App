@@ -22,6 +22,7 @@ import { reloadSession } from '@/lib/ReloadSession'
 
 // Bagian untuk import Array 
 import { Emoji } from '@/Helper/ProfilePage/EmojiList'
+import { Emoji2 } from '@/Helper/ProfilePage/EmojiList'
 
 const ProfilePageComponent = () =>
 { 
@@ -80,11 +81,21 @@ const ProfilePageComponent = () =>
   {
     if(ShowEmojiComponent === true) 
     {   
-      return <div className="flex flex-row justify-center bg-white w-44 h-16 absolute left-80 top-8 z-10 rounded-sm">        
+      return <div className="flex flex-row justify-center w-56 absolute left-80 top-8 z-10 rounded-sm">        
               {Emoji.unicode.map((emoji,index) => 
-              ( 
-                <p key={index} dangerouslySetInnerHTML={{__html: emoji}} className="cursor-pointer bg-cyan-700" onClick={() => ChoseEmoji(emoji)}/> 
-              ))}
+                ( 
+                  <span key={index} dangerouslySetInnerHTML={{__html: emoji}} className="cursor-pointer bg-cyan-700" onClick={() => ChoseEmoji(emoji)}/> 
+                ))
+              }
+              <div className="flex flex-col">
+                {Emoji2.unicode.map((emoji,index) => 
+                  ( 
+                    <div key={index} className="flex flex-row">
+                      <span key={index} dangerouslySetInnerHTML={{__html: emoji}} className="cursor-pointer bg-cyan-700" onClick={() => ChoseEmoji(emoji)}/>      
+                    </div>
+                  ))
+                }
+              </div>
             </div>
     }
   }
@@ -131,8 +142,7 @@ const ProfilePageComponent = () =>
           "Content-Type":"application/json"
         },
         body: JSON.stringify({
-          Username: data.Username,
-          Emoji: SelectedEmoji
+          Username: data.Username
         })
       }) 
       if(!response.ok) 
@@ -504,7 +514,7 @@ const ProfilePageComponent = () =>
               {ShowTagInputName()}
               <div className="flex flex-row gap-2">
                 <input type="text" 
-                       className="focus:outline-none px-1 py-2 min-w-24 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
+                       className="focus:outline-none px-1 py-2 min-w-32 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
                        value={UpdateUsername}
                        disabled
                        ref={DisplayNoneInputNameRef}
