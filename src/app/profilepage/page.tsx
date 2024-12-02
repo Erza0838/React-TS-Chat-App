@@ -15,14 +15,21 @@ import { Button } from '@/Components/ui/button'
 import { SidebarElement } from '../SidebarElement'
 
 // Baris akhir import component
-import EmojiPicker from '@/Components/ui/EmojiPicker'
-import EmojiComponent from '@/Components/ui/Emoji'
 import { UpdateUsernameValidationSchema } from '@/lib/validations/UserInformationValidation'
 import { reloadSession } from '@/lib/ReloadSession'
 
 // Bagian untuk import Array 
-import { Emoji } from '@/Helper/ProfilePage/EmojiList'
-import { Emoji2 } from '@/Helper/ProfilePage/EmojiList'
+import { FirstColumnEmoji } from '@/Helper/ProfilePage/EmojiList'
+import { SecondColumEmoji } from '@/Helper/ProfilePage/EmojiList'
+import { ThirdColumnEmoji } from '@/Helper/ProfilePage/EmojiList'
+import { FourthColumEmoji } from '@/Helper/ProfilePage/EmojiList'
+import { FifthColumnEmoji } from '@/Helper/ProfilePage/EmojiList'
+import { SixthColumnEmoji } from '@/Helper/ProfilePage/EmojiList'
+import { SeventhColumnEmoji } from '@/Helper/ProfilePage/EmojiList'
+import { EigthColumnEmoji } from '@/Helper/ProfilePage/EmojiList'
+import { NinthColumnEmoji } from '@/Helper/ProfilePage/EmojiList'
+import { TenthColumnEmoji } from '@/Helper/ProfilePage/EmojiList'
+import { EleventhColumnEmoji } from '@/Helper/ProfilePage/EmojiList'
 
 const ProfilePageComponent = () =>
 { 
@@ -48,8 +55,6 @@ const ProfilePageComponent = () =>
   let [EditInformationClickEvent,setEditInformationClickEvent] = useState<boolean>(false)
   const [ChecklistIconInNameInput,setChecklistIconInNameInput] = useState<boolean>(false)
   const [SelectedEmoji,SetSelectedEmoji] = useState<string>("")
-
-  console.log("Emoji : " + SelectedEmoji)
 
   // // useRef untuk tombol emoji
   const ShowEmojiPickerRef = useRef<HTMLDivElement>(null)
@@ -81,22 +86,85 @@ const ProfilePageComponent = () =>
   {
     if(ShowEmojiComponent === true) 
     {   
-      return <div className="flex flex-row justify-center w-56 absolute left-80 top-8 z-10 rounded-sm">        
-              {Emoji.unicode.map((emoji,index) => 
-                ( 
-                  <span key={index} dangerouslySetInnerHTML={{__html: emoji}} className="cursor-pointer bg-cyan-700" onClick={() => ChoseEmoji(emoji)}/> 
-                ))
-              }
-              <div className="flex flex-col">
-                {Emoji2.unicode.map((emoji,index) => 
+      return <div className="flex flex-col absolute translate-x-96 w-60 h-36 pt-4 top-8 z-10 bg-cyan-700 overflow-y-auto">
+              <div className="flex flex-row justify-center gap-1">          
+                {FirstColumnEmoji.unicode.map((emoji,index) => 
                   ( 
-                    <div key={index} className="flex flex-row">
-                      <span key={index} dangerouslySetInnerHTML={{__html: emoji}} className="cursor-pointer bg-cyan-700" onClick={() => ChoseEmoji(emoji)}/>      
-                    </div>
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
                   ))
                 }
               </div>
-            </div>
+              <div className="flex flex-row justify-center gap-1">        
+                {SecondColumEmoji.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-1">        
+                {ThirdColumnEmoji.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-1">        
+                {FourthColumEmoji.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-1">        
+                {FifthColumnEmoji.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-1">        
+                {SixthColumnEmoji.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-1">        
+                {SeventhColumnEmoji.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-1">        
+                {EigthColumnEmoji.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-1">        
+                {NinthColumnEmoji.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-1">        
+                {TenthColumnEmoji.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-1">        
+                {EleventhColumnEmoji.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+             </div>
     }
   }
   // Baris akhir function emoji
@@ -142,7 +210,8 @@ const ProfilePageComponent = () =>
           "Content-Type":"application/json"
         },
         body: JSON.stringify({
-          Username: data.Username
+          Username: data.Username,
+          Emoji: SelectedEmoji
         })
       }) 
       if(!response.ok) 
@@ -515,7 +584,7 @@ const ProfilePageComponent = () =>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                        className="focus:outline-none px-1 py-2 min-w-32 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                       value={UpdateUsername}
+                       value={UpdateUsername + SelectedEmoji}
                        disabled
                        ref={DisplayNoneInputNameRef}
                        onChange={(e) => SetUpdateUsername(e.target.value)}/>
