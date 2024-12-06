@@ -96,14 +96,10 @@ export const authOptions: NextAuthOptions =
                     email: token.email,
                     name: token.name,
                     id: token.sub,
+                    // emoji: session.user.emoji
                 }
             }
-            // session.user.emoji = user.emoji;
             return session
         },
-        // async session(session, user) {
-        //     session.user.emoji = user.emoji;
-        //     return session;
-        // },
     }
 }

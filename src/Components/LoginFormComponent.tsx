@@ -114,9 +114,6 @@ export default function LoginFormComponent()
                         <Button type="submit" disabled={isLoading}>
                             {isLoading ? "Loading..." : "Login"}
                         </Button>
-                        {/* <button type="submit" disabled={isLoading}>
-                            {isLoading ? "Loading..." : "Login"}
-                        </button> */}
                     </form>
                 </Form>
             </div>

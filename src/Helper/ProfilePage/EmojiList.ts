@@ -3,7 +3,7 @@ interface EmojiCode
     unicode: string[]
 }
 
-export const FirstColumnEmoji: Readonly<EmojiCode> = 
+export const FirstColumnEmojiSmileys: Readonly<EmojiCode> = 
 {
     unicode: 
     [
@@ -18,7 +18,8 @@ export const FirstColumnEmoji: Readonly<EmojiCode> =
     ]
 }
 
-export const SecondColumEmoji: Readonly<EmojiCode> = {
+export const SecondColumEmojiSmileys: Readonly<EmojiCode> = 
+{
     unicode: 
     [
         "😜",
@@ -32,7 +33,7 @@ export const SecondColumEmoji: Readonly<EmojiCode> = {
     ]
 }
 
-export const ThirdColumnEmoji: Readonly<EmojiCode> = 
+export const ThirdColumnEmojiSmileys: Readonly<EmojiCode> = 
 {
     unicode: 
     [
@@ -47,7 +48,7 @@ export const ThirdColumnEmoji: Readonly<EmojiCode> =
     ]
 }
 
-export const FourthColumEmoji: Readonly<EmojiCode> = 
+export const FourthColumEmojiSmileys: Readonly<EmojiCode> = 
 {
     unicode: 
     [
@@ -62,7 +63,7 @@ export const FourthColumEmoji: Readonly<EmojiCode> =
     ]
 }
 
-export const FifthColumnEmoji: Readonly<EmojiCode> = 
+export const FifthColumnEmojiSmileys: Readonly<EmojiCode> = 
 {
     unicode: 
     [
@@ -77,7 +78,7 @@ export const FifthColumnEmoji: Readonly<EmojiCode> =
     ]
 }
 
-export const SixthColumnEmoji: Readonly<EmojiCode> = 
+export const SixthColumnEmojiSmileys: Readonly<EmojiCode> = 
 {
     unicode: 
     [
@@ -92,7 +93,7 @@ export const SixthColumnEmoji: Readonly<EmojiCode> =
     ]
 }
 
-export const SeventhColumnEmoji: Readonly<EmojiCode> = 
+export const SeventhColumnEmojiSmileys: Readonly<EmojiCode> = 
 {
     unicode: 
     [
@@ -108,7 +109,7 @@ export const SeventhColumnEmoji: Readonly<EmojiCode> =
 
 }
 
-export const EigthColumnEmoji: Readonly<EmojiCode> = 
+export const EigthColumnEmojiSmileys: Readonly<EmojiCode> = 
 {
     unicode: 
     [
@@ -123,7 +124,7 @@ export const EigthColumnEmoji: Readonly<EmojiCode> =
     ]
 }
 
-export const NinthColumnEmoji: Readonly<EmojiCode> = 
+export const NinthColumnEmojiSmileys: Readonly<EmojiCode> = 
 {
     unicode: 
     [
@@ -138,7 +139,7 @@ export const NinthColumnEmoji: Readonly<EmojiCode> =
     ]
 }
 
-export const TenthColumnEmoji: Readonly<EmojiCode> = 
+export const TenthColumnEmojiSmileys: Readonly<EmojiCode> = 
 {
     unicode: 
     [
@@ -153,7 +154,7 @@ export const TenthColumnEmoji: Readonly<EmojiCode> =
     ]
 }
 
-export const EleventhColumnEmoji: Readonly<EmojiCode> = 
+export const EleventhColumnEmojiSmileys: Readonly<EmojiCode> = 
 {
     unicode: 
     [
@@ -168,7 +169,7 @@ export const EleventhColumnEmoji: Readonly<EmojiCode> =
     ]
 }
 
-export const TwelfthColumnEmoji: Readonly<EmojiCode> = 
+export const TwelfthColumnEmojiSmileys: Readonly<EmojiCode> = 
 {
     unicode: 
     [

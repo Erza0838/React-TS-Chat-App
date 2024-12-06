@@ -3,11 +3,14 @@ import { DefaultSession } from "next-auth"
 
 declare module "next-auth" 
 {
-    interface Session {
-        user: {
+    interface Session 
+    {
+        user: 
+        {
             id: string | null | undefined,
             email: string | null | undefined,
             name: string | null | undefined
+            // emoji: string | null | undefined
         } & DefaultSession["user"]  
     }
     // interface User {
