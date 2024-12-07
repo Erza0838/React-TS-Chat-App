@@ -18,18 +18,41 @@ import { UpdateUsernameValidationSchema } from '@/lib/validations/UserInformatio
 import { UpdateEmailValidationSchema } from '@/lib/validations/UserInformationValidation'
 import { reloadSession } from '@/lib/ReloadSession'
 
-// Bagian untuk import Array 
-import { FirstColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiList'
-import { SecondColumEmojiSmileys } from '@/Helper/ProfilePage/EmojiList'
-import { ThirdColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiList'
-import { FourthColumEmojiSmileys } from '@/Helper/ProfilePage/EmojiList'
-import { FifthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiList'
-import { SixthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiList'
-import { SeventhColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiList'
-import { EigthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiList'
-import { NinthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiList'
-import { TenthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiList'
-import { EleventhColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiList'
+// Bagian untuk import Array emoji wajah
+import { FirstColumnEmojiSmileys, TwelfthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
+import { SecondColumEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
+import { ThirdColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
+import { FourthColumEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
+import { FifthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
+import { SixthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
+import { SeventhColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
+import { EigthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
+import { NinthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
+import { TenthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
+import { EleventhColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
+
+// Bagian untuk import Array emoji tangan
+import { FirstColumnHandEmoji } from '@/Helper/ProfilePage/EmojiCollection/HandEmojiList'
+import { SecondColumnHandEmoji } from '@/Helper/ProfilePage/EmojiCollection/HandEmojiList'
+import { ThirdColumnHandEmoji } from '@/Helper/ProfilePage/EmojiCollection/HandEmojiList'
+import { FourthColumnHandEmoji } from '@/Helper/ProfilePage/EmojiCollection/HandEmojiList'
+import { FifthColumnHandEmoji } from '@/Helper/ProfilePage/EmojiCollection/HandEmojiList'
+
+// Bagian untuk import Array emoji hewan
+import { FirstColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { SecondColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { ThirdColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { FourthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { FifthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { SixthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { SeventhColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { EigthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { NinthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { TenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { EleventhColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { TwlefthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { ThirteenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { FourteenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
 
 const ProfilePageComponent = () =>
 { 
@@ -45,6 +68,7 @@ const ProfilePageComponent = () =>
 
   // useRef untuk update button
   const SubmitNewUsernameWithEnterKeyRef = useRef<HTMLButtonElement>(null)
+  const SubmitNewEmailWithEnterKeyRef = useRef<HTMLButtonElement>(null)
 
   // State untuk tombol emoji
   const [ShowEmojiComponent,SetShowEmojiComponent] = useState<boolean>(false)
@@ -118,7 +142,7 @@ const ProfilePageComponent = () =>
     
   const SubmitNewUsername:SubmitHandler<UpdateUsernameFormValues>  = async (data: UpdateUsernameFormValues) => 
   {
-    console.log("Submitted data: ",data)
+    console.log("Submitted username: ",data)
     try 
     {                                              
       const response = await fetch("/api/profileapi/updateusernameprofile",
@@ -129,9 +153,6 @@ const ProfilePageComponent = () =>
           "Content-Type":"application/json"
         },
         body: JSON.stringify(data)
-        // body: JSON.stringify({
-        //   Username: data.Username,
-        // })
       }) 
       if(!response.ok) 
       {
@@ -154,16 +175,14 @@ const ProfilePageComponent = () =>
             {
               ...session?.user,
               name: data.Username,
-              // emoji: SelectedEmoji
             }
           })
           SetUpdateUsername(data.Username)
-          // SetSelectedEmoji(SelectedEmoji)
           reloadSession() 
         } 
         catch (error) 
         {
-          console.log("Error update session : " + error) 
+          console.log("Error update session username : " + error) 
           toast.error("Update username gagal")
         }
       }
@@ -177,7 +196,64 @@ const ProfilePageComponent = () =>
       toast.success("Username diubah!")
     }
   }
-  // Baris akhir validasi zod username
+  // Baris akhir validasi zod email
+  const SubmitNewEmail:SubmitHandler<UpdateEmailFormValues>  = async (data: UpdateEmailFormValues) => 
+  {
+    console.log("Submitted email: ",data)
+    try 
+    {                                              
+      const response = await fetch("/api/profileapi/updateemailprofile",
+      {
+        method: "PUT",
+        headers: 
+        {
+          "Content-Type":"application/json"
+        },
+        body: JSON.stringify(data)
+      }) 
+      if(!response.ok) 
+      {
+          throw new Error("Network response error")
+      }
+      const result = await response.json()
+      console.log(result)
+      if(result.error) 
+      {
+        toast.error(result.error)
+        return
+      }
+      if(session && session.user) 
+      {
+        try 
+        {
+          await update({
+            ...session,
+            user: 
+            {
+              ...session?.user,
+              email: data.Email,
+            }
+          })
+          SetUpdateEmail(data.Email)
+          reloadSession() 
+        } 
+        catch (error) 
+        {
+          console.log("Error update session username : " + error) 
+          toast.error("Update username gagal")
+        }
+      }
+    } 
+    catch(error) 
+    {
+      console.error("Error submit form : " + error)
+    }
+    finally
+    {
+      toast.success("Email diubah!")
+    }
+  }
+  // Baris akhir validasi zod email
 
   // Bagian function untuk emoji
   // Function untuk menghilangkan emoji picker
@@ -206,92 +282,214 @@ const ProfilePageComponent = () =>
   {
     if(ShowEmojiComponent === true) 
     {   
-      return <div className="flex 
-                             flex-col 
-                             absolute 
-                             translate-x-96 
-                             w-60 
-                             h-36 
-                             pt-4 
-                             top-8 
-                             z-10 
-                             bg-cyan-700 
-                             overflow-y-auto"
-                             ref={HideEmojiPickerRef}>
-              <div className="flex flex-row justify-center gap-1">          
+      return <div className="flex flex-col absolute translate-x-96 w-72 h-36 pt-4 pb-4 top-8 z-10 bg-cyan-700 overflow-y-auto" ref={HideEmojiPickerRef}>
+              <div className="flex flex-row justify-center gap-3">          
                 {FirstColumnEmojiSmileys.unicode.map((emoji,index) => 
                   ( 
                       <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
                   ))
                 }
               </div>
-              <div className="flex flex-row justify-center gap-1">        
+              <div className="flex flex-row justify-center gap-3">        
                 {SecondColumEmojiSmileys.unicode.map((emoji,index) => 
                   ( 
                       <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
                   ))
                 }
               </div>
-              <div className="flex flex-row justify-center gap-1">        
+              <div className="flex flex-row justify-center gap-3">        
                 {ThirdColumnEmojiSmileys.unicode.map((emoji,index) => 
                   ( 
                       <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
                   ))
                 }
               </div>
-              <div className="flex flex-row justify-center gap-1">        
+              <div className="flex flex-row justify-center gap-3">        
                 {FourthColumEmojiSmileys.unicode.map((emoji,index) => 
                   ( 
                       <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
                   ))
                 }
               </div>
-              <div className="flex flex-row justify-center gap-1">        
+              <div className="flex flex-row justify-center gap-3">        
                 {FifthColumnEmojiSmileys.unicode.map((emoji,index) => 
                   ( 
                       <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
                   ))
                 }
               </div>
-              <div className="flex flex-row justify-center gap-1">        
+              <div className="flex flex-row justify-center gap-3">        
                 {SixthColumnEmojiSmileys.unicode.map((emoji,index) => 
                   ( 
                       <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
                   ))
                 }
               </div>
-              <div className="flex flex-row justify-center gap-1">        
+              <div className="flex flex-row justify-center gap-3">        
                 {SeventhColumnEmojiSmileys.unicode.map((emoji,index) => 
                   ( 
                       <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
                   ))
                 }
               </div>
-              <div className="flex flex-row justify-center gap-1">        
+              <div className="flex flex-row justify-center gap-3">        
                 {EigthColumnEmojiSmileys.unicode.map((emoji,index) => 
                   ( 
                       <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
                   ))
                 }
               </div>
-              <div className="flex flex-row justify-center gap-1">        
+              <div className="flex flex-row justify-center gap-3">        
                 {NinthColumnEmojiSmileys.unicode.map((emoji,index) => 
                   ( 
                       <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
                   ))
                 }
               </div>
-              <div className="flex flex-row justify-center gap-1">        
+              <div className="flex flex-row justify-center gap-3">        
                 {TenthColumnEmojiSmileys.unicode.map((emoji,index) => 
                   ( 
                       <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
                   ))
                 }
               </div>
-              <div className="flex flex-row justify-center gap-1">        
+              <div className="flex flex-row justify-center gap-3">        
                 {EleventhColumnEmojiSmileys.unicode.map((emoji,index) => 
                   ( 
                       <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-4">        
+                {FirstColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-4">        
+                {SecondColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-4">        
+                {ThirdColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FourthColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FifthColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FirstColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {SecondColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {ThirdColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FourthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FifthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {SixthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {SeventhColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {EigthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {NinthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {TenthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {EleventhColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {TwlefthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {ThirteenthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FourteenthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
                   ))
                 }
               </div>
@@ -318,6 +516,10 @@ const ProfilePageComponent = () =>
     switch(event.key) 
     {
       case "Escape" : setEditEmailClickEvent(false)
+                      if(DisplayNoneInputEmailRef.current) 
+                      {
+                          DisplayNoneInputEmailRef.current.style.display = "block"
+                      }
         break
     }
   }
@@ -368,6 +570,18 @@ const ProfilePageComponent = () =>
       case "Enter" : if(SubmitNewUsernameWithEnterKeyRef.current) 
                       {
                         SubmitNewUsernameWithEnterKeyRef.current.focus()
+                      }
+        break
+    }
+  }
+
+  const SendNewEmailToApiWithEnterKey = (event: React.KeyboardEvent<HTMLInputElement>) =>
+  {
+    switch(event.key) 
+    {
+      case "Enter" : if(SubmitNewEmailWithEnterKeyRef.current) 
+                      {
+                        SubmitNewEmailWithEnterKeyRef.current.focus()
                       }
         break
     }
@@ -529,24 +743,21 @@ const ProfilePageComponent = () =>
       return <form onSubmit={handleSubmit(SubmitNewUsername)}>
                 <div className="flex flex-row gap-2">
                   <input type="text" 
-                         className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-700 focus:border-b-4 font-serif md:font-serif"
-                        //  value={UpdateUsername + SelectedEmoji}
-                         value={UpdateUsername}
+                         className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
+                         value={UpdateUsername + SelectedEmoji}
                          {...register("Username")}
                          onChange={(e) => 
                          {
-                          console.log("Input : " + e.target.value)
                           SetUpdateUsername(e.target.value)
                          }}
                          onKeyDown={DisabledEditName}
                          onKeyUp={SendNewUserNameToApiWithEnterKey}
                          autoFocus={true}/>                        
-                  {/* <span>{SelectedEmoji}</span> */}
-                  <div className="flex flex-row gap-1 absolute left-64" style={{backgroundColor: "rgb(8 51 68)"}}>
+                  <div className="flex flex-row gap-0 absolute left-64" style={{backgroundColor: "rgb(8 51 68)"}}>
                     <FontAwesomeIcon
                         icon={faSmile}
                         style={{color: "#ffffff"}}
-                        className="cursor-pointer box-border translate-y-3 bg-red-500 w-5 h-5"
+                        className="cursor-pointer box-border translate-y-3 outline-none active:bg-cyan-700 pr-1 pl-1 pt-1 pb-1 rounded-full"
                         onClick={() => ClickEmojiButton(!ShowEmojiComponent)}
                         onKeyUp={HideEmojiPickerWithEscKey}
                         tabIndex={0}
@@ -571,21 +782,38 @@ const ProfilePageComponent = () =>
 
   function ShowTagInputEmail()
   {   
-    if(EditEmailClickEvent === false) 
-    { 
-      return <input type="text" 
-                    name="username" 
-                    className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
-                    value={session?.user?.email ?? ""}    
-                    onChange={e => SetUpdateUsername(e.target.value)}/>     
-    }
     if(EditEmailClickEvent === true) 
     { 
-      return <input type="text" 
-                    name="username" 
-                    className="focus:outline-none px-1 py-1 min-w-24 text-white bg-orange-600 focus:border-b-4"
-                    value={session?.user?.email ?? ""}   
-                    onChange={e => SetUpdateUsername(e.target.value)}/>     
+      return <form onSubmit={handleEmailSubmit(SubmitNewEmail)}>
+                <div className="flex flex-row gap-2">
+                  <input type="text" 
+                         className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
+                        //  value={UpdateEmail}
+                         value={session?.user.email!}
+                         {...registerEmail("Email")}
+                         onChange={(e) => 
+                         {
+                          SetUpdateEmail(e.target.value)
+                         }}
+                         onKeyDown={DisabledEditEmail}
+                         onKeyUp={SendNewEmailToApiWithEnterKey}
+                         autoFocus={true}/>                        
+                  <div className="flex flex-row gap-0 absolute left-64" style={{backgroundColor: "rgb(8 51 68)"}}>
+                    <Button 
+                      type="submit" 
+                      style={{backgroundColor: "rgb(8 51 68)"}} 
+                      ref={SubmitNewEmailWithEnterKeyRef}>  
+                        <FontAwesomeIcon 
+                            icon={faCheck} 
+                            style={{color: "#ffffff"}}
+                            className="cursor-pointer box-border"/>
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex flex-row">
+                  {errors.Username && <span className="text-red-500">{errors.Username.message}</span>}
+                </div>  
+            </form>
     }
   }
 
@@ -630,10 +858,9 @@ const ProfilePageComponent = () =>
                   <h4 className="text-zinc-400 font-bold">Nama</h4>
                   {ShowTagInputName()}
                   <div className="flex flex-row gap-2">
-                    <input type="text" 
-                          className="focus:outline-none px-1 py-2 min-w-32 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                           value={UpdateUsername}
-                          // value={UpdateUsername + SelectedEmoji}
+                    <input className="focus:outline-none px-1 py-2 min-w-32 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
+                          value={UpdateUsername + SelectedEmoji}
+                          // value={session?.user.name + SelectedEmoji}
                           disabled
                           ref={DisplayNoneInputNameRef}
                           onChange={(e) => SetUpdateUsername(e.target.value)}/>
@@ -648,13 +875,12 @@ const ProfilePageComponent = () =>
                 <div className="flex flex-col gap-2">
                   <h4 className="text-zinc-400 font-bold">Email</h4>
                   {ShowTagInputEmail()}
-                  <input type="text"
-                        className="focus:outline-none px-1 py-1 -translate-y-9 min-w-24 text-white bg-red-500 focus:border-b-4 border-b-cyan-700" 
-                        disabled
-                        onKeyDown={DisabledEditEmail}
-                        onKeyUp={DisabledChecklistIconInInputEmail}
-                        defaultValue={session?.user?.email ?? ""}
-                        onChange={e => SetUpdateEmail(e.target.value)}/>
+                  <input className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
+                        //  value={UpdateEmail}
+                         value={session?.user.email!}
+                         disabled
+                         ref={DisplayNoneInputEmailRef}
+                         onChange={e => SetUpdateEmail(e.target.value)}/>
                 </div>
                 <div className="flex flex-row translate-y-10 translate-x-10">
                   {ShowEditIconInInputEmail()}

@@ -62,3 +62,18 @@ export const FourthColumnHandEmoji: Readonly<HandEmojiType> =
         "🤳"
     ]
 }   
+
+export const FifthColumnHandEmoji: Readonly<HandEmojiType> =
+{
+    unicode: 
+    [
+        "✍️",
+        "💪",
+        "🦾",
+        "✊",
+        "🙏",
+        "🙌",
+        "🤲",
+        "🙏🏻"
+    ]
+}   

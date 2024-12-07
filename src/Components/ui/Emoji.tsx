@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Emoji } from '@/Helper/ProfilePage/EmojiList'
+import { Emoji } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
 
 export default function EmojiComponent() 
 {

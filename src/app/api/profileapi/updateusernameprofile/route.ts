@@ -27,7 +27,8 @@ export const PUT = async (request: NextRequest,response: NextResponse) =>
         return NextResponse.json({error: "Id tidak ditemukan"},{status: 400})
     }
     
-    const UpdateUsername = await prisma.userModel.update({
+    const UpdateUsername = await prisma.userModel.update(
+    {
         where:  
         {
             id: session.user.id as string,
