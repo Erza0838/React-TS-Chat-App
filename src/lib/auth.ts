@@ -85,6 +85,7 @@ export const authOptions: NextAuthOptions =
                 token.email = user.email 
                 token.name = user.name 
                 token.sub = user.id 
+                // token.expires = Date.now()
             }
             return token
         },

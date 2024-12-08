@@ -8,6 +8,9 @@ export const PUT = async (request: NextRequest,response: NextResponse) =>
     const RawEmail = await request.json()
     const CleandEmail = RawEmail.Email.replace(/"/g,'')
     const EmailSession = await getServerSession(authOptions)
+    console.log("Email dari input : " + CleandEmail)
+
+    console.log("Kadaluarsa : " + EmailSession?.expires)
 
     if(!EmailSession) 
     {

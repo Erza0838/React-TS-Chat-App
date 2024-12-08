@@ -59,6 +59,8 @@ const ProfilePageComponent = () =>
 { 
   const {data: session, update} = useSession()
 
+  console.log("Kadaluarsa cookie : " + session?.expires)
+
   // useRef untuk input tag
   const AutoFocusInputNameRef = useRef<HTMLInputElement>(null)
   const DisplayNoneInputNameRef = useRef<HTMLInputElement>(null)
@@ -109,6 +111,11 @@ const ProfilePageComponent = () =>
     {
       SetUpdateEmail(session.user.email)
     }
+
+    // if(!session?.expires) 
+    // {
+    //   session.update()
+    // }
   },[session])
   // Baris akhir useEffect
 
@@ -168,24 +175,16 @@ const ProfilePageComponent = () =>
       }
       if(session && session.user) 
       {
-        try 
-        {
-          await update({
-            ...session,
-            user: 
-            {
-              ...session?.user,
-              name: data.Username,
-            }
-          })
-          SetUpdateUsername(data.Username)
-          reloadSession() 
-        } 
-        catch (error) 
-        {
-          console.log("Error update session username : " + error) 
-          toast.error("Update username gagal")
-        }
+        update({
+          ...session,
+          user: 
+          {
+            ...session?.user,
+            name: data.Username,
+          }
+        })
+        SetUpdateUsername(data.Username)
+        reloadSession() 
       }
     } 
     catch(error) 
@@ -225,24 +224,16 @@ const ProfilePageComponent = () =>
       }
       if(session && session.user) 
       {
-        try 
-        {
-          await update({
-            ...session,
-            user: 
-            {
-              ...session?.user,
-              email: data.Email,
-            }
-          })
-          SetUpdateEmail(data.Email as string)
-          reloadSession() 
-        } 
-        catch (error) 
-        {
-          console.log("Error update session email : " + error) 
-          toast.error("Update email gagal")
-        }
+        update({
+          ...session,
+          user: 
+          {
+            ...session?.user,
+            email: data.Email,
+          }
+        })
+        SetUpdateEmail(data.Email)
+        reloadSession() 
       }
     } 
     catch(error) 
@@ -877,8 +868,8 @@ const ProfilePageComponent = () =>
                   <h4 className="text-zinc-400 font-bold">Email</h4>
                   {ShowTagInputEmail()}
                   <input className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
-                        //  value={UpdateEmail}
-                         value={session?.user.email!}
+                         value={UpdateEmail}
+                        //  value={session?.user.email!}
                          disabled
                          ref={DisplayNoneInputEmailRef}
                          onChange={e => SetUpdateEmail(e.target.value)}/>
