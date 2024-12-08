@@ -8,7 +8,7 @@ import { z } from "zod"
 import { Input } from "@/Components/ui/input"
 import { Button } from '@/Components/ui/button'
 import { signIn } from "next-auth/react"
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import Link from "next/link"
 import 
 {
@@ -59,10 +59,14 @@ export default function LoginFormComponent()
                 if(response.error === "CredentialsSignin") 
                 {
                     toast.error("Email atau password salah!")
+                    redirect("/login")
                 }
             }
-            toast.success("Login berhasil!")
-            router.push("/homepage")
+            if(response.ok) 
+            {
+                toast.success("Login berhasil!")
+                router.push("/homepage")
+            }
         } 
         catch(error: any) 
         {

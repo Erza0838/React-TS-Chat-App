@@ -19,7 +19,7 @@ import { UpdateEmailValidationSchema } from '@/lib/validations/UserInformationVa
 import { reloadSession } from '@/lib/ReloadSession'
 
 // Bagian untuk import Array emoji wajah
-import { FirstColumnEmojiSmileys, TwelfthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
+import { FirstColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
 import { SecondColumEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
 import { ThirdColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
 import { FourthColumEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
@@ -30,6 +30,7 @@ import { EigthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/Fa
 import { NinthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
 import { TenthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
 import { EleventhColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
+import { TwelfthColumnEmojiSmileys } from '@/Helper/ProfilePage/EmojiCollection/FaceEmojiList'
 
 // Bagian untuk import Array emoji tangan
 import { FirstColumnHandEmoji } from '@/Helper/ProfilePage/EmojiCollection/HandEmojiList'
@@ -103,10 +104,10 @@ const ProfilePageComponent = () =>
     if(session && session.user.name) 
     {
       SetUpdateUsername(session.user.name)
-      // if(session.user.emoji != undefined) 
-      // {
-      //   SetSelectedEmoji(session.user.emoji)   
-      // }
+    }
+    if(session && session.user.email) 
+    {
+      SetUpdateEmail(session.user.email)
     }
   },[session])
   // Baris akhir useEffect
@@ -234,13 +235,13 @@ const ProfilePageComponent = () =>
               email: data.Email,
             }
           })
-          SetUpdateEmail(data.Email)
+          SetUpdateEmail(data.Email as string)
           reloadSession() 
         } 
         catch (error) 
         {
-          console.log("Error update session username : " + error) 
-          toast.error("Update username gagal")
+          console.log("Error update session email : " + error) 
+          toast.error("Update email gagal")
         }
       }
     } 
@@ -788,12 +789,12 @@ const ProfilePageComponent = () =>
                 <div className="flex flex-row gap-2">
                   <input type="text" 
                          className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                        //  value={UpdateEmail}
-                         value={session?.user.email!}
+                         value={UpdateEmail}
+                        //  value={session?.user.email ?? ""}
                          {...registerEmail("Email")}
-                         onChange={(e) => 
+                         onChange={(event) => 
                          {
-                          SetUpdateEmail(e.target.value)
+                          SetUpdateEmail(event.target.value)
                          }}
                          onKeyDown={DisabledEditEmail}
                          onKeyUp={SendNewEmailToApiWithEnterKey}
