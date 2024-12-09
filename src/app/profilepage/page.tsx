@@ -161,7 +161,7 @@ const ProfilePageComponent = () =>
     })
     return {register,handleSubmit,formState}
   }
-  const {register: InsertDescriptionProfile,handleSubmit: handleDescriptionProfileSubmit,formState: {errors: DescriptionProfileErrors}} = UpdateUsernameProfileForm()
+  const {register: InsertDescriptionProfile,handleSubmit: handleDescriptionProfileSubmit,formState: {errors: DescriptionProfileErrors}} = InsertDescriptionProfileForm()
     
   const SubmitNewUsername:SubmitHandler<UpdateUsernameFormValue>  = async (data: UpdateUsernameFormValue) => 
   {
