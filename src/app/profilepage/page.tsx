@@ -75,6 +75,7 @@ const ProfilePageComponent = () =>
   // useRef untuk update button
   const SubmitNewUsernameWithEnterKeyRef = useRef<HTMLButtonElement>(null)
   const SubmitNewEmailWithEnterKeyRef = useRef<HTMLButtonElement>(null)
+  const SubmitDescriptionProfileWithEnterKeyRef = useRef<HTMLButtonElement>(null)
 
   // State untuk tombol emoji
   const [ShowEmojiComponent,SetShowEmojiComponent] = useState<boolean>(false)
@@ -99,11 +100,6 @@ const ProfilePageComponent = () =>
   type UpdateEmailFormValue = z.infer<typeof UpdateEmailValidationSchema>
   type InsertDescriptionFormValue = z.infer<typeof InsertDescriptionProfileSchema>
 
-  console.log("Session data : " + JSON.stringify(session))
-  // if(!session)
-  // {
-  //   redirect("/login")
-  // }
 
   // UseEffect untuk menyimpan nilai pada state variable saat ada perubahan pada session
   useEffect(() => 
@@ -569,6 +565,10 @@ const ProfilePageComponent = () =>
     switch(event.key) 
     {
       case "Escape" : setEditInformationClickEvent(false)
+                       if(DisplayNoneInputInformationRef.current) 
+                       {
+                          DisplayNoneInputInformationRef.current.style.display = "block"
+                       }
         break
     }
   }
@@ -597,7 +597,8 @@ const ProfilePageComponent = () =>
   {
     switch(event.key) 
     {
-      case "Escape" : EditInformationClickEvent = false
+      case "Escape" : setEditInformationClickEvent(false)
+                      // EditInformationClickEvent = false
         break
     }
   }
@@ -608,7 +609,8 @@ const ProfilePageComponent = () =>
   {
     switch(event.key) 
     {
-      case "Enter" : if(SubmitNewUsernameWithEnterKeyRef.current) 
+      case "Enter" : 
+                      if(SubmitNewUsernameWithEnterKeyRef.current) 
                       {
                         SubmitNewUsernameWithEnterKeyRef.current.focus()
                       }
@@ -620,10 +622,24 @@ const ProfilePageComponent = () =>
   {
     switch(event.key) 
     {
-      case "Enter" : if(SubmitNewEmailWithEnterKeyRef.current) 
+      case "Enter" : 
+                     if(SubmitNewEmailWithEnterKeyRef.current) 
                       {
                         SubmitNewEmailWithEnterKeyRef.current.focus()
                       }
+        break
+    }
+  }
+
+  const SendDescripritionProfileToApiWithEnterKey = (event: React.KeyboardEvent<HTMLInputElement>) =>
+  {
+    switch(event.key) 
+    {
+      case "Enter" : 
+                    if(SubmitDescriptionProfileWithEnterKeyRef.current) 
+                    {
+                      SubmitDescriptionProfileWithEnterKeyRef.current.focus()
+                    }
         break
     }
   }
@@ -689,12 +705,7 @@ const ProfilePageComponent = () =>
   { 
     if(EditInformationClickEvent === true) 
     {
-      AutoFocusInputInformationRef.current?.focus()
       SetDisplayNoneInputInformation()    
-      return <FontAwesomeIcon 
-              icon={faCheck} 
-              style={{color: "#ffffff"}}
-              className="cursor-pointer"/>
     }
     if(EditInformationClickEvent === false) 
     {
@@ -865,13 +876,13 @@ const ProfilePageComponent = () =>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                       className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                      // {...InsertDescriptionProfile("")}
+                      {...InsertDescriptionProfile("InsertDescription")}
                       onChange={(event) => 
                       {
                         SetUpdateInformation(event.target.value)
                       }}
-                      onKeyDown={DisabledEditEmail}
-                      onKeyUp={SendNewEmailToApiWithEnterKey}
+                      onKeyDown={DisabledEditInformation}
+                      onKeyUp={SendDescripritionProfileToApiWithEnterKey}
                       autoFocus={true}/>                        
                 <div className="flex flex-row gap-0 absolute left-64" style={{backgroundColor: "rgb(8 51 68)"}}>
                   <Button 
@@ -911,7 +922,6 @@ const ProfilePageComponent = () =>
                   <div className="flex flex-row gap-2">
                     <input className="focus:outline-none px-1 py-2 min-w-32 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
                           value={UpdateUsername + SelectedEmoji}
-                          // value={session?.user.name + SelectedEmoji}
                           disabled
                           ref={DisplayNoneInputNameRef}
                           onChange={(e) => SetUpdateUsername(e.target.value)}/>
@@ -960,11 +970,10 @@ const ProfilePageComponent = () =>
                   <h4 className="text-zinc-400 font-bold">Info</h4>
                   {ShowTagInputInformation()}
                   <input type="text" 
-                        name="" 
-                        className="focus:outline-none px-1 py-1 -translate-y-9 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
+                        className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
+                        // className="focus:outline-none px-1 py-1 min-w-24 text-white bg-red-500 focus:border-b-4" 
                         disabled
                         onKeyDown={DisabledEditInformation}
-                        onKeyUp={DisabledChecklistIconInInputInformation}
                         ref={DisplayNoneInputInformationRef}
                         onChange={e => SetUpdateInformation(e.target.value)}/>
                 </div>
