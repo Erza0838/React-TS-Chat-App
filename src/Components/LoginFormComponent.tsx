@@ -71,7 +71,6 @@ export default function LoginFormComponent()
         catch(error: any) 
         {
             console.error(error)
-            toast.error("Terjadi kesalahan pada sistem")
         }
         finally
         {

@@ -14,8 +14,11 @@ import { faUserCircle,faEdit,faCheck,faClipboard,faSmile } from '@fortawesome/fr
 import { Button } from '@/Components/ui/button'
 import { SidebarElement } from '../SidebarElement'
 // Baris akhir import component
+
+// Import zod object
 import { UpdateUsernameValidationSchema } from '@/lib/validations/UserInformationValidation'
 import { UpdateEmailValidationSchema } from '@/lib/validations/UserInformationValidation'
+import { InsertDescriptionProfileSchema } from '@/lib/validations/UserInformationValidation'
 import { reloadSession } from '@/lib/ReloadSession'
 
 // Bagian untuk import Array emoji wajah
@@ -59,7 +62,7 @@ const ProfilePageComponent = () =>
 { 
   const {data: session, update} = useSession()
 
-  console.log("Kadaluarsa cookie : " + session?.expires)
+  // console.log("Kadaluarsa cookie : " + session?.expires)
 
   // useRef untuk input tag
   const AutoFocusInputNameRef = useRef<HTMLInputElement>(null)
@@ -90,9 +93,11 @@ const ProfilePageComponent = () =>
   let [EditEmailClickEvent,setEditEmailClickEvent] = useState<boolean>(false)
   let [EditInformationClickEvent,setEditInformationClickEvent] = useState<boolean>(false)
   const [ChecklistIconInNameInput,setChecklistIconInNameInput] = useState<boolean>(false)
-  // Validasi zod username
-  type UpdateUsernameFormValues = z.infer<typeof UpdateUsernameValidationSchema>
-  type UpdateEmailFormValues = z.infer<typeof UpdateEmailValidationSchema>
+
+  // Validasi zod 
+  type UpdateUsernameFormValue = z.infer<typeof UpdateUsernameValidationSchema>
+  type UpdateEmailFormValue = z.infer<typeof UpdateEmailValidationSchema>
+  type InsertDescriptionFormValue = z.infer<typeof InsertDescriptionProfileSchema>
 
   console.log("Session data : " + JSON.stringify(session))
   // if(!session)
@@ -130,25 +135,35 @@ const ProfilePageComponent = () =>
 
   const UpdateEmailProfileForm = () => 
   {
-    const {register,handleSubmit,formState} = useForm<UpdateEmailFormValues>
+    const {register,handleSubmit,formState} = useForm<UpdateEmailFormValue>
     ({
       resolver: zodResolver(UpdateEmailValidationSchema)
     })
     return { register,handleSubmit,formState }
   }
-  const {register: registerEmail,handleSubmit: handleEmailSubmit,formState: {errors: emailErrors}} = UpdateEmailProfileForm()
+  const {register: registerEmail,handleSubmit: handleEmailSubmit,formState: {errors: EmailErrors}} = UpdateEmailProfileForm()
 
   const UpdateUsernameProfileForm = () => 
   {
-    const { register, handleSubmit, formState } = useForm<UpdateUsernameFormValues>
+    const { register, handleSubmit, formState } = useForm<UpdateUsernameFormValue>
     ({
       resolver: zodResolver(UpdateUsernameValidationSchema)
     })
     return { register, handleSubmit, formState } 
   }
-  const {register: register,handleSubmit: handleSubmit,formState: {errors: errors}} = UpdateUsernameProfileForm()
+  const {register: registerUsername,handleSubmit: handleUsernameSubmit,formState: {errors: UsernameErrors}} = UpdateUsernameProfileForm()
+
+  const InsertDescriptionProfileForm = () =>
+  {
+    const {register,handleSubmit,formState} = useForm<InsertDescriptionFormValue>
+    ({
+      resolver: zodResolver(InsertDescriptionProfileSchema)
+    })
+    return {register,handleSubmit,formState}
+  }
+  const {register: InsertDescriptionProfile,handleSubmit: handleDescriptionProfileSubmit,formState: {errors: DescriptionProfileErrors}} = UpdateUsernameProfileForm()
     
-  const SubmitNewUsername:SubmitHandler<UpdateUsernameFormValues>  = async (data: UpdateUsernameFormValues) => 
+  const SubmitNewUsername:SubmitHandler<UpdateUsernameFormValue>  = async (data: UpdateUsernameFormValue) => 
   {
     console.log("Submitted username: ",data)
     try 
@@ -167,7 +182,6 @@ const ProfilePageComponent = () =>
           throw new Error("Network response error")
       }
       const result = await response.json()
-      console.log(result)
       if(result.error) 
       {
         toast.error(result.error)
@@ -197,7 +211,7 @@ const ProfilePageComponent = () =>
     }
   }
   // Baris akhir validasi zod email
-  const SubmitNewEmail:SubmitHandler<UpdateEmailFormValues>  = async (data: UpdateEmailFormValues) => 
+  const SubmitNewEmail:SubmitHandler<UpdateEmailFormValue>  = async (data: UpdateEmailFormValue) => 
   {
     console.log("Submitted email: ",data)
     try 
@@ -216,7 +230,6 @@ const ProfilePageComponent = () =>
           throw new Error("Network response error")
       }
       const result = await response.json()
-      console.log(result)
       if(result.error) 
       {
         toast.error(result.error)
@@ -246,6 +259,42 @@ const ProfilePageComponent = () =>
     }
   }
   // Baris akhir validasi zod email
+
+  // Function untuk mengirim deskripsi profile ke api
+  const SubmitDescriptionProfile:SubmitHandler<InsertDescriptionFormValue>  = async (data: InsertDescriptionFormValue) =>
+  {
+    console.log("Submitted email: ",data)
+    try 
+    {                                              
+      const response = await fetch("/api/profileapi/insertdescriptionprofile",
+      {
+        method: "POST",
+        headers: 
+        {
+          "Content-Type":"application/json"
+        },
+        body: JSON.stringify(data)
+      }) 
+      if(!response.ok) 
+      {
+          throw new Error("Network response error")
+      }
+      const result = await response.json()
+      if(result.error) 
+      {
+        toast.error(result.error)
+        return
+      }
+    } 
+    catch(error) 
+    {
+      console.error("Error submit form : " + error)
+    }
+    finally
+    {
+      toast.success("Info diubah!")
+    }
+  }
 
   // Bagian function untuk emoji
   // Function untuk menghilangkan emoji picker
@@ -732,12 +781,12 @@ const ProfilePageComponent = () =>
   {   
     if(EditNameClickEvent === true) 
     { 
-      return <form onSubmit={handleSubmit(SubmitNewUsername)}>
+      return <form onSubmit={handleUsernameSubmit(SubmitNewUsername)}>
                 <div className="flex flex-row gap-2">
                   <input type="text" 
                          className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
                          value={UpdateUsername + SelectedEmoji}
-                         {...register("Username")}
+                         {...registerUsername("Username")}
                          onChange={(e) => 
                          {
                           SetUpdateUsername(e.target.value)
@@ -766,7 +815,7 @@ const ProfilePageComponent = () =>
                   </div>
                 </div>
                 <div className="flex flex-row">
-                  {errors.Username && <span className="text-red-500">{errors.Username.message}</span>}
+                  {UsernameErrors.Username && <span className="text-red-500">{UsernameErrors.Username.message}</span>}
                 </div>  
             </form>
     }
@@ -781,7 +830,6 @@ const ProfilePageComponent = () =>
                   <input type="text" 
                          className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
                          value={UpdateEmail}
-                        //  value={session?.user.email ?? ""}
                          {...registerEmail("Email")}
                          onChange={(event) => 
                          {
@@ -803,7 +851,7 @@ const ProfilePageComponent = () =>
                   </div>
                 </div>
                 <div className="flex flex-row">
-                  {errors.Username && <span className="text-red-500">{errors.Username.message}</span>}
+                  {EmailErrors.Email && <span className="text-red-500">{EmailErrors.Email.message}</span>}
                 </div>  
             </form>
     }
@@ -811,25 +859,36 @@ const ProfilePageComponent = () =>
 
   function ShowTagInputInformation() 
   {
-    if(EditInformationClickEvent === false) 
-    {
-      return <input type="text" 
-              name="username" 
-              className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700"  
-              onKeyDown={DisabledEditInformation}
-              onKeyUp={DisabledChecklistIconInInputInformation}
-              ref={AutoFocusInputInformationRef}
-              onChange={e => SetUpdateInformation(e.target.value)}/>
-    }
     if(EditInformationClickEvent === true) 
     {
-      return <input type="text" 
-              name="username" 
-              className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700"  
-              onKeyDown={DisabledEditInformation}
-              onKeyUp={DisabledChecklistIconInInputInformation}
-              ref={AutoFocusInputInformationRef}
-              onChange={e => SetUpdateInformation(e.target.value)}/>
+      return <form onSubmit={handleDescriptionProfileSubmit(SubmitDescriptionProfile)}>
+              <div className="flex flex-row gap-2">
+                <input type="text" 
+                      className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
+                      // {...InsertDescriptionProfile("")}
+                      onChange={(event) => 
+                      {
+                        SetUpdateInformation(event.target.value)
+                      }}
+                      onKeyDown={DisabledEditEmail}
+                      onKeyUp={SendNewEmailToApiWithEnterKey}
+                      autoFocus={true}/>                        
+                <div className="flex flex-row gap-0 absolute left-64" style={{backgroundColor: "rgb(8 51 68)"}}>
+                  <Button 
+                    type="submit" 
+                    style={{backgroundColor: "rgb(8 51 68)"}} 
+                    ref={SubmitNewEmailWithEnterKeyRef}>  
+                      <FontAwesomeIcon 
+                          icon={faCheck} 
+                          style={{color: "#ffffff"}}
+                          className="cursor-pointer box-border"/>
+                  </Button>
+                </div>
+              </div>
+              <div className="flex flex-row">
+                {EmailErrors.Email && <span className="text-red-500">{EmailErrors.Email.message}</span>}
+              </div>  
+            </form>
     }
   }
   

@@ -52,10 +52,6 @@ export const UpdateUsernameValidationSchema = z.object(
     }).max(20,{
         message: "username maksimal 20 karakter"
     }),
-    // Emoji: z.string().max(3,
-    // {
-    //     message: "Maksimal 3 emoji"
-    // })
 })
 
 export const UpdateEmailValidationSchema = z.object(
@@ -65,5 +61,13 @@ export const UpdateEmailValidationSchema = z.object(
         message: "email tidak boleh kosong"
     }).max(30,{
         message: "email maksimal 30 karakter"
+    })
+})
+
+export const InsertDescriptionProfileSchema = z.object(
+{
+    InsertDescription: z.string().min(1, 
+    {
+        message: "Form tidak boleh kosong"
     })
 })
