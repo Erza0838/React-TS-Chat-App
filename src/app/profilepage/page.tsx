@@ -77,29 +77,33 @@ const ProfilePageComponent = () =>
   const SubmitNewEmailWithEnterKeyRef = useRef<HTMLButtonElement>(null)
   const SubmitDescriptionProfileWithEnterKeyRef = useRef<HTMLButtonElement>(null)
 
-  // State untuk tombol emoji
+  // State untuk tombol emoji input update username
   const [ShowEmojiComponent,SetShowEmojiComponent] = useState<boolean>(false)
+
+  // State untuk tombol emoji input buat descripksi
+  const [ShowEmojiComponentDescriptionProfile,SetShowEmojiComponentDescriptionProfile] = useState<boolean>(false)
 
   // useRef untuk tombol emoji
   const HideEmojiPickerRef = useRef<HTMLDivElement>(null)
+  const HideEmojiPickerDescriptionProfileRef = useRef<HTMLDivElement>(null)
 
   // State untuk tag input update profile
   const [UpdateUsername,SetUpdateUsername] = useState<string>("")
   const [UpdateEmail,SetUpdateEmail] = useState<string>("")
   const [UpdatInformation,SetUpdateInformation] = useState<string>("")
-  let [SelectedEmoji,SetSelectedEmoji] = useState<string>("")
+  const [SelectedEmoji,SetSelectedEmoji] = useState<string>("")
+  const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string>("")
 
   // State untuk mouse event
   let [EditNameClickEvent,setEditNameClickEvent] = useState<boolean>(false)
   let [EditEmailClickEvent,setEditEmailClickEvent] = useState<boolean>(false)
   let [EditInformationClickEvent,setEditInformationClickEvent] = useState<boolean>(false)
-  const [ChecklistIconInNameInput,setChecklistIconInNameInput] = useState<boolean>(false)
+  let [SelectedEmojiDescriptionProfile,SetSelectedEmojiDescriptionProfile] = useState<boolean>(false)
 
   // Validasi zod 
   type UpdateUsernameFormValue = z.infer<typeof UpdateUsernameValidationSchema>
   type UpdateEmailFormValue = z.infer<typeof UpdateEmailValidationSchema>
   type InsertDescriptionFormValue = z.infer<typeof InsertDescriptionProfileSchema>
-
 
   // UseEffect untuk menyimpan nilai pada state variable saat ada perubahan pada session
   useEffect(() => 
@@ -314,7 +318,12 @@ const ProfilePageComponent = () =>
     SetSelectedEmoji(ClickEmoji)
   }
 
-  // Function untuk menampilkan emoji picker
+  const ChoseEmojiForDescriptionProfile = (ClickEmojiDescriptionProfile: string) =>
+  {
+    SetSelectedEmojiValueDescriptionProfile(ClickEmojiDescriptionProfile)
+  }
+
+  // Function untuk menampilkan emoji picker update username
   function ShowEmojiPicker()
   {
     if(ShowEmojiComponent === true) 
@@ -534,6 +543,23 @@ const ProfilePageComponent = () =>
     }
   }
   // Baris akhir function emoji
+
+  // Function untuk menampilkan emoji picker input deskripsi
+  function ShowEmojiPickerDescriptionProfile() 
+  {
+    if(ShowEmojiComponentDescriptionProfile === true) 
+    {
+      return <div className="flex flex-col absolute translate-x-96 w-72 h-36 pt-4 pb-4 top-8 z-10 bg-cyan-700 overflow-y-auto">
+              <div className="flex flex-row justify-center gap-3">        
+                {FirstColumnEmojiSmileys.unicode.map((SmileEmojiDescriptionProfile,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: SmileEmojiDescriptionProfile }} className="cursor-pointer" onClick={() => ChoseEmojiForDescriptionProfile(SmileEmojiDescriptionProfile)} />
+                  ))
+                }
+              </div>
+            </div>
+    }
+  }
   
   // Bagian keyboard event "ESC" untuk mengembalikan input disable
   const DisabledEditName = (event: React.KeyboardEvent<HTMLInputElement>) =>
@@ -715,8 +741,14 @@ const ProfilePageComponent = () =>
     }
   }
 
-  function ClickEmojiButton(ClickEmojiButtonState: boolean) {
+  function ClickEmojiButton(ClickEmojiButtonState: boolean) 
+  {
     SetShowEmojiComponent(ClickEmojiButtonState)
+  }
+
+  function ClickEmojiButtonDescriptionProfile(ClickEmojiButtonDescriptionPrpfileState: boolean) 
+  {
+    SetSelectedEmojiDescriptionProfile(ClickEmojiButtonDescriptionPrpfileState)
   }
 
   function ClickEditName(ClickEditNamestate: boolean)
@@ -885,7 +917,22 @@ const ProfilePageComponent = () =>
                       onKeyUp={SendDescripritionProfileToApiWithEnterKey}
                       autoFocus={true}/>                        
                 <div className="flex flex-row gap-0 absolute left-64" style={{backgroundColor: "rgb(8 51 68)"}}>
-                  <Button 
+                    {/* <FontAwesomeIcon
+                      icon={faSmile}
+                      style={{color: "#ffffff"}}
+                      className="cursor-pointer box-border translate-y-3 outline-none active:bg-cyan-700 pr-1 pl-1 pt-1 pb-1 rounded-full"
+                      onClick={() => ClickEmojiButton(!ShowEmojiComponent)}
+                      onKeyUp={HideEmojiPickerWithEscKey}
+                      tabIndex={0}
+                      aria-hidden='false'/> */}
+                    <FontAwesomeIcon
+                      icon={faSmile}
+                      style={{color: "#ffffff"}}
+                      className="cursor-pointer box-border translate-y-3 outline-none active:bg-cyan-700 pr-1 pl-1 pt-1 pb-1 rounded-full"
+                      onClick={() => ClickEmojiButtonDescriptionProfile(!SetShowEmojiComponentDescriptionProfile)}
+                      tabIndex={0}
+                      aria-hidden='false'/>
+                  {/* <Button 
                     type="submit" 
                     style={{backgroundColor: "rgb(8 51 68)"}} 
                     ref={SubmitNewEmailWithEnterKeyRef}>  
@@ -893,7 +940,7 @@ const ProfilePageComponent = () =>
                           icon={faCheck} 
                           style={{color: "#ffffff"}}
                           className="cursor-pointer box-border"/>
-                  </Button>
+                  </Button> */}
                 </div>
               </div>
               <div className="flex flex-row">
@@ -909,11 +956,12 @@ const ProfilePageComponent = () =>
       ( 
         <> */}
           {ShowEmojiPicker()}
+          {ShowEmojiPickerDescriptionProfile()}
           <SidebarElement></SidebarElement>
           <div className="inline-block bg-cyan-950 h-lvh w-80 overflow-auto touch-pan-x absolute left-16  overflow-y-hidden">
             <div className="flex flex-col gap-7 mx-3 my`x-6">
               <div className="flex flex-col">
-                <h2 className="text-white font-bold">Profie</h2>
+                <h2 className="text-white font-bold">Profile</h2>
               </div>
               <div className="flex flex-row">
                 <div className="flex flex-col gap-2">
@@ -973,9 +1021,10 @@ const ProfilePageComponent = () =>
                         className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
                         // className="focus:outline-none px-1 py-1 min-w-24 text-white bg-red-500 focus:border-b-4" 
                         disabled
-                        onKeyDown={DisabledEditInformation}
-                        ref={DisplayNoneInputInformationRef}
-                        onChange={e => SetUpdateInformation(e.target.value)}/>
+                        // onKeyDown={DisabledEditInformation}
+                        // ref={DisplayNoneInputInformationRef}
+                        // onChange={e => SetUpdateInformation(e.target.value)}
+                        />
                 </div>
                 <div className="flex flex-row translate-y-10 translate-x-10">
                   {ShowEditIconInInputInformation()} 
