@@ -41,6 +41,7 @@ import { SecondColumnHandEmoji } from '@/Helper/ProfilePage/EmojiCollection/Hand
 import { ThirdColumnHandEmoji } from '@/Helper/ProfilePage/EmojiCollection/HandEmojiList'
 import { FourthColumnHandEmoji } from '@/Helper/ProfilePage/EmojiCollection/HandEmojiList'
 import { FifthColumnHandEmoji } from '@/Helper/ProfilePage/EmojiCollection/HandEmojiList'
+import { FirstColumnHandEmojiDescriptionProfile } from '@/Helper/ProfilePage/EmojiCollection/DescriptionProfileEmoji/DescriptionProfileHandEmoji'
 
 // Bagian untuk import Array emoji hewan
 import { FirstColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
@@ -87,11 +88,13 @@ const ProfilePageComponent = () =>
   const HideEmojiPickerRef = useRef<HTMLDivElement>(null)
   const HideEmojiPickerDescriptionProfileRef = useRef<HTMLDivElement>(null)
 
-  // State untuk tag input update profile
+  // State untuk tag input profile
   const [UpdateUsername,SetUpdateUsername] = useState<string>("")
   const [UpdateEmail,SetUpdateEmail] = useState<string>("")
   const [UpdatInformation,SetUpdateInformation] = useState<string>("")
   const [SelectedEmoji,SetSelectedEmoji] = useState<string>("")
+  const [DescriptionProfileValue,SetDescriptionProfileValue] = useState<string>("")
+  // const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string[]>([])
   const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string>("")
 
   // State untuk mouse event
@@ -318,9 +321,11 @@ const ProfilePageComponent = () =>
     SetSelectedEmoji(ClickEmoji)
   }
 
+  // const ChoseEmojiForDescriptionProfile = (ClickEmojiDescriptionProfile: string[]) =>
   const ChoseEmojiForDescriptionProfile = (ClickEmojiDescriptionProfile: string) =>
   {
     SetSelectedEmojiValueDescriptionProfile(ClickEmojiDescriptionProfile)
+    // return ClickEmojiDescriptionProfile
   }
 
   // Function untuk menampilkan emoji picker update username
@@ -549,11 +554,249 @@ const ProfilePageComponent = () =>
   {
     if(ShowEmojiComponentDescriptionProfile === true) 
     {
-      return <div className="flex flex-col absolute translate-x-96 w-72 h-36 pt-4 pb-4 top-8 z-10 bg-cyan-700 overflow-y-auto">
-              <div className="flex flex-row justify-center gap-3">        
-                {FirstColumnEmojiSmileys.unicode.map((SmileEmojiDescriptionProfile,index) => 
+      return <div className="flex flex-col absolute translate-x-96 w-72 h-36 pt-4 pb-4 top-80 z-10 bg-cyan-700 overflow-y-auto">
+              <div className="flex flex-row justify-center gap-3">          
+                {FirstColumnEmojiSmileys.unicode.map((DescriptionProfileEmoji,index) => 
                   ( 
-                      <span key={index} dangerouslySetInnerHTML={{ __html: SmileEmojiDescriptionProfile }} className="cursor-pointer" onClick={() => ChoseEmojiForDescriptionProfile(SmileEmojiDescriptionProfile)} />
+                      <span key={index} dangerouslySetInnerHTML={{ __html: DescriptionProfileEmoji }} className="cursor-pointer" onClick={() => ChoseEmojiForDescriptionProfile(DescriptionProfileEmoji[0])} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {SecondColumEmojiSmileys.unicode.map((DescriptionProfileEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: DescriptionProfileEmoji }} className="cursor-pointer" onClick={() => ChoseEmojiForDescriptionProfile(DescriptionProfileEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {ThirdColumnEmojiSmileys.unicode.map((DescriptionProfileEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: DescriptionProfileEmoji }} className="cursor-pointer" onClick={() => ChoseEmojiForDescriptionProfile(DescriptionProfileEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FourthColumEmojiSmileys.unicode.map((DescriptionProfileEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: DescriptionProfileEmoji }} className="cursor-pointer" onClick={() => ChoseEmojiForDescriptionProfile(DescriptionProfileEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FifthColumnEmojiSmileys.unicode.map((DescriptionProfileEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: DescriptionProfileEmoji }} className="cursor-pointer" onClick={() => ChoseEmojiForDescriptionProfile(DescriptionProfileEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {SixthColumnEmojiSmileys.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {SeventhColumnEmojiSmileys.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {EigthColumnEmojiSmileys.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {NinthColumnEmojiSmileys.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {TenthColumnEmojiSmileys.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {EleventhColumnEmojiSmileys.unicode.map((emoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: emoji }} className="cursor-pointer" onClick={() => ChoseEmoji(emoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-4">        
+                {FirstColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-4">        
+                {SecondColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-4">        
+                {ThirdColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FourthColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FifthColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-4">        
+                {FirstColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-4">        
+                {SecondColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-4">        
+                {ThirdColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FourthColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FifthColumnHandEmoji.unicode.map((HandEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: HandEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(HandEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FirstColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {SecondColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {ThirdColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FourthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FifthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {SixthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {SeventhColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {EigthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {NinthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {TenthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {EleventhColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {TwlefthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {ThirteenthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
+                  ))
+                }
+              </div>
+              <div className="flex flex-row justify-center gap-3">        
+                {FourteenthColumnAnimalEmoji.unicode.map((AnimalEmoji,index) => 
+                  ( 
+                      <span key={index} dangerouslySetInnerHTML={{ __html: AnimalEmoji }} className="cursor-pointer" onClick={() => ChoseEmoji(AnimalEmoji)} />
                   ))
                 }
               </div>
@@ -748,7 +991,7 @@ const ProfilePageComponent = () =>
 
   function ClickEmojiButtonDescriptionProfile(ClickEmojiButtonDescriptionPrpfileState: boolean) 
   {
-    SetSelectedEmojiDescriptionProfile(ClickEmojiButtonDescriptionPrpfileState)
+    SetShowEmojiComponentDescriptionProfile(ClickEmojiButtonDescriptionPrpfileState)
   }
 
   function ClickEditName(ClickEditNamestate: boolean)
@@ -908,6 +1151,7 @@ const ProfilePageComponent = () =>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                       className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
+                      value={SelectedEmojiValueDescriptionProfile}
                       {...InsertDescriptionProfile("InsertDescription")}
                       onChange={(event) => 
                       {
@@ -917,30 +1161,22 @@ const ProfilePageComponent = () =>
                       onKeyUp={SendDescripritionProfileToApiWithEnterKey}
                       autoFocus={true}/>                        
                 <div className="flex flex-row gap-0 absolute left-64" style={{backgroundColor: "rgb(8 51 68)"}}>
-                    {/* <FontAwesomeIcon
-                      icon={faSmile}
-                      style={{color: "#ffffff"}}
-                      className="cursor-pointer box-border translate-y-3 outline-none active:bg-cyan-700 pr-1 pl-1 pt-1 pb-1 rounded-full"
-                      onClick={() => ClickEmojiButton(!ShowEmojiComponent)}
-                      onKeyUp={HideEmojiPickerWithEscKey}
-                      tabIndex={0}
-                      aria-hidden='false'/> */}
                     <FontAwesomeIcon
                       icon={faSmile}
                       style={{color: "#ffffff"}}
                       className="cursor-pointer box-border translate-y-3 outline-none active:bg-cyan-700 pr-1 pl-1 pt-1 pb-1 rounded-full"
-                      onClick={() => ClickEmojiButtonDescriptionProfile(!SetShowEmojiComponentDescriptionProfile)}
+                      onClick={() => ClickEmojiButtonDescriptionProfile(!ShowEmojiComponentDescriptionProfile)}
                       tabIndex={0}
                       aria-hidden='false'/>
-                  {/* <Button 
-                    type="submit" 
-                    style={{backgroundColor: "rgb(8 51 68)"}} 
-                    ref={SubmitNewEmailWithEnterKeyRef}>  
-                      <FontAwesomeIcon 
-                          icon={faCheck} 
-                          style={{color: "#ffffff"}}
-                          className="cursor-pointer box-border"/>
-                  </Button> */}
+                  <Button 
+                      type="submit" 
+                      style={{backgroundColor: "rgb(8 51 68)"}} 
+                      ref={SubmitNewUsernameWithEnterKeyRef}>  
+                        <FontAwesomeIcon 
+                            icon={faCheck} 
+                            style={{color: "#ffffff"}}
+                            className="cursor-pointer box-border"/>
+                    </Button>
                 </div>
               </div>
               <div className="flex flex-row">

@@ -98,7 +98,7 @@ export const authOptions: NextAuthOptions =
                     name: token.name,
                     id: token.sub,
                     // emoji: session.user.emoji
-                }
+                }   
             }
             return session
         },
