@@ -1090,13 +1090,13 @@ const ProfilePageComponent = () =>
                         tabIndex={0}
                         aria-hidden='false'/>
                     <Button 
-                      type="submit" 
-                      style={{backgroundColor: "rgb(8 51 68)"}} 
-                      ref={SubmitNewUsernameWithEnterKeyRef}>  
-                        <FontAwesomeIcon 
-                            icon={faCheck} 
-                            style={{color: "#ffffff"}}
-                            className="cursor-pointer box-border"/>
+                        type="submit" 
+                        style={{backgroundColor: "rgb(8 51 68)"}} 
+                        ref={SubmitNewUsernameWithEnterKeyRef}>  
+                          <FontAwesomeIcon 
+                              icon={faCheck} 
+                              style={{color: "#ffffff"}}
+                              className="cursor-pointer box-border"/>
                     </Button>
                   </div>
                 </div>
@@ -1151,12 +1151,12 @@ const ProfilePageComponent = () =>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                       className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                      value={SelectedEmojiValueDescriptionProfile}
+                      // value={SelectedEmojiValueDescriptionProfile}
                       {...InsertDescriptionProfile("InsertDescription")}
-                      onChange={(event) => 
-                      {
-                        SetUpdateInformation(event.target.value)
-                      }}
+                      // onChange={(e) => 
+                      // {
+                      //   SetUpdateInformation(e.target.value)
+                      // }}
                       onKeyDown={DisabledEditInformation}
                       onKeyUp={SendDescripritionProfileToApiWithEnterKey}
                       autoFocus={true}/>                        
@@ -1180,7 +1180,7 @@ const ProfilePageComponent = () =>
                 </div>
               </div>
               <div className="flex flex-row">
-                {EmailErrors.Email && <span className="text-red-500">{EmailErrors.Email.message}</span>}
+                {DescriptionProfileErrors && <span className="text-red-500">{DescriptionProfileErrors.InsertDescription?.message}</span>}
               </div>  
             </form>
     }
@@ -1220,9 +1220,9 @@ const ProfilePageComponent = () =>
                 <div className="flex flex-col gap-2">
                   <h4 className="text-zinc-400 font-bold">Email</h4>
                   {ShowTagInputEmail()}
-                  <input className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
+                  {/* <input className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700"  */}
+                  <input className="focus:outline-none px-1 py-1 min-w-24 text-white bg-red-500 focus:border-b-4" 
                          value={UpdateEmail}
-                        //  value={session?.user.email!}
                          disabled
                          ref={DisplayNoneInputEmailRef}
                          onChange={e => SetUpdateEmail(e.target.value)}/>
@@ -1236,7 +1236,6 @@ const ProfilePageComponent = () =>
                 <div className="flex flex-col gap-2">
                   <h4 className="text-zinc-400 font-bold">Id</h4>
                   <input type="text" 
-                          name=''
                           disabled
                           className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950"
                           value={session?.user?.id ?? ""}
@@ -1254,8 +1253,9 @@ const ProfilePageComponent = () =>
                   <h4 className="text-zinc-400 font-bold">Info</h4>
                   {ShowTagInputInformation()}
                   <input type="text" 
-                        className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
-                        // className="focus:outline-none px-1 py-1 min-w-24 text-white bg-red-500 focus:border-b-4" 
+                        // className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
+                        className="focus:outline-none px-1 py-1 min-w-24 text-white bg-red-500 focus:border-b-4" 
+                        ref={DisplayNoneInputInformationRef}
                         disabled
                         // onKeyDown={DisabledEditInformation}
                         // ref={DisplayNoneInputInformationRef}

@@ -5,8 +5,6 @@ import { authOptions } from "@/lib/auth"
 
 export const PUT = async (request: NextRequest,response: NextResponse) =>
 {  
-    // const RawUsername = await request.text()
-    // const CleandUsername = RawUsername.replace(/"/g,'')
     const RawUsername = await request.json()
     console.log("Raw username : " + JSON.stringify(RawUsername))
     const CleandUsername = RawUsername.Username.replace(/"/g,'')

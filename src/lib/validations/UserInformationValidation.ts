@@ -68,6 +68,6 @@ export const InsertDescriptionProfileSchema = z.object(
 {
     InsertDescription: z.string().min(1, 
     {
-        message: "Form tidak boleh kosong"
+        message: "Deskripsi tidak boleh kosong"
     })
 })
