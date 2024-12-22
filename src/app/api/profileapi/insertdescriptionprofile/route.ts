@@ -3,18 +3,26 @@ import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 
-export const POST = async (request: NextRequest,response: NextResponse) => {
+export const POST = async (request: NextRequest,response: NextResponse) => 
+{   
+    const RawDescriptionProfile = await request.json()
+    const DescriptionValue = RawDescriptionProfile.InsertDescription.replace(/"/g,'')
     const session = await getServerSession(authOptions)
+    // console.log("Session server : " + JSON.stringify(session))
+    // console.log("Request header : " + JSON.stringify(request.headers))
     if (!session?.user?.id) 
     {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
-    
-    const RawDescriptionProfileValue = await request.json()
-    const DescriptionProfileValue = RawDescriptionProfileValue.InsertDescription.replace(/"/g,'')
-    const InsertDescriptionProfile = await prisma.userDescription.create({
-        data: {
-            UserDescription: DescriptionProfileValue,
+    if(session === null) 
+    {
+        return NextResponse.json({ error: "Session null" }, { status: 401 })
+    }
+    const InsertDescriptionProfile = await prisma.userDescription.create(
+    {
+        data: 
+        {
+            UserDescription: DescriptionValue,
             UserIdReference: 
             {
                 connect: 
@@ -26,10 +34,6 @@ export const POST = async (request: NextRequest,response: NextResponse) => {
             updatedAt: new Date(),
         }
     })
-    if(InsertDescriptionProfile) 
-    {
-        console.log("Deskripsi user : " + InsertDescriptionProfile)
-    }
 
     return NextResponse.json({ success: true })
 }

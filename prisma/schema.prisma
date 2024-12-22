@@ -15,12 +15,15 @@ datasource db {
 
 // Model untuk menyimpan informasi pengguna yang melakukan registrasi
 model UserModel {
+  // id       String  @id @default(uuid()) 
   id                 String  @id @default(cuid())
   Genders            String  @db.Char(100)
   Email              String  @db.VarChar(100)
   Username           String  @db.VarChar(100)
   Password           String  @unique @db.VarChar(100)
   UserProfilePicture String? @db.VarChar(255)
+  // Emoji              String? @db.VarChar(10)
+  // ProfilePicture Unsupported("blob")?
 
   UserDescription_Reference    UserDescription[]
   User_Contacts_Id             User_Contacts[]
@@ -30,7 +33,7 @@ model UserModel {
 }
 
 model UserDescription {
-  UserDescriptionId String   @id @default(cuid())
+  UserDescriptionId String  @id @default(uuid()) 
   UserDescription   String   @db.VarChar(255)
   UserId            String
   createdAt         DateTime @default(now())

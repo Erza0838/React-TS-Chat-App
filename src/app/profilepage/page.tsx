@@ -59,10 +59,16 @@ import { TwlefthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/A
 import { ThirteenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
 import { FourteenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
 
+interface DescriptionProfileData 
+{ 
+  id: string
+  DescriptionProfile: string
+}
+
 const ProfilePageComponent = () =>
 { 
   const {data: session, update} = useSession()
-
+  console.log("Session : " + JSON.stringify(session))
   // console.log("Kadaluarsa cookie : " + session?.expires)
 
   // useRef untuk input tag
@@ -110,7 +116,8 @@ const ProfilePageComponent = () =>
 
   // UseEffect untuk menyimpan nilai pada state variable saat ada perubahan pada session
   useEffect(() => 
-  {
+  { 
+    console.log("Session useEffect : " + JSON.stringify(session))
     if(session && session.user.name) 
     {
       SetUpdateUsername(session.user.name)
@@ -119,11 +126,6 @@ const ProfilePageComponent = () =>
     {
       SetUpdateEmail(session.user.email)
     }
-
-    // if(!session?.expires) 
-    // {
-    //   session.update()
-    // }
   },[session])
   // Baris akhir useEffect
 
@@ -266,7 +268,7 @@ const ProfilePageComponent = () =>
   // Function untuk mengirim deskripsi profile ke api
   const SubmitDescriptionProfile:SubmitHandler<InsertDescriptionFormValue>  = async (data: InsertDescriptionFormValue) =>
   {
-    console.log("Submitted email: ",data)
+    console.log("Deskripsi profile: ",data)
     try 
     {                                              
       const response = await fetch("/api/profileapi/insertdescriptionprofile",
@@ -299,6 +301,27 @@ const ProfilePageComponent = () =>
     }
   }
 
+  // Function untuk mengambil data deskripsi profile dari database
+  async function ShowDescriptionProfile(): Promise<DescriptionProfileData | null> 
+  {
+    try 
+    {
+      const response = await fetch("api/profileapi/showdescriptionprofile")  
+      if(!response.ok) 
+      {
+        throw new Error("Network response error") 
+      }
+      const data: DescriptionProfileData = await response.json()
+      console.log(data)
+      return data
+    } 
+    catch(error) 
+    {
+      console.error("Error fetching data" + error)
+      return null
+    }
+  }
+
   // Bagian function untuk emoji
   // Function untuk menghilangkan emoji picker
   function HideEmojiPickerWithEscKey(event: React.KeyboardEvent<SVGSVGElement>) 
@@ -325,7 +348,6 @@ const ProfilePageComponent = () =>
   const ChoseEmojiForDescriptionProfile = (ClickEmojiDescriptionProfile: string) =>
   {
     SetSelectedEmojiValueDescriptionProfile(ClickEmojiDescriptionProfile)
-    // return ClickEmojiDescriptionProfile
   }
 
   // Function untuk menampilkan emoji picker update username

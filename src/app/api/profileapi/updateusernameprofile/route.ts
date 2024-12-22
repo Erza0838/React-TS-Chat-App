@@ -6,12 +6,9 @@ import { authOptions } from "@/lib/auth"
 export const PUT = async (request: NextRequest,response: NextResponse) =>
 {  
     const RawUsername = await request.json()
-    console.log("Raw username : " + JSON.stringify(RawUsername))
     const CleandUsername = RawUsername.Username.replace(/"/g,'')
-    console.log("Username dari input : " + CleandUsername)
-    // console.log("Username dari input : " + RawUsername)
     const session = await getServerSession(authOptions)
-    console.log("Session value: ", session)
+    // console.log("Session value: ", session)
 
     if(!RawUsername.Username) 
     {

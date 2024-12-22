@@ -2,8 +2,9 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import SessionWrapper from "@/Components/SessionWrapper"
+// import SessionWrapper from "@/Components/SessionWrapper"
 import { SessionProvider } from "next-auth/react"
+import { useSession } from "next-auth/react"
 // import Providers from "@/components/Providers"
 import toast, { Toaster } from 'react-hot-toast'
 const inter = Inter({ subsets: ["latin"] });
@@ -28,10 +29,34 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
           <UserButton />
         </SignedIn> */}
         <SessionProvider>
-          {children}
+          <SessionWrapper>
+            {children}
+          </SessionWrapper>
         </SessionProvider>
         <Toaster position="top-center"></Toaster>
       </body>
     </html>
   )
+}
+
+function SessionWrapper({children} : {children: React.ReactNode})
+{
+  const {data: session,status} = useSession()
+
+  console.log("Session status:" + status)
+  console.log("Session data:" + JSON.stringify(session))
+
+  if(status === "loading") 
+  {
+    return <div>
+      Loading...
+    </div>
+  }
+  if(status === "unauthenticated") 
+  {
+    return <div>
+      Autentikasi gagal
+    </div>
+  }
+  return <>{children}</>
 }
