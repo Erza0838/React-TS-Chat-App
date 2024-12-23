@@ -115,6 +115,7 @@ const ProfilePageComponent = () =>
   type UpdateEmailFormValue = z.infer<typeof UpdateEmailValidationSchema>
   type InsertDescriptionFormValue = z.infer<typeof InsertDescriptionProfileSchema>
 
+
   // UseEffect untuk menyimpan nilai pada state variable saat ada perubahan pada session
   useEffect(() => 
   { 
@@ -127,13 +128,20 @@ const ProfilePageComponent = () =>
     {
       SetUpdateEmail(session.user.email)
     }
+    // FetchDescriptionProfile()
   },[session])
   // Baris akhir useEffect
 
   useEffect(() => 
   {
-    FetchDescriptionProfile()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    async function ShowDescriptionProfile()
+    {
+      const response = await fetch("/api/profileapi/showdescriptionprofile")    
+      const DescriptionProfile = await response.json()
+      SetDescriptionProfile(DescriptionProfile)
+    }
+    ShowDescriptionProfile()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // if(session) 
@@ -309,31 +317,32 @@ const ProfilePageComponent = () =>
   }
 
   // Function untuk mengambil data deskripsi profile dari database
-  async function ShowDescriptionProfile(): Promise<DescriptionProfileData | null> 
-  {
-    try 
-    {
-      const response = await fetch("api/profileapi/showdescriptionprofile")  
-      if(!response.ok) 
-      {
-        throw new Error("Network response error") 
-      }
-      const data: DescriptionProfileData = await response.json()
-      console.log(data)
-      return data
-    } 
-    catch(error) 
-    {
-      console.error("Error fetching data" + error)
-      return null
-    }
-  }
+  // async function ShowDescriptionProfile(): Promise<DescriptionProfileData | null> 
+  // {
+  //   try 
+  //   {                              
+  //     const response = await fetch("/api/profileapi/showdescriptionprofile")  
+  //     if(!response.ok) 
+  //     {
+  //       throw new Error("Select description profile error") 
+  //     }
+  //     const data: DescriptionProfileData = await response.json()
+  //     console.log("Deskripsi profile API : " + data)
+  //     return data
+  //   } 
+  //   catch(error) 
+  //   {
+  //     console.error("Error fetching data" + error)
+  //     return null
+  //   }
+  // }
 
-  const FetchDescriptionProfile = async () => 
-  { 
-      const DescripritionProfileData = await ShowDescriptionProfile()
-      SetDescriptionProfile(DescripritionProfileData)
-  }
+  // const FetchDescriptionProfile = async () => 
+  // { 
+  //     const DescripritionProfileData = await ShowDescriptionProfile()
+  //     SetDescriptionProfile(DescripritionProfileData)
+  //     console.log("Data deskripsi profile")
+  // }
 
   // function ShowDescriptionProfileInInputTag() 
   // {
@@ -1194,12 +1203,8 @@ const ProfilePageComponent = () =>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                       className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                      value={DescriprionProfile?.DescriptionProfile}
+                      value={DescriprionProfile?.DescriptionProfile || ""}
                       {...InsertDescriptionProfile("InsertDescription")}
-                      // onChange={(e) => 
-                      // {
-                      //   SetUpdateInformation(e.target.value)
-                      // }}
                       onKeyDown={DisabledEditInformation}
                       onKeyUp={SendDescripritionProfileToApiWithEnterKey}
                       autoFocus={true}/>                        
