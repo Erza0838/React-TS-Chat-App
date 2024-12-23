@@ -29,9 +29,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
           <UserButton />
         </SignedIn> */}
         <SessionProvider>
-          <SessionWrapper>
+          {/* <SessionWrapper> */}
             {children}
-          </SessionWrapper>
+          {/* </SessionWrapper> */}
         </SessionProvider>
         <Toaster position="top-center"></Toaster>
       </body>
@@ -39,24 +39,24 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
   )
 }
 
-function SessionWrapper({children} : {children: React.ReactNode})
-{
-  const {data: session,status} = useSession()
+// function SessionWrapper({children} : {children: React.ReactNode})
+// {
+//   const {data: session,status} = useSession()
 
-  console.log("Session status:" + status)
-  console.log("Session data:" + JSON.stringify(session))
+//   console.log("Session status:" + status)
+//   console.log("Session data:" + JSON.stringify(session))
 
-  if(status === "loading") 
-  {
-    return <div>
-      Loading...
-    </div>
-  }
-  if(status === "unauthenticated") 
-  {
-    return <div>
-      Autentikasi gagal
-    </div>
-  }
-  return <>{children}</>
-}
+//   if(status === "loading") 
+//   {
+//     return <div>
+//       Loading...
+//     </div>
+//   }
+//   if(status === "unauthenticated") 
+//   {
+//     return <div>
+//       Autentikasi gagal
+//     </div>
+//   }
+//   return <>{children}</>
+// }

@@ -102,6 +102,7 @@ const ProfilePageComponent = () =>
   const [DescriptionProfileValue,SetDescriptionProfileValue] = useState<string>("")
   // const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string[]>([])
   const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string>("")
+  const [DescriprionProfile,SetDescriptionProfile] = useState<DescriptionProfileData | null>(null)
 
   // State untuk mouse event
   let [EditNameClickEvent,setEditNameClickEvent] = useState<boolean>(false)
@@ -128,6 +129,12 @@ const ProfilePageComponent = () =>
     }
   },[session])
   // Baris akhir useEffect
+
+  useEffect(() => 
+  {
+    FetchDescriptionProfile()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // if(session) 
   // {
@@ -321,6 +328,20 @@ const ProfilePageComponent = () =>
       return null
     }
   }
+
+  const FetchDescriptionProfile = async () => 
+  { 
+      const DescripritionProfileData = await ShowDescriptionProfile()
+      SetDescriptionProfile(DescripritionProfileData)
+  }
+
+  // function ShowDescriptionProfileInInputTag() 
+  // {
+  //   if(DescriprionProfile !== null) 
+  //   {
+  //     return    
+  //   }
+  // }
 
   // Bagian function untuk emoji
   // Function untuk menghilangkan emoji picker
@@ -1173,7 +1194,7 @@ const ProfilePageComponent = () =>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                       className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                      // value={SelectedEmojiValueDescriptionProfile}
+                      value={DescriprionProfile?.DescriptionProfile}
                       {...InsertDescriptionProfile("InsertDescription")}
                       // onChange={(e) => 
                       // {
