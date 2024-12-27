@@ -62,7 +62,7 @@ import { FourteenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollectio
 interface DescriptionProfileData 
 { 
   id: string
-  DescriptionProfile: string
+  DescriptionProfileValue: string
 }
 
 const ProfilePageComponent = () =>
@@ -102,7 +102,7 @@ const ProfilePageComponent = () =>
   const [DescriptionProfileValue,SetDescriptionProfileValue] = useState<string>("")
   // const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string[]>([])
   const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string>("")
-  const [DescriprionProfile,SetDescriptionProfile] = useState<DescriptionProfileData | null>(null)
+  const [DescriptionProfile,SetDescriptionProfile] = useState<DescriptionProfileData | null>(null)
 
   // State untuk mouse event
   let [EditNameClickEvent,setEditNameClickEvent] = useState<boolean>(false)
@@ -137,8 +137,16 @@ const ProfilePageComponent = () =>
     async function ShowDescriptionProfile()
     {
       const response = await fetch("/api/profileapi/showdescriptionprofile")    
-      const DescriptionProfile = await response.json()
-      SetDescriptionProfile(DescriptionProfile)
+
+      if(!response.ok) 
+      {
+        console.error("Deskripsi profile bermasalah : " + response.statusText)
+        return null
+      }
+
+      const DescriptionProfileValue = await response.json()
+      console.log("Deskirpsi profile : " + JSON.stringify(DescriptionProfileValue))
+      SetDescriptionProfile(DescriptionProfileValue)
     }
     ShowDescriptionProfile()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -177,7 +185,11 @@ const ProfilePageComponent = () =>
   {
     const {register,handleSubmit,formState} = useForm<InsertDescriptionFormValue>
     ({
-      resolver: zodResolver(InsertDescriptionProfileSchema)
+      resolver: zodResolver(InsertDescriptionProfileSchema),
+      defaultValues:
+      {
+        ProfileDescription: ""
+      }
     })
     return {register,handleSubmit,formState}
   }
@@ -1203,8 +1215,9 @@ const ProfilePageComponent = () =>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                       className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                      value={DescriprionProfile?.DescriptionProfile || ""}
-                      {...InsertDescriptionProfile("InsertDescription")}
+                      // value={JSON.stringify(DescriptionProfile?.DescriptionProfileData || "")}
+                      value={DescriptionProfile?.DescriptionProfileValue|| ""}
+                      {...InsertDescriptionProfile("ProfileDescription")}
                       onKeyDown={DisabledEditInformation}
                       onKeyUp={SendDescripritionProfileToApiWithEnterKey}
                       autoFocus={true}/>                        
@@ -1228,7 +1241,7 @@ const ProfilePageComponent = () =>
                 </div>
               </div>
               <div className="flex flex-row">
-                {DescriptionProfileErrors && <span className="text-red-500">{DescriptionProfileErrors.InsertDescription?.message}</span>}
+                {DescriptionProfileErrors && <span className="text-red-500">{DescriptionProfileErrors.ProfileDescription?.message}</span>}
               </div>  
             </form>
     }

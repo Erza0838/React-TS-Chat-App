@@ -5,11 +5,14 @@ import { authOptions } from "@/lib/auth"
 
 export const POST = async (request: NextRequest,response: NextResponse) => 
 {   
-    const RawDescriptionProfile = await request.json()
-    const DescriptionValue = RawDescriptionProfile.InsertDescription.replace(/"/g,'')
+    // const {RawDescriptionProfile} = await request.json()
+    const {ProfileDescription} = await request.json()
+    // const DescriptionValue = RawDescriptionProfile.InsertDescription.replace(/"/g,'')
+
+    // const RawUsername = await request.json()
+    // const CleandUsername = RawUsername.Username.replace(/"/g,'')
+
     const session = await getServerSession(authOptions)
-    // console.log("Session server : " + JSON.stringify(session))
-    // console.log("Request header : " + JSON.stringify(request.headers))
     if (!session?.user?.id) 
     {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -22,7 +25,9 @@ export const POST = async (request: NextRequest,response: NextResponse) =>
     {
         data: 
         {
-            UserDescription: DescriptionValue,
+            // UserDescription: DescriptionValue,
+            // UserDescription: RawDescriptionProfile,
+            UserDescription: ProfileDescription as string,
             UserIdReference: 
             {
                 connect: 

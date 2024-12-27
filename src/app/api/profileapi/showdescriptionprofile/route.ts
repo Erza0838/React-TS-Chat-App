@@ -32,9 +32,9 @@ export const GET = async (request: NextRequest,response: NextResponse) =>
         }
     })   
     if(SelectDescriptionProfile) 
-    {
-        // console.log("Deskripsi user : " + JSON.stringify(SelectDescriptionProfile))
-        return NextResponse.json({success: "Deskripsi user : " + JSON.stringify(SelectDescriptionProfile)})
+    {   
+        console.log("Deskripsi profile : " + JSON.stringify(SelectDescriptionProfile))
+        return NextResponse.json(SelectDescriptionProfile)
     }
     return NextResponse.json({ success: true })
 }

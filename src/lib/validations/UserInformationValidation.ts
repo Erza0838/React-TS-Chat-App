@@ -66,7 +66,7 @@ export const UpdateEmailValidationSchema = z.object(
 
 export const InsertDescriptionProfileSchema = z.object(
 {
-    InsertDescription: z.string().min(1, 
+    ProfileDescription: z.string().min(1, 
     {
         message: "Deskripsi tidak boleh kosong"
     })
