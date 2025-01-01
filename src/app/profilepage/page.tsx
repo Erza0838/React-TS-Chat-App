@@ -15,6 +15,8 @@ import { Button } from '@/Components/ui/button'
 import { SidebarElement } from '../SidebarElement'
 // Baris akhir import component
 
+import { prisma } from "@/app/Database"
+
 // Import zod object
 import { UpdateUsernameValidationSchema } from '@/lib/validations/UserInformationValidation'
 import { UpdateEmailValidationSchema } from '@/lib/validations/UserInformationValidation'
@@ -58,8 +60,9 @@ import { EleventhColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/
 import { TwlefthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
 import { ThirteenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
 import { FourteenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { PiSquare } from 'lucide-react'
 
-interface DescriptionProfileData 
+interface DescriptionProfileDataType 
 { 
   id: string
   DescriptionProfileValue: string
@@ -68,8 +71,6 @@ interface DescriptionProfileData
 const ProfilePageComponent = () =>
 { 
   const {data: session, update} = useSession()
-  console.log("Session : " + JSON.stringify(session))
-  // console.log("Kadaluarsa cookie : " + session?.expires)
 
   // useRef untuk input tag
   const AutoFocusInputNameRef = useRef<HTMLInputElement>(null)
@@ -102,7 +103,7 @@ const ProfilePageComponent = () =>
   const [DescriptionProfileValue,SetDescriptionProfileValue] = useState<string>("")
   // const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string[]>([])
   const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string>("")
-  const [DescriptionProfile,SetDescriptionProfile] = useState<DescriptionProfileData | null>(null)
+  const [DescriptionProfile,SetDescriptionProfile] = useState<DescriptionProfileDataType| null>(null)
 
   // State untuk mouse event
   let [EditNameClickEvent,setEditNameClickEvent] = useState<boolean>(false)
@@ -141,9 +142,8 @@ const ProfilePageComponent = () =>
       if(!response.ok) 
       {
         console.error("Deskripsi profile bermasalah : " + response.statusText)
-        return null
+        return
       }
-
       const DescriptionProfileValue = await response.json()
       console.log("Deskirpsi profile : " + JSON.stringify(DescriptionProfileValue))
       SetDescriptionProfile(DescriptionProfileValue)
@@ -1207,18 +1207,34 @@ const ProfilePageComponent = () =>
     }
   }
 
-  function ShowTagInputInformation() 
+  function fetchData()
   {
+      if(!DescriptionProfile) 
+      {
+        return <p className="text-white">...Loading</p>
+      }   
+      if(DescriptionProfile) 
+      {
+        return <p className="text-white">{DescriptionProfileValue}</p>
+      }   
+  }
+
+  function ShowTagInputInformation() 
+  { 
     if(EditInformationClickEvent === true) 
     {
       return <form onSubmit={handleDescriptionProfileSubmit(SubmitDescriptionProfile)}>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                       className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                      // value={JSON.stringify(DescriptionProfile?.DescriptionProfileData || "")}
-                      value={DescriptionProfile?.DescriptionProfileValue|| ""}
+                      value={DescriptionProfile?.DescriptionProfileValue || ""}
+                      // value={JSON.stringify(DescriptionProfile)}
                       {...InsertDescriptionProfile("ProfileDescription")}
-                      onKeyDown={DisabledEditInformation}
+                      onChange={(e) => 
+                      {
+                        SetDescriptionProfileValue(e.target.value)
+                      }}
+                      onKeyDown={DisabledEditInformation}                                 
                       onKeyUp={SendDescripritionProfileToApiWithEnterKey}
                       autoFocus={true}/>                        
                 <div className="flex flex-row gap-0 absolute left-64" style={{backgroundColor: "rgb(8 51 68)"}}>
@@ -1314,14 +1330,9 @@ const ProfilePageComponent = () =>
                   <h4 className="text-zinc-400 font-bold">Info</h4>
                   {ShowTagInputInformation()}
                   <input type="text" 
-                        // className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700" 
                         className="focus:outline-none px-1 py-1 min-w-24 text-white bg-red-500 focus:border-b-4" 
                         ref={DisplayNoneInputInformationRef}
-                        disabled
-                        // onKeyDown={DisabledEditInformation}
-                        // ref={DisplayNoneInputInformationRef}
-                        // onChange={e => SetUpdateInformation(e.target.value)}
-                        />
+                        disabled/>
                 </div>
                 <div className="flex flex-row translate-y-10 translate-x-10">
                   {ShowEditIconInInputInformation()} 
