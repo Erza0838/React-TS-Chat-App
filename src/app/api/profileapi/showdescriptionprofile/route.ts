@@ -3,21 +3,15 @@ import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 
-// export const POST = async (request: NextRequest,response: NextResponse) => 
 export const GET = async (request: NextRequest,response: NextResponse) => 
 {   
     const session = await getServerSession(authOptions)
-    // console.log("Cookie select data : " + JSON.stringify(session))
-    // console.log("Request Cookie : " + request.cookies)
-    // console.log("Request headers : " + JSON.stringify(request.headers))
     if(!session) 
     {   
-        // console.log("Session kosong")
         return NextResponse.json({ error: "Session kosong"}, { status: 401 })
     }
     if(!session?.user?.id) 
     {   
-        // console.log("Session id : " + session.user.id)
         return NextResponse.json({ cookie: session}, { status: 401 })
     }
     const SelectDescriptionProfile = await prisma.userDescription.findMany(
@@ -31,10 +25,14 @@ export const GET = async (request: NextRequest,response: NextResponse) =>
             UserDescription: true
         }
     })   
+    if(!SelectDescriptionProfile || SelectDescriptionProfile.length === 0) 
+    {
+        return NextResponse.json({error: "Deskripsi profile tidak ditemukan"}, {status: 404})
+    }
     if(SelectDescriptionProfile) 
     {   
         console.log("Deskripsi profile : " + JSON.stringify(SelectDescriptionProfile))
-        return NextResponse.json(SelectDescriptionProfile)
+        return NextResponse.json({SelectDescriptionProfile})
     }
-    return NextResponse.json({ success: true })
+    // return NextResponse.json({ success: true })
 }

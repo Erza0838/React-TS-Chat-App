@@ -64,7 +64,6 @@ import { PiSquare } from 'lucide-react'
 
 interface DescriptionProfileDataType 
 { 
-  id: string
   DescriptionProfileValue: string
 }
 
@@ -100,10 +99,11 @@ const ProfilePageComponent = () =>
   const [UpdateEmail,SetUpdateEmail] = useState<string>("")
   const [UpdatInformation,SetUpdateInformation] = useState<string>("")
   const [SelectedEmoji,SetSelectedEmoji] = useState<string>("")
-  const [DescriptionProfileValue,SetDescriptionProfileValue] = useState<string>("")
+  // const [DescriptionProfileValue,SetDescriptionProfileValue] = useState<string>("")
   // const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string[]>([])
   const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string>("")
-  const [DescriptionProfile,SetDescriptionProfile] = useState<DescriptionProfileDataType| null>(null)
+  // const [DescriptionProfile,SetDescriptionProfile] = useState<DescriptionProfileDataType| null>(null)
+  const [DescriptionProfile,SetDescriptionProfile] = useState<string>("")
 
   // State untuk mouse event
   let [EditNameClickEvent,setEditNameClickEvent] = useState<boolean>(false)
@@ -135,20 +135,33 @@ const ProfilePageComponent = () =>
 
   useEffect(() => 
   {
-    async function ShowDescriptionProfile()
-    {
-      const response = await fetch("/api/profileapi/showdescriptionprofile")    
-
-      if(!response.ok) 
+    async function FetchDescriptionProfile()
+    { 
+      try 
       {
-        console.error("Deskripsi profile bermasalah : " + response.statusText)
-        return
+        const response = await fetch("/api/profileapi/showdescriptionprofile")    
+        if(!response.ok) 
+        {
+          throw new Error ("Deskripsi profile bermasalah : " + response.statusText)
+        }
+        const DescriptionProfileValue: DescriptionProfileDataType[] = await response.json()
+        console.log("API : " + JSON.stringify(DescriptionProfileValue))
+        console.log("Deskripsi Profile : " + JSON.stringify(DescriptionProfileValue))
+        if(DescriptionProfileValue && DescriptionProfileValue.length > 0) 
+        {
+          SetDescriptionProfile(DescriptionProfileValue[0].DescriptionProfileValue)
+        }
+        else 
+        {
+          console.warn("Deskripsi profile kosong!")
+        } 
+      } 
+      catch(error) 
+      {
+        console.error(error) 
       }
-      const DescriptionProfileValue = await response.json()
-      console.log("Deskirpsi profile : " + JSON.stringify(DescriptionProfileValue))
-      SetDescriptionProfile(DescriptionProfileValue)
     }
-    ShowDescriptionProfile()
+    FetchDescriptionProfile()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -1207,18 +1220,6 @@ const ProfilePageComponent = () =>
     }
   }
 
-  function fetchData()
-  {
-      if(!DescriptionProfile) 
-      {
-        return <p className="text-white">...Loading</p>
-      }   
-      if(DescriptionProfile) 
-      {
-        return <p className="text-white">{DescriptionProfileValue}</p>
-      }   
-  }
-
   function ShowTagInputInformation() 
   { 
     if(EditInformationClickEvent === true) 
@@ -1227,13 +1228,10 @@ const ProfilePageComponent = () =>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                       className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                      value={DescriptionProfile?.DescriptionProfileValue || ""}
-                      // value={JSON.stringify(DescriptionProfile)}
+                      value={DescriptionProfile || ""}
+                      id="DescriptionProfile"
                       {...InsertDescriptionProfile("ProfileDescription")}
-                      onChange={(e) => 
-                      {
-                        SetDescriptionProfileValue(e.target.value)
-                      }}
+                      onChange={(e) => SetDescriptionProfile(e.target.value)}
                       onKeyDown={DisabledEditInformation}                                 
                       onKeyUp={SendDescripritionProfileToApiWithEnterKey}
                       autoFocus={true}/>                        
