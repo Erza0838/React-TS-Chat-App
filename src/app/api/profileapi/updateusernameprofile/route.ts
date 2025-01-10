@@ -4,22 +4,16 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 
 export const PUT = async (request: NextRequest,response: NextResponse) =>
+// export const POST = async (request: NextRequest,response: NextResponse) =>
 {  
-    const RawUsername = await request.json()
-    const CleandUsername = RawUsername.Username.replace(/"/g,'')
+    const {Username} = await request.json()
+    console.log("Username baru : " + Username)
     const session = await getServerSession(authOptions)
-    // console.log("Session value: ", session)
-
-    if(!RawUsername.Username) 
-    {
-        console.error("Username kosong")
-        return NextResponse.json({error : "Username kosong"}, {status: 400})
-    }
 
     if(!session) 
     {
         console.error("Unauthorized")
-        return new Response("Unauthorized", {status: 401})
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     if(!session.user.id) 
@@ -36,7 +30,7 @@ export const PUT = async (request: NextRequest,response: NextResponse) =>
         },
         data: 
         {
-            Username: CleandUsername 
+            Username: Username
             // Username: RawUsername
         }
     })

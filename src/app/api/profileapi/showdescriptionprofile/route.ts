@@ -29,10 +29,11 @@ export const GET = async (request: NextRequest,response: NextResponse) =>
     {
         return NextResponse.json({error: "Deskripsi profile tidak ditemukan"}, {status: 404})
     }
+    const descriptions = SelectDescriptionProfile.map(item => item.UserDescription).join(", ");
     if(SelectDescriptionProfile) 
     {   
-        console.log("Deskripsi profile : " + JSON.stringify(SelectDescriptionProfile))
-        return NextResponse.json({SelectDescriptionProfile})
+        console.log("Deskripsi profile : " + JSON.stringify(descriptions))
+        return NextResponse.json({descriptions})
     }
     // return NextResponse.json({ success: true })
 }

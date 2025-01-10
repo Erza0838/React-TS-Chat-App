@@ -103,7 +103,7 @@ const ProfilePageComponent = () =>
   // const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string[]>([])
   const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string>("")
   // const [DescriptionProfile,SetDescriptionProfile] = useState<DescriptionProfileDataType| null>(null)
-  const [DescriptionProfile,SetDescriptionProfile] = useState<string>("")
+  const [DescriptionProfile,SetDescriptionProfile] = useState<string | null>(null)
 
   // State untuk mouse event
   let [EditNameClickEvent,setEditNameClickEvent] = useState<boolean>(false)
@@ -145,8 +145,8 @@ const ProfilePageComponent = () =>
           throw new Error ("Deskripsi profile bermasalah : " + response.statusText)
         }
         const DescriptionProfileValue: DescriptionProfileDataType[] = await response.json()
-        console.log("API : " + JSON.stringify(DescriptionProfileValue))
-        console.log("Deskripsi Profile : " + JSON.stringify(DescriptionProfileValue))
+        // console.log("API : " + JSON.stringify(DescriptionProfileValue))
+        // console.log("Deskripsi Profile : " + JSON.stringify(DescriptionProfileValue))
         if(DescriptionProfileValue && DescriptionProfileValue.length > 0) 
         {
           SetDescriptionProfile(DescriptionProfileValue[0].DescriptionProfileValue)
@@ -178,7 +178,11 @@ const ProfilePageComponent = () =>
   {
     const {register,handleSubmit,formState} = useForm<UpdateEmailFormValue>
     ({
-      resolver: zodResolver(UpdateEmailValidationSchema)
+      resolver: zodResolver(UpdateEmailValidationSchema), 
+      defaultValues:
+      {
+        Email: ""
+      }
     })
     return { register,handleSubmit,formState }
   }
@@ -188,7 +192,11 @@ const ProfilePageComponent = () =>
   {
     const { register, handleSubmit, formState } = useForm<UpdateUsernameFormValue>
     ({
-      resolver: zodResolver(UpdateUsernameValidationSchema)
+      resolver: zodResolver(UpdateUsernameValidationSchema),
+      defaultValues:
+      {
+        Username: ""
+      }
     })
     return { register, handleSubmit, formState } 
   }
@@ -216,6 +224,7 @@ const ProfilePageComponent = () =>
       const response = await fetch("/api/profileapi/updateusernameprofile",
       {
         method: "PUT",
+        // method: "POST",
         headers: 
         {
           "Content-Type":"application/json"
@@ -1150,9 +1159,9 @@ const ProfilePageComponent = () =>
                          className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
                          value={UpdateUsername + SelectedEmoji}
                          {...registerUsername("Username")}
-                         onChange={(e) => 
+                         onChange={(event) => 
                          {
-                          SetUpdateUsername(e.target.value)
+                          SetUpdateUsername(event.target.value)
                          }}
                          onKeyDown={DisabledEditName}
                          onKeyUp={SendNewUserNameToApiWithEnterKey}
@@ -1228,7 +1237,7 @@ const ProfilePageComponent = () =>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                       className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                      value={DescriptionProfile || ""}
+                      value={JSON.stringify(DescriptionProfile || "")}
                       id="DescriptionProfile"
                       {...InsertDescriptionProfile("ProfileDescription")}
                       onChange={(e) => SetDescriptionProfile(e.target.value)}
