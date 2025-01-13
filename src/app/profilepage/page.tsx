@@ -64,7 +64,7 @@ import { PiSquare } from 'lucide-react'
 
 interface DescriptionProfileDataType 
 { 
-  DescriptionProfileValue: string
+  DescriptionValue: string
 }
 
 const ProfilePageComponent = () =>
@@ -99,10 +99,7 @@ const ProfilePageComponent = () =>
   const [UpdateEmail,SetUpdateEmail] = useState<string>("")
   const [UpdatInformation,SetUpdateInformation] = useState<string>("")
   const [SelectedEmoji,SetSelectedEmoji] = useState<string>("")
-  // const [DescriptionProfileValue,SetDescriptionProfileValue] = useState<string>("")
-  // const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string[]>([])
   const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string>("")
-  // const [DescriptionProfile,SetDescriptionProfile] = useState<DescriptionProfileDataType| null>(null)
   const [DescriptionProfile,SetDescriptionProfile] = useState<string | null>(null)
 
   // State untuk mouse event
@@ -120,7 +117,6 @@ const ProfilePageComponent = () =>
   // UseEffect untuk menyimpan nilai pada state variable saat ada perubahan pada session
   useEffect(() => 
   { 
-    console.log("Session useEffect : " + JSON.stringify(session))
     if(session && session.user.name) 
     {
       SetUpdateUsername(session.user.name)
@@ -144,14 +140,14 @@ const ProfilePageComponent = () =>
         {
           throw new Error ("Deskripsi profile bermasalah : " + response.statusText)
         }
-        const DescriptionProfileValue: DescriptionProfileDataType[] = await response.json()
-        // console.log("API : " + JSON.stringify(DescriptionProfileValue))
-        // console.log("Deskripsi Profile : " + JSON.stringify(DescriptionProfileValue))
-        if(DescriptionProfileValue && DescriptionProfileValue.length > 0) 
+        const DescriptionProfileValue: string = await response.json() 
+        const CleanedStringDescriptionProfileValue = DescriptionProfileValue.replace(/^"|"$/g, "")
+        console.log("Deskripsi profile : " + CleanedStringDescriptionProfileValue)
+        if(DescriptionProfileValue) 
         {
-          SetDescriptionProfile(DescriptionProfileValue[0].DescriptionProfileValue)
+          SetDescriptionProfile(CleanedStringDescriptionProfileValue)
         }
-        else 
+        else  
         {
           console.warn("Deskripsi profile kosong!")
         } 
@@ -348,45 +344,8 @@ const ProfilePageComponent = () =>
     {
       toast.success("Info diubah!")
     }
-  }
+  }  // Bagian function untuk emoji
 
-  // Function untuk mengambil data deskripsi profile dari database
-  // async function ShowDescriptionProfile(): Promise<DescriptionProfileData | null> 
-  // {
-  //   try 
-  //   {                              
-  //     const response = await fetch("/api/profileapi/showdescriptionprofile")  
-  //     if(!response.ok) 
-  //     {
-  //       throw new Error("Select description profile error") 
-  //     }
-  //     const data: DescriptionProfileData = await response.json()
-  //     console.log("Deskripsi profile API : " + data)
-  //     return data
-  //   } 
-  //   catch(error) 
-  //   {
-  //     console.error("Error fetching data" + error)
-  //     return null
-  //   }
-  // }
-
-  // const FetchDescriptionProfile = async () => 
-  // { 
-  //     const DescripritionProfileData = await ShowDescriptionProfile()
-  //     SetDescriptionProfile(DescripritionProfileData)
-  //     console.log("Data deskripsi profile")
-  // }
-
-  // function ShowDescriptionProfileInInputTag() 
-  // {
-  //   if(DescriprionProfile !== null) 
-  //   {
-  //     return    
-  //   }
-  // }
-
-  // Bagian function untuk emoji
   // Function untuk menghilangkan emoji picker
   function HideEmojiPickerWithEscKey(event: React.KeyboardEvent<SVGSVGElement>) 
   {
@@ -1230,14 +1189,14 @@ const ProfilePageComponent = () =>
   }
 
   function ShowTagInputInformation() 
-  { 
+  {   
     if(EditInformationClickEvent === true) 
     {
       return <form onSubmit={handleDescriptionProfileSubmit(SubmitDescriptionProfile)}>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                       className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                      value={JSON.stringify(DescriptionProfile || "")}
+                      value={DescriptionProfile || ""}
                       id="DescriptionProfile"
                       {...InsertDescriptionProfile("ProfileDescription")}
                       onChange={(e) => SetDescriptionProfile(e.target.value)}
@@ -1272,88 +1231,82 @@ const ProfilePageComponent = () =>
   
   return(
     <>
-      {/* {session ? 
-      ( 
-        <> */}
-          {ShowEmojiPicker()}
-          {ShowEmojiPickerDescriptionProfile()}
-          <SidebarElement></SidebarElement>
-          <div className="inline-block bg-cyan-950 h-lvh w-80 overflow-auto touch-pan-x absolute left-16  overflow-y-hidden">
-            <div className="flex flex-col gap-7 mx-3 my`x-6">
-              <div className="flex flex-col">
-                <h2 className="text-white font-bold">Profile</h2>
+      {ShowEmojiPicker()}
+      {ShowEmojiPickerDescriptionProfile()}
+      <SidebarElement></SidebarElement>
+      <div className="inline-block bg-cyan-950 h-lvh w-80 overflow-auto touch-pan-x absolute left-16  overflow-y-hidden">
+        <div className="flex flex-col gap-7 mx-3 my`x-6">
+          <div className="flex flex-col">
+            <h2 className="text-white font-bold">Profile</h2>
+          </div>
+          <div className="flex flex-row">
+            <div className="flex flex-col gap-2">
+              <h4 className="text-zinc-400 font-bold">Nama</h4>
+              {ShowTagInputName()}
+              <div className="flex flex-row gap-2">
+                <input className="focus:outline-none px-1 py-2 min-w-32 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
+                      value={UpdateUsername + SelectedEmoji}
+                      disabled
+                      ref={DisplayNoneInputNameRef}
+                      onChange={(e) => SetUpdateUsername(e.target.value)}/>
               </div>
-              <div className="flex flex-row">
-                <div className="flex flex-col gap-2">
-                  <h4 className="text-zinc-400 font-bold">Nama</h4>
-                  {ShowTagInputName()}
-                  <div className="flex flex-row gap-2">
-                    <input className="focus:outline-none px-1 py-2 min-w-32 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                          value={UpdateUsername + SelectedEmoji}
-                          disabled
-                          ref={DisplayNoneInputNameRef}
-                          onChange={(e) => SetUpdateUsername(e.target.value)}/>
-                  </div>
-                </div>  
-                <div className="flex flex-row translate-y-10 translate-x-14">
-                  {ShowEditIconInInputName()}
-                  {ChangeChecklistIconInNameInput()}
-                </div>
-              </div>
-              <div className="flex flex-row">
-                <div className="flex flex-col gap-2">
-                  <h4 className="text-zinc-400 font-bold">Email</h4>
-                  {ShowTagInputEmail()}
-                  {/* <input className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700"  */}
-                  <input className="focus:outline-none px-1 py-1 min-w-24 text-white bg-red-500 focus:border-b-4" 
-                         value={UpdateEmail}
-                         disabled
-                         ref={DisplayNoneInputEmailRef}
-                         onChange={e => SetUpdateEmail(e.target.value)}/>
-                </div>
-                <div className="flex flex-row translate-y-10 translate-x-10">
-                  {ShowEditIconInInputEmail()}
-                  {ChangeChecklistIconInEmailInput()}
-                </div>
-              </div>
-              <div className="flex flex-row">
-                <div className="flex flex-col gap-2">
-                  <h4 className="text-zinc-400 font-bold">Id</h4>
-                  <input type="text" 
-                          disabled
-                          className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950"
-                          value={session?.user?.id ?? ""}
-                          readOnly/>
-                </div>
-                <div className="flex flex-row translate-y-10 translate-x-10">
-                  <FontAwesomeIcon 
-                    icon={faClipboard} 
-                    style={{color: "#ffffff"}}
-                    className="cursor-pointer"/>
-                </div>
-              </div>
-              <div className="flex flex-row">
-                <div className="flex flex-col gap-2">
-                  <h4 className="text-zinc-400 font-bold">Info</h4>
-                  {ShowTagInputInformation()}
-                  <input type="text" 
-                        className="focus:outline-none px-1 py-1 min-w-24 text-white bg-red-500 focus:border-b-4" 
-                        ref={DisplayNoneInputInformationRef}
-                        disabled/>
-                </div>
-                <div className="flex flex-row translate-y-10 translate-x-10">
-                  {ShowEditIconInInputInformation()} 
-                  {ChangeChecklistIconInInformationInput()}
-                </div>
-              </div>
+            </div>  
+            <div className="flex flex-row translate-y-10 translate-x-14">
+              {ShowEditIconInInputName()}
+              {ChangeChecklistIconInNameInput()}
             </div>
           </div>
-        </>
-    //   ) : 
-    //   (
-    //     redirect("/login")
-    //   )}
-    // </>
+          <div className="flex flex-row">
+            <div className="flex flex-col gap-2">
+              <h4 className="text-zinc-400 font-bold">Email</h4>
+              {ShowTagInputEmail()}
+              {/* <input className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700"  */}
+              <input className="focus:outline-none px-1 py-1 min-w-24 text-white bg-red-500 focus:border-b-4" 
+                      value={UpdateEmail}
+                      disabled
+                      ref={DisplayNoneInputEmailRef}
+                      onChange={e => SetUpdateEmail(e.target.value)}/>
+            </div>
+            <div className="flex flex-row translate-y-10 translate-x-10">
+              {ShowEditIconInInputEmail()}
+              {ChangeChecklistIconInEmailInput()}
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className="flex flex-col gap-2">
+              <h4 className="text-zinc-400 font-bold">Id</h4>
+              <input type="text" 
+                      disabled
+                      className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950"
+                      value={session?.user?.id ?? ""}
+                      readOnly/>
+            </div>
+            <div className="flex flex-row translate-y-10 translate-x-10">
+              <FontAwesomeIcon 
+                icon={faClipboard} 
+                style={{color: "#ffffff"}}
+                className="cursor-pointer"/>
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className="flex flex-col gap-2">
+              <h4 className="text-zinc-400 font-bold">Info</h4>
+              {ShowTagInputInformation()}
+              <input type="text" 
+                    className="focus:outline-none px-1 py-1 min-w-24 text-white bg-red-500 focus:border-b-4" 
+                    ref={DisplayNoneInputInformationRef}
+                    value={DescriptionProfile || ""}
+                    onChange={e => SetDescriptionProfile(e.target.value)}
+                    disabled/>
+            </div>
+            <div className="flex flex-row translate-y-10 translate-x-10">
+              {ShowEditIconInInputInformation()} 
+              {ChangeChecklistIconInInformationInput()}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
 

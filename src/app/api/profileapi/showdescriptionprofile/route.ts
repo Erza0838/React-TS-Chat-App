@@ -29,11 +29,10 @@ export const GET = async (request: NextRequest,response: NextResponse) =>
     {
         return NextResponse.json({error: "Deskripsi profile tidak ditemukan"}, {status: 404})
     }
-    const descriptions = SelectDescriptionProfile.map(item => item.UserDescription).join(", ");
+    const description = SelectDescriptionProfile.map(item => item.UserDescription).join(", ")
+    const cleanedStringDescription = description.replace(/^"|"$/g, "")
     if(SelectDescriptionProfile) 
     {   
-        console.log("Deskripsi profile : " + JSON.stringify(descriptions))
-        return NextResponse.json({descriptions})
+        return NextResponse.json(cleanedStringDescription)
     }
-    // return NextResponse.json({ success: true })
 }
