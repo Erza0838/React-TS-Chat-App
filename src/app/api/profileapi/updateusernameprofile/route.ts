@@ -4,7 +4,6 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 
 export const PUT = async (request: NextRequest,response: NextResponse) =>
-// export const POST = async (request: NextRequest,response: NextResponse) =>
 {  
     const {Username} = await request.json()
     console.log("Username baru : " + Username)
