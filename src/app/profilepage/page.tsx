@@ -18,7 +18,7 @@ import { SidebarElement } from '../SidebarElement'
 import { prisma } from "@/app/Database"
 
 // Import zod object
-import { UpdateUsernameValidationSchema } from '@/lib/validations/UserInformationValidation'
+import { UpdateDescriptionProfileSchema, UpdateUsernameValidationSchema } from '@/lib/validations/UserInformationValidation'
 import { UpdateEmailValidationSchema } from '@/lib/validations/UserInformationValidation'
 import { InsertDescriptionProfileSchema } from '@/lib/validations/UserInformationValidation'
 import { reloadSession } from '@/lib/ReloadSession'
@@ -101,6 +101,11 @@ const ProfilePageComponent = () =>
   const [SelectedEmoji,SetSelectedEmoji] = useState<string>("")
   const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string>("")
   const [DescriptionProfile,SetDescriptionProfile] = useState<string | null>(null)
+  const [DescriptionProfileFormData,SetDescriptionProfileFormData] = useState(
+  {
+    id: "",
+    description: ""
+  })
 
   // State untuk mouse event
   let [EditNameClickEvent,setEditNameClickEvent] = useState<boolean>(false)
@@ -112,7 +117,7 @@ const ProfilePageComponent = () =>
   type UpdateUsernameFormValue = z.infer<typeof UpdateUsernameValidationSchema>
   type UpdateEmailFormValue = z.infer<typeof UpdateEmailValidationSchema>
   type InsertDescriptionFormValue = z.infer<typeof InsertDescriptionProfileSchema>
-
+  type UpdateDescriptionFormValue = z.infer<typeof UpdateDescriptionProfileSchema>
 
   // UseEffect untuk menyimpan nilai pada state variable saat ada perubahan pada session
   useEffect(() => 
@@ -142,7 +147,6 @@ const ProfilePageComponent = () =>
         }
         const DescriptionProfileValue: string = await response.json() 
         const CleanedStringDescriptionProfileValue = DescriptionProfileValue.replace(/^"|"$/g, "")
-        console.log("Deskripsi profile : " + CleanedStringDescriptionProfileValue)
         if(DescriptionProfileValue) 
         {
           SetDescriptionProfile(CleanedStringDescriptionProfileValue)
@@ -211,7 +215,7 @@ const ProfilePageComponent = () =>
     return {register,handleSubmit,formState}
   }
   const {register: InsertDescriptionProfile,handleSubmit: handleDescriptionProfileSubmit,formState: {errors: DescriptionProfileErrors}} = InsertDescriptionProfileForm()
-    
+  
   const SubmitNewUsername:SubmitHandler<UpdateUsernameFormValue>  = async (data: UpdateUsernameFormValue) => 
   {
     console.log("Submitted username: ",data)
@@ -220,7 +224,6 @@ const ProfilePageComponent = () =>
       const response = await fetch("/api/profileapi/updateusernameprofile",
       {
         method: "PUT",
-        // method: "POST",
         headers: 
         {
           "Content-Type":"application/json"
@@ -344,8 +347,56 @@ const ProfilePageComponent = () =>
     {
       toast.success("Info diubah!")
     }
-  }  // Bagian function untuk emoji
+  } 
 
+  // Revisi insert deskripsi dan update deskripsi
+  const submitDescriptionProfile = async (data: {description: string, id?: string}) => 
+  {
+    try 
+    {
+      if(data.id) 
+      {
+        const UpdateDescription = await fetch("/api/profileapi/updatedescriptionprofile", 
+        {
+          method: "PUT",
+          headers: 
+          {
+            "Content-Type":"application/json"
+          },
+          body: JSON.stringify(
+          {
+            id: data.id, 
+            description: data.description
+          })
+        })
+        const DescriptionProfile = await UpdateDescription.json()
+        console.log("Deskripsi profile : " + DescriptionProfile)
+      } 
+      else 
+      {
+        const NewDescription = await fetch("/api/profileapi/insertdescriptionprofile", 
+        {
+          method: "POST",
+          headers: 
+          {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(
+          {
+            description: data.description
+          })
+        })
+        const NewDescriptionProfile = await NewDescription.json()
+        console.log("Deskripsi baru : " + NewDescriptionProfile)
+      }
+    } 
+    catch (error) 
+    {
+      console.error(error)
+    }
+  }
+
+  // Bagian function untuk emoji
   // Function untuk menghilangkan emoji picker
   function HideEmojiPickerWithEscKey(event: React.KeyboardEvent<SVGSVGElement>) 
   {

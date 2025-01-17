@@ -71,3 +71,11 @@ export const InsertDescriptionProfileSchema = z.object(
         message: "Deskripsi tidak boleh kosong"
     })
 })
+
+export const UpdateDescriptionProfileSchema = z.object(
+{
+    NewProfileDescription: z.string().min(1, 
+    {
+        message: "Deskripsi tidak boleh kosong"
+    })
+})

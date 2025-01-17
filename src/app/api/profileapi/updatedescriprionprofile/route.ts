@@ -11,24 +11,31 @@ export const PUT = async (request: NextRequest,response: NextResponse) =>
     {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
+
+    const PreviousDescription = await prisma.userDescription.findFirst(
+    {
+        where: 
+        {
+            UserIdReference:
+            {
+                id: session.user.id
+            }
+        }
+    })
+
     const UpdateProfileDescription = await prisma.userDescription.update(
     {
         where: 
         {
-            UserIdReference: 
-            {
-                id: session.user.id
-            }
+            UserDescriptionId: PreviousDescription?.UserDescriptionId
         },
-        select:
+        data: 
         {
-            UserDescription: true
+            UserDescription: NewProfileDescription
         }
-    })
-    if(UpdateProfileDescription) 
-    {
-        console.log("Deskripsi baru : " + UpdateProfileDescription)
-    }
+    })   
+    
+    console.log("Deskripsi baru : " + UpdateProfileDescription) 
 
     return NextResponse.json({ success: true })
 }

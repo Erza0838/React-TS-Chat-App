@@ -35,7 +35,7 @@ model UserModel {
 model UserDescription {
   UserDescriptionId String  @id @default(uuid()) 
   UserDescription   String   @db.VarChar(255)
-  UserId            String
+  UserId            String   
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
