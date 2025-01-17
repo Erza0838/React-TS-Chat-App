@@ -18,9 +18,9 @@ import { SidebarElement } from '../SidebarElement'
 import { prisma } from "@/app/Database"
 
 // Import zod object
-import { UpdateDescriptionProfileSchema, UpdateUsernameValidationSchema } from '@/lib/validations/UserInformationValidation'
+import { UpdateUsernameValidationSchema } from '@/lib/validations/UserInformationValidation'
 import { UpdateEmailValidationSchema } from '@/lib/validations/UserInformationValidation'
-import { InsertDescriptionProfileSchema } from '@/lib/validations/UserInformationValidation'
+import { DescriptionProfileSchema } from '@/lib/validations/UserInformationValidation'
 import { reloadSession } from '@/lib/ReloadSession'
 
 // Bagian untuk import Array emoji wajah
@@ -116,8 +116,7 @@ const ProfilePageComponent = () =>
   // Validasi zod 
   type UpdateUsernameFormValue = z.infer<typeof UpdateUsernameValidationSchema>
   type UpdateEmailFormValue = z.infer<typeof UpdateEmailValidationSchema>
-  type InsertDescriptionFormValue = z.infer<typeof InsertDescriptionProfileSchema>
-  type UpdateDescriptionFormValue = z.infer<typeof UpdateDescriptionProfileSchema>
+  type DescriptionFormValue = z.infer<typeof DescriptionProfileSchema>
 
   // UseEffect untuk menyimpan nilai pada state variable saat ada perubahan pada session
   useEffect(() => 
@@ -204,9 +203,9 @@ const ProfilePageComponent = () =>
 
   const InsertDescriptionProfileForm = () =>
   {
-    const {register,handleSubmit,formState} = useForm<InsertDescriptionFormValue>
+    const {register,handleSubmit,formState} = useForm<DescriptionFormValue>
     ({
-      resolver: zodResolver(InsertDescriptionProfileSchema),
+      resolver: zodResolver(DescriptionProfileSchema),
       defaultValues:
       {
         ProfileDescription: ""
@@ -215,7 +214,7 @@ const ProfilePageComponent = () =>
     return {register,handleSubmit,formState}
   }
   const {register: InsertDescriptionProfile,handleSubmit: handleDescriptionProfileSubmit,formState: {errors: DescriptionProfileErrors}} = InsertDescriptionProfileForm()
-  
+
   const SubmitNewUsername:SubmitHandler<UpdateUsernameFormValue>  = async (data: UpdateUsernameFormValue) => 
   {
     console.log("Submitted username: ",data)
@@ -314,7 +313,7 @@ const ProfilePageComponent = () =>
   // Baris akhir validasi zod email
 
   // Function untuk mengirim deskripsi profile ke api
-  const SubmitDescriptionProfile:SubmitHandler<InsertDescriptionFormValue>  = async (data: InsertDescriptionFormValue) =>
+  const SubmitDescriptionProfile:SubmitHandler<DescriptionFormValue>  = async (data: DescriptionFormValue) =>
   {
     console.log("Deskripsi profile: ",data)
     try 
@@ -348,13 +347,13 @@ const ProfilePageComponent = () =>
       toast.success("Info diubah!")
     }
   } 
-
+  
   // Revisi insert deskripsi dan update deskripsi
-  const submitDescriptionProfile = async (data: {description: string, id?: string}) => 
+  const submitDescriptionProfile = async (data: DescriptionFormValue) => 
   {
     try 
     {
-      if(data.id) 
+      if(data.ProfileDescription) 
       {
         const UpdateDescription = await fetch("/api/profileapi/updatedescriptionprofile", 
         {
@@ -363,11 +362,7 @@ const ProfilePageComponent = () =>
           {
             "Content-Type":"application/json"
           },
-          body: JSON.stringify(
-          {
-            id: data.id, 
-            description: data.description
-          })
+          body: JSON.stringify(data)
         })
         const DescriptionProfile = await UpdateDescription.json()
         console.log("Deskripsi profile : " + DescriptionProfile)
@@ -383,7 +378,7 @@ const ProfilePageComponent = () =>
           },
           body: JSON.stringify(
           {
-            description: data.description
+            description: data.ProfileDescription
           })
         })
         const NewDescriptionProfile = await NewDescription.json()
