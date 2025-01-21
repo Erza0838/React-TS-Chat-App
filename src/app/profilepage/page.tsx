@@ -13,9 +13,8 @@ import toast from 'react-hot-toast'
 import { faUserCircle,faEdit,faCheck,faClipboard,faSmile } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '@/Components/ui/button'
 import { SidebarElement } from '../SidebarElement'
+import { v4 as uuidv4 } from "uuid"
 // Baris akhir import component
-
-import { prisma } from "@/app/Database"
 
 // Import zod object
 import { UpdateUsernameValidationSchema } from '@/lib/validations/UserInformationValidation'
@@ -60,15 +59,10 @@ import { EleventhColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/
 import { TwlefthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
 import { ThirteenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
 import { FourteenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
-import { PiSquare } from 'lucide-react'
-
-interface DescriptionProfileDataType 
-{ 
-  DescriptionValue: string
-}
 
 const ProfilePageComponent = () =>
 { 
+  const newUuid = uuidv4()  
   const {data: session, update} = useSession()
 
   // useRef untuk input tag
@@ -173,6 +167,12 @@ const ProfilePageComponent = () =>
   //   redirect("/login")
   // }
 
+  interface DescriptionProfileType 
+  {
+    ProfileDescription: string,
+    ProfileDescriptionId?: string
+  }
+
   const UpdateEmailProfileForm = () => 
   {
     const {register,handleSubmit,formState} = useForm<UpdateEmailFormValue>
@@ -208,12 +208,27 @@ const ProfilePageComponent = () =>
       resolver: zodResolver(DescriptionProfileSchema),
       defaultValues:
       {
-        ProfileDescription: ""
+        ProfileDescription: "",
+        ProfileDescriptionId: ""
       }
     })
     return {register,handleSubmit,formState}
   }
   const {register: InsertDescriptionProfile,handleSubmit: handleDescriptionProfileSubmit,formState: {errors: DescriptionProfileErrors}} = InsertDescriptionProfileForm()
+
+  const InsertAndUpdateDescriptionProfileForm = () =>
+  {
+    const {register,handleSubmit,formState} = useForm<DescriptionFormValue>
+    ({
+      resolver: zodResolver(DescriptionProfileSchema),
+      defaultValues:
+      {
+        ProfileDescription: ""
+      }
+    })
+    return {register,handleSubmit,formState}
+  }
+  const {register: InsertAndUpdateDescriptionProfile,handleSubmit: InsertAndUpdatehandleDescriptionProfileSubmit,formState: {errors: InsertAndUpdateDescriptionProfileErrors}} = InsertAndUpdateDescriptionProfileForm()
 
   const SubmitNewUsername:SubmitHandler<UpdateUsernameFormValue>  = async (data: UpdateUsernameFormValue) => 
   {
@@ -349,41 +364,27 @@ const ProfilePageComponent = () =>
   } 
   
   // Revisi insert deskripsi dan update deskripsi
-  const submitDescriptionProfile = async (data: DescriptionFormValue) => 
-  {
-    try 
+  // const SubmitDescriptionProfileValue: SubmitHandler<DescriptionProfileType> = async (data) => 
+  const SubmitDescriptionProfileValue: SubmitHandler<DescriptionProfileType> = async (data) => 
+  { 
+    if(!data.ProfileDescriptionId) 
     {
-      if(data.ProfileDescription) 
+      data.ProfileDescriptionId = uuidv4()      
+    }
+  
+    try 
+    { 
+      const ProfileDescriptionApiEndPoint = data.ProfileDescriptionId ? "/api/profileapi/updatedescriptionprofile" : "/api/profileapi/insertdescriptionprofile"
+      const ProfileDescriptionApiResponse = await fetch(ProfileDescriptionApiEndPoint, 
       {
-        const UpdateDescription = await fetch("/api/profileapi/updatedescriptionprofile", 
+        method: "POST",
+        headers: 
         {
-          method: "PUT",
-          headers: 
-          {
-            "Content-Type":"application/json"
-          },
-          body: JSON.stringify(data)
-        })
-        const DescriptionProfile = await UpdateDescription.json()
-        console.log("Deskripsi profile : " + DescriptionProfile)
-      } 
-      else 
-      {
-        const NewDescription = await fetch("/api/profileapi/insertdescriptionprofile", 
-        {
-          method: "POST",
-          headers: 
-          {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(
-          {
-            description: data.ProfileDescription
-          })
-        })
-        const NewDescriptionProfile = await NewDescription.json()
-        console.log("Deskripsi baru : " + NewDescriptionProfile)
-      }
+          "Content-Type":"application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      console.log("Deskripsi Profile : " + ProfileDescriptionApiResponse) 
     } 
     catch (error) 
     {
@@ -1238,7 +1239,7 @@ const ProfilePageComponent = () =>
   {   
     if(EditInformationClickEvent === true) 
     {
-      return <form onSubmit={handleDescriptionProfileSubmit(SubmitDescriptionProfile)}>
+      return <form onSubmit={InsertAndUpdatehandleDescriptionProfileSubmit(SubmitDescriptionProfileValue)}>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                       className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"

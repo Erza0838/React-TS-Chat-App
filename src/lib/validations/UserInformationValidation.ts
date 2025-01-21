@@ -69,5 +69,6 @@ export const DescriptionProfileSchema = z.object(
     ProfileDescription: z.string().min(1, 
     {
         message: "Deskripsi tidak boleh kosong"
-    })
+    }),
+    ProfileDescriptionId : z.string().uuid().optional()
 })

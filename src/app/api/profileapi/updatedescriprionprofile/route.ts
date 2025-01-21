@@ -3,7 +3,8 @@ import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 
-export const PUT = async (request: NextRequest,response: NextResponse) => 
+// export const PUT = async (request: NextRequest,response: NextResponse) => 
+export const POST = async (request: NextRequest,response: NextResponse) => 
 {
     const {NewProfileDescription} = await request.json()
     const session = await getServerSession(authOptions)
