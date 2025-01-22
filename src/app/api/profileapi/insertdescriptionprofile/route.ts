@@ -31,6 +31,6 @@ export const POST = async (request: NextRequest,response: NextResponse) =>
             updatedAt: new Date(),
         }
     })
-
+    console.log("Deskripsi baru : " + InsertDescriptionProfile)
     return NextResponse.json({ success: true })
 }

@@ -127,45 +127,36 @@ const ProfilePageComponent = () =>
   },[session])
   // Baris akhir useEffect
 
-  useEffect(() => 
-  {
-    async function FetchDescriptionProfile()
-    { 
-      try 
-      {
-        const response = await fetch("/api/profileapi/showdescriptionprofile")    
-        if(!response.ok) 
-        {
-          throw new Error ("Deskripsi profile bermasalah : " + response.statusText)
-        }
-        const DescriptionProfileValue: string = await response.json() 
-        const CleanedStringDescriptionProfileValue = DescriptionProfileValue.replace(/^"|"$/g, "")
-        if(DescriptionProfileValue) 
-        {
-          SetDescriptionProfile(CleanedStringDescriptionProfileValue)
-        }
-        else  
-        {
-          console.warn("Deskripsi profile kosong!")
-        } 
-      } 
-      catch(error) 
-      {
-        console.error(error) 
-      }
-    }
-    FetchDescriptionProfile()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  // if(session) 
+  // useEffect(() => 
   // {
-  //   console.log(session.user.name)
-  // }
-  // if(session == undefined || !session) 
-  // {
-  //   redirect("/login")
-  // }
+  //   async function FetchDescriptionProfile()
+  //   { 
+  //     try 
+  //     {
+  //       const response = await fetch("/api/profileapi/showdescriptionprofile")    
+  //       if(!response.ok) 
+  //       {
+  //         throw new Error ("Deskripsi profile bermasalah : " + response.statusText)
+  //       }
+  //       const DescriptionProfileValue: string = await response.json() 
+  //       const CleanedStringDescriptionProfileValue = DescriptionProfileValue.replace(/^"|"$/g, "")
+  //       if(DescriptionProfileValue) 
+  //       {
+  //         SetDescriptionProfile(CleanedStringDescriptionProfileValue)
+  //       }
+  //       else  
+  //       {
+  //         console.warn("Deskripsi profile kosong!")
+  //       } 
+  //     } 
+  //     catch(error) 
+  //     {
+  //       console.error(error) 
+  //     }
+  //   }
+  //   FetchDescriptionProfile()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
 
   interface DescriptionProfileType 
   {
@@ -201,29 +192,28 @@ const ProfilePageComponent = () =>
   }
   const {register: registerUsername,handleSubmit: handleUsernameSubmit,formState: {errors: UsernameErrors}} = UpdateUsernameProfileForm()
 
-  const InsertDescriptionProfileForm = () =>
-  {
-    const {register,handleSubmit,formState} = useForm<DescriptionFormValue>
-    ({
-      resolver: zodResolver(DescriptionProfileSchema),
-      defaultValues:
-      {
-        ProfileDescription: "",
-        ProfileDescriptionId: ""
-      }
-    })
-    return {register,handleSubmit,formState}
-  }
-  const {register: InsertDescriptionProfile,handleSubmit: handleDescriptionProfileSubmit,formState: {errors: DescriptionProfileErrors}} = InsertDescriptionProfileForm()
+  // const InsertDescriptionProfileForm = () =>
+  // {
+  //   const {register,handleSubmit,formState} = useForm<DescriptionFormValue>({
+  //     resolver: zodResolver(DescriptionProfileSchema),
+  //     defaultValues:
+  //     {
+  //       ProfileDescriptionValidation: "",
+  //       ProfileDescriptionId: ""
+  //     }
+  //   })
+  //   return {register,handleSubmit,formState}
+  // }
+  // const {register: InsertDescriptionProfile,handleSubmit: handleDescriptionProfileSubmit,formState: {errors: DescriptionProfileErrors}} = InsertDescriptionProfileForm()
 
   const InsertAndUpdateDescriptionProfileForm = () =>
   {
-    const {register,handleSubmit,formState} = useForm<DescriptionFormValue>
-    ({
+    const {register,handleSubmit,formState} = useForm<DescriptionFormValue>({
       resolver: zodResolver(DescriptionProfileSchema),
       defaultValues:
       {
-        ProfileDescription: ""
+        ProfileDescriptionValidation: "",
+        ProfileDescriptionIdValidation: ""
       }
     })
     return {register,handleSubmit,formState}
@@ -365,16 +355,16 @@ const ProfilePageComponent = () =>
   
   // Revisi insert deskripsi dan update deskripsi
   // const SubmitDescriptionProfileValue: SubmitHandler<DescriptionProfileType> = async (data) => 
-  const SubmitDescriptionProfileValue: SubmitHandler<DescriptionProfileType> = async (data) => 
+  const SubmitDescriptionProfileValue: SubmitHandler<DescriptionFormValue> = async (data) => 
   { 
-    if(!data.ProfileDescriptionId) 
+    if(!data.ProfileDescriptionIdValidation) 
     {
-      data.ProfileDescriptionId = uuidv4()      
+      data.ProfileDescriptionIdValidation = uuidv4()      
     }
-  
+    console.log("Id deskripsi profile : " + data.ProfileDescriptionIdValidation)
     try 
-    { 
-      const ProfileDescriptionApiEndPoint = data.ProfileDescriptionId ? "/api/profileapi/updatedescriptionprofile" : "/api/profileapi/insertdescriptionprofile"
+    {                                                                                                                               
+      const ProfileDescriptionApiEndPoint = data.ProfileDescriptionIdValidation ? "/api/profileapi/updatedescriptionprofile" : "/api/profileapi/insertdescriptionprofile"
       const ProfileDescriptionApiResponse = await fetch(ProfileDescriptionApiEndPoint, 
       {
         method: "POST",
@@ -1243,10 +1233,12 @@ const ProfilePageComponent = () =>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                       className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                      value={DescriptionProfile || ""}
-                      id="DescriptionProfile"
-                      {...InsertDescriptionProfile("ProfileDescription")}
-                      onChange={(e) => SetDescriptionProfile(e.target.value)}
+                      {...InsertAndUpdateDescriptionProfile("ProfileDescriptionValidation")}
+                      // value={DescriptionProfile || ""}
+                      onChange={(event) => 
+                      { 
+                        SetDescriptionProfile(event.target.value)
+                      }}
                       onKeyDown={DisabledEditInformation}                                 
                       onKeyUp={SendDescripritionProfileToApiWithEnterKey}
                       autoFocus={true}/>                        
@@ -1261,7 +1253,7 @@ const ProfilePageComponent = () =>
                   <Button 
                       type="submit" 
                       style={{backgroundColor: "rgb(8 51 68)"}} 
-                      ref={SubmitNewUsernameWithEnterKeyRef}>  
+                      ref={SubmitDescriptionProfileWithEnterKeyRef}>  
                         <FontAwesomeIcon 
                             icon={faCheck} 
                             style={{color: "#ffffff"}}
@@ -1270,7 +1262,7 @@ const ProfilePageComponent = () =>
                 </div>
               </div>
               <div className="flex flex-row">
-                {DescriptionProfileErrors && <span className="text-red-500">{DescriptionProfileErrors.ProfileDescription?.message}</span>}
+                {InsertAndUpdateDescriptionProfileErrors.ProfileDescriptionValidation && <span className="text-red-500">{InsertAndUpdateDescriptionProfileErrors.ProfileDescriptionValidation?.message}</span>}
               </div>  
             </form>
     }
