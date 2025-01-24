@@ -95,11 +95,6 @@ const ProfilePageComponent = () =>
   const [SelectedEmoji,SetSelectedEmoji] = useState<string>("")
   const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string>("")
   const [DescriptionProfile,SetDescriptionProfile] = useState<string | null>(null)
-  const [DescriptionProfileFormData,SetDescriptionProfileFormData] = useState(
-  {
-    id: "",
-    description: ""
-  })
 
   // State untuk mouse event
   let [EditNameClickEvent,setEditNameClickEvent] = useState<boolean>(false)
@@ -180,8 +175,7 @@ const ProfilePageComponent = () =>
 
   const UpdateUsernameProfileForm = () => 
   {
-    const { register, handleSubmit, formState } = useForm<UpdateUsernameFormValue>
-    ({
+    const { register, handleSubmit, formState } = useForm<UpdateUsernameFormValue>({
       resolver: zodResolver(UpdateUsernameValidationSchema),
       defaultValues:
       {
@@ -212,8 +206,10 @@ const ProfilePageComponent = () =>
       resolver: zodResolver(DescriptionProfileSchema),
       defaultValues:
       {
-        ProfileDescriptionValidation: "",
-        ProfileDescriptionIdValidation: ""
+        // ProfileDescriptionValidation: "",
+        // ProfileDescriptionIdValidation: ""
+        UserDescription: "",
+        UserDescriptionId: ""
       }
     })
     return {register,handleSubmit,formState}
@@ -355,16 +351,16 @@ const ProfilePageComponent = () =>
   
   // Revisi insert deskripsi dan update deskripsi
   // const SubmitDescriptionProfileValue: SubmitHandler<DescriptionProfileType> = async (data) => 
-  const SubmitDescriptionProfileValue: SubmitHandler<DescriptionFormValue> = async (data) => 
+  const SubmitDescriptionProfileValue: SubmitHandler<DescriptionFormValue> = async (data: DescriptionFormValue) => 
   { 
-    if(!data.ProfileDescriptionIdValidation) 
+    if(!data.UserDescription) 
     {
-      data.ProfileDescriptionIdValidation = uuidv4()      
+      data.UserDescriptionId = uuidv4()      
     }
-    console.log("Id deskripsi profile : " + data.ProfileDescriptionIdValidation)
+    console.log("Id deskripsi profile : " + data.UserDescriptionId)
     try 
     {                                                                                                                               
-      const ProfileDescriptionApiEndPoint = data.ProfileDescriptionIdValidation ? "/api/profileapi/updatedescriptionprofile" : "/api/profileapi/insertdescriptionprofile"
+      const ProfileDescriptionApiEndPoint = data.UserDescription ? "/api/profileapi/updatedescriptionprofile" : "/api/profileapi/insertdescriptionprofile"
       const ProfileDescriptionApiResponse = await fetch(ProfileDescriptionApiEndPoint, 
       {
         method: "POST",
@@ -374,8 +370,14 @@ const ProfilePageComponent = () =>
         },
         body: JSON.stringify(data)
       })
-      console.log("Deskripsi Profile : " + ProfileDescriptionApiResponse) 
+      if(!ProfileDescriptionApiResponse.ok) 
+      {
+        throw new Error("Network response error")
+      }
+      const result = await ProfileDescriptionApiResponse.json()
+      console.log("Deskripsi Profile : " + result) 
     } 
+
     catch (error) 
     {
       console.error(error)
@@ -1233,7 +1235,8 @@ const ProfilePageComponent = () =>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                       className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                      {...InsertAndUpdateDescriptionProfile("ProfileDescriptionValidation")}
+                      // {...InsertAndUpdateDescriptionProfile("ProfileDescriptionValidation")}
+                      {...InsertAndUpdateDescriptionProfile("UserDescription")}
                       // value={DescriptionProfile || ""}
                       onChange={(event) => 
                       { 
@@ -1262,7 +1265,8 @@ const ProfilePageComponent = () =>
                 </div>
               </div>
               <div className="flex flex-row">
-                {InsertAndUpdateDescriptionProfileErrors.ProfileDescriptionValidation && <span className="text-red-500">{InsertAndUpdateDescriptionProfileErrors.ProfileDescriptionValidation?.message}</span>}
+                {/* {InsertAndUpdateDescriptionProfileErrors.ProfileDescriptionValidation && <span className="text-red-500">{InsertAndUpdateDescriptionProfileErrors.ProfileDescriptionValidation?.message}</span>} */}
+                {InsertAndUpdateDescriptionProfileErrors.UserDescription && <span className="text-red-500">{InsertAndUpdateDescriptionProfileErrors.UserDescription?.message}</span>}
               </div>  
             </form>
     }

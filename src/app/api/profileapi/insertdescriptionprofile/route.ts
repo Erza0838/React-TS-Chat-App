@@ -5,7 +5,8 @@ import { authOptions } from "@/lib/auth"
 
 export const POST = async (request: NextRequest,response: NextResponse) => 
 {   
-    const {ProfileDescription} = await request.json()
+    // const {ProfileDescription} = await request.json()
+    const {UserDescription} = await request.json()
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) 
     {
@@ -19,7 +20,8 @@ export const POST = async (request: NextRequest,response: NextResponse) =>
     {
         data: 
         {
-            UserDescription: ProfileDescription as string,
+            // UserDescription: ProfileDescription as string,
+            UserDescription: UserDescription as string,
             UserIdReference: 
             {
                 connect: 
