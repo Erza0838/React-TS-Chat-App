@@ -13,7 +13,6 @@ import toast from 'react-hot-toast'
 import { faUserCircle,faEdit,faCheck,faClipboard,faSmile } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '@/Components/ui/button'
 import { SidebarElement } from '../SidebarElement'
-import { v4 as uuidv4 } from "uuid"
 // Baris akhir import component
 
 // Import zod object
@@ -62,7 +61,6 @@ import { FourteenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollectio
 
 const ProfilePageComponent = () =>
 { 
-  const newUuid = uuidv4()  
   const {data: session, update} = useSession()
 
   // useRef untuk input tag
@@ -94,7 +92,7 @@ const ProfilePageComponent = () =>
   const [UpdatInformation,SetUpdateInformation] = useState<string>("")
   const [SelectedEmoji,SetSelectedEmoji] = useState<string>("")
   const [SelectedEmojiValueDescriptionProfile,SetSelectedEmojiValueDescriptionProfile] = useState<string>("")
-  const [DescriptionProfile,SetDescriptionProfile] = useState<string | null>(null)
+  const [DescriptionProfile,SetDescriptionProfile] = useState<string>("")
 
   // State untuk mouse event
   let [EditNameClickEvent,setEditNameClickEvent] = useState<boolean>(false)
@@ -122,36 +120,36 @@ const ProfilePageComponent = () =>
   },[session])
   // Baris akhir useEffect
 
-  // useEffect(() => 
-  // {
-  //   async function FetchDescriptionProfile()
-  //   { 
-  //     try 
-  //     {
-  //       const response = await fetch("/api/profileapi/showdescriptionprofile")    
-  //       if(!response.ok) 
-  //       {
-  //         throw new Error ("Deskripsi profile bermasalah : " + response.statusText)
-  //       }
-  //       const DescriptionProfileValue: string = await response.json() 
-  //       const CleanedStringDescriptionProfileValue = DescriptionProfileValue.replace(/^"|"$/g, "")
-  //       if(DescriptionProfileValue) 
-  //       {
-  //         SetDescriptionProfile(CleanedStringDescriptionProfileValue)
-  //       }
-  //       else  
-  //       {
-  //         console.warn("Deskripsi profile kosong!")
-  //       } 
-  //     } 
-  //     catch(error) 
-  //     {
-  //       console.error(error) 
-  //     }
-  //   }
-  //   FetchDescriptionProfile()
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [])
+  useEffect(() => 
+  {
+    async function FetchDescriptionProfile()
+    { 
+      try 
+      {
+        const response = await fetch("/api/profileapi/showdescriptionprofile")    
+        if(!response.ok) 
+        {
+          throw new Error ("Deskripsi profile bermasalah : " + response.statusText)
+        }
+        const DescriptionProfileValue: string = await response.json() 
+        const CleanedStringDescriptionProfileValue = DescriptionProfileValue.replace(/^"|"$/g, "")
+        if(DescriptionProfileValue) 
+        {
+          SetDescriptionProfile(CleanedStringDescriptionProfileValue)
+        }
+        else  
+        {
+          console.warn("Deskripsi profile kosong!")
+        } 
+      } 
+      catch(error) 
+      {
+        console.error(error) 
+      }
+    }
+    FetchDescriptionProfile()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   interface DescriptionProfileType 
   {
@@ -161,8 +159,7 @@ const ProfilePageComponent = () =>
 
   const UpdateEmailProfileForm = () => 
   {
-    const {register,handleSubmit,formState} = useForm<UpdateEmailFormValue>
-    ({
+    const {register,handleSubmit,formState} = useForm<UpdateEmailFormValue>({
       resolver: zodResolver(UpdateEmailValidationSchema), 
       defaultValues:
       {
@@ -186,39 +183,21 @@ const ProfilePageComponent = () =>
   }
   const {register: registerUsername,handleSubmit: handleUsernameSubmit,formState: {errors: UsernameErrors}} = UpdateUsernameProfileForm()
 
-  // const InsertDescriptionProfileForm = () =>
-  // {
-  //   const {register,handleSubmit,formState} = useForm<DescriptionFormValue>({
-  //     resolver: zodResolver(DescriptionProfileSchema),
-  //     defaultValues:
-  //     {
-  //       ProfileDescriptionValidation: "",
-  //       ProfileDescriptionId: ""
-  //     }
-  //   })
-  //   return {register,handleSubmit,formState}
-  // }
-  // const {register: InsertDescriptionProfile,handleSubmit: handleDescriptionProfileSubmit,formState: {errors: DescriptionProfileErrors}} = InsertDescriptionProfileForm()
-
   const InsertAndUpdateDescriptionProfileForm = () =>
   {
-    const {register,handleSubmit,formState} = useForm<DescriptionFormValue>({
+    const { register, handleSubmit,formState } = useForm<DescriptionFormValue>({
       resolver: zodResolver(DescriptionProfileSchema),
       defaultValues:
       {
-        // ProfileDescriptionValidation: "",
-        // ProfileDescriptionIdValidation: ""
         UserDescription: "",
-        UserDescriptionId: ""
       }
     })
-    return {register,handleSubmit,formState}
+    return { register, handleSubmit, formState}
   }
   const {register: InsertAndUpdateDescriptionProfile,handleSubmit: InsertAndUpdatehandleDescriptionProfileSubmit,formState: {errors: InsertAndUpdateDescriptionProfileErrors}} = InsertAndUpdateDescriptionProfileForm()
 
-  const SubmitNewUsername:SubmitHandler<UpdateUsernameFormValue>  = async (data: UpdateUsernameFormValue) => 
+  const SubmitNewUsername:SubmitHandler<UpdateUsernameFormValue> = async (data: UpdateUsernameFormValue) => 
   {
-    console.log("Submitted username: ",data)
     try 
     {                                              
       const response = await fetch("/api/profileapi/updateusernameprofile",
@@ -313,54 +292,15 @@ const ProfilePageComponent = () =>
   }
   // Baris akhir validasi zod email
 
-  // Function untuk mengirim deskripsi profile ke api
-  const SubmitDescriptionProfile:SubmitHandler<DescriptionFormValue>  = async (data: DescriptionFormValue) =>
-  {
-    console.log("Deskripsi profile: ",data)
-    try 
-    {                                              
-      const response = await fetch("/api/profileapi/insertdescriptionprofile",
-      {
-        method: "POST",
-        headers: 
-        {
-          "Content-Type":"application/json"
-        },
-        body: JSON.stringify(data)
-      }) 
-      if(!response.ok) 
-      {
-          throw new Error("Network response error")
-      }
-      const result = await response.json()
-      if(result.error) 
-      {
-        toast.error(result.error)
-        return
-      }
-    } 
-    catch(error) 
-    {
-      console.error("Error submit form : " + error)
-    }
-    finally
-    {
-      toast.success("Info diubah!")
-    }
-  } 
-  
-  // Revisi insert deskripsi dan update deskripsi
-  // const SubmitDescriptionProfileValue: SubmitHandler<DescriptionProfileType> = async (data) => 
+  // Insert deskripsi dan update deskripsi
   const SubmitDescriptionProfileValue: SubmitHandler<DescriptionFormValue> = async (data: DescriptionFormValue) => 
   { 
-    if(!data.UserDescription) 
-    {
-      data.UserDescriptionId = uuidv4()      
-    }
-    console.log("Id deskripsi profile : " + data.UserDescriptionId)
     try 
-    {                                                                                                                               
-      const ProfileDescriptionApiEndPoint = data.UserDescription ? "/api/profileapi/updatedescriptionprofile" : "/api/profileapi/insertdescriptionprofile"
+    { 
+      const isDescriptionProfileEmpty = !DescriptionProfile || DescriptionProfile.trim() === ""
+      const ProfileDescriptionApiEndPoint = DescriptionProfile 
+                                          ? "/api/profileapi/updatedescriptionprofile"  
+                                          : "/api/profileapi/insertdescriptionprofile"                         
       const ProfileDescriptionApiResponse = await fetch(ProfileDescriptionApiEndPoint, 
       {
         method: "POST",
@@ -374,13 +314,24 @@ const ProfilePageComponent = () =>
       {
         throw new Error("Network response error")
       }
-      const result = await ProfileDescriptionApiResponse.json()
-      console.log("Deskripsi Profile : " + result) 
+      const result = await ProfileDescriptionApiResponse.json() 
+      if(result.error) 
+      {
+        toast.error(result.error)
+        return
+      }
+      if(isDescriptionProfileEmpty) 
+      {
+        toast.success("Deskripsi ditambahkan!")
+      }
+      else
+      {
+        toast.success("Deskripsi diubah!")
+      }
     } 
-
-    catch (error) 
+    catch(error) 
     {
-      console.error(error)
+      console.error("Error submit form : " + error)
     }
   }
 
@@ -406,7 +357,6 @@ const ProfilePageComponent = () =>
     SetSelectedEmoji(ClickEmoji)
   }
 
-  // const ChoseEmojiForDescriptionProfile = (ClickEmojiDescriptionProfile: string[]) =>
   const ChoseEmojiForDescriptionProfile = (ClickEmojiDescriptionProfile: string) =>
   {
     SetSelectedEmojiValueDescriptionProfile(ClickEmojiDescriptionProfile)
@@ -1235,9 +1185,8 @@ const ProfilePageComponent = () =>
               <div className="flex flex-row gap-2">
                 <input type="text" 
                       className="focus:outline-none py-1 min-w-24 pr-11 text-white bg-cyan-950 focus:border-b-4 font-serif md:font-serif"
-                      // {...InsertAndUpdateDescriptionProfile("ProfileDescriptionValidation")}
                       {...InsertAndUpdateDescriptionProfile("UserDescription")}
-                      // value={DescriptionProfile || ""}
+                      value={DescriptionProfile + SelectedEmojiValueDescriptionProfile}
                       onChange={(event) => 
                       { 
                         SetDescriptionProfile(event.target.value)
@@ -1338,7 +1287,7 @@ const ProfilePageComponent = () =>
               <input type="text" 
                     className="focus:outline-none px-1 py-1 min-w-24 text-white bg-red-500 focus:border-b-4" 
                     ref={DisplayNoneInputInformationRef}
-                    value={DescriptionProfile || ""}
+                    value={DescriptionProfile + SelectedEmojiValueDescriptionProfile || ""}
                     onChange={e => SetDescriptionProfile(e.target.value)}
                     disabled/>
             </div>

@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/auth"
 export const PUT = async (request: NextRequest,response: NextResponse) =>
 {  
     const {Username} = await request.json()
-    console.log("Username baru : " + Username)
+    console.log("Username dari input : " + Username)
     const session = await getServerSession(authOptions)
 
     if(!session) 

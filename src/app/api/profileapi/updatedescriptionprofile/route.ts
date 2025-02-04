@@ -6,7 +6,8 @@ import { authOptions } from "@/lib/auth"
 // export const PUT = async (request: NextRequest,response: NextResponse) => 
 export const POST = async (request: NextRequest,response: NextResponse) => 
 {
-    const {NewProfileDescription} = await request.json()
+    const {UserDescription} = await request.json()
+    console.log("Update Deskripsi : " + UserDescription)
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) 
     {
@@ -32,11 +33,9 @@ export const POST = async (request: NextRequest,response: NextResponse) =>
         },
         data: 
         {
-            UserDescription: NewProfileDescription
+            UserDescription: UserDescription as string,
         }
     })   
-    
-    console.log("Deskripsi baru : " + UpdateProfileDescription) 
-
-    return NextResponse.json({ success: true })
+    console.log("Deskripsi baru : " + JSON.stringify(UpdateProfileDescription)) 
+    return NextResponse.json({ success: true }) 
 }

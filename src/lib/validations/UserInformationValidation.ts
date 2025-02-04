@@ -75,5 +75,5 @@ export const DescriptionProfileSchema = z.object(
     {
         message: "Deskripsi tidak boleh kosong"
     }),
-    UserDescriptionId : z.string().uuid().optional()
+    // UserDescriptionId : z.string().uuid().optional()
 })
