@@ -77,3 +77,12 @@ export const DescriptionProfileSchema = z.object(
     }),
     // UserDescriptionId : z.string().uuid().optional()
 })
+
+export const UserContactIdValidationSchema = z.object(
+{
+    UserContactId :z.string().min(1,
+    {
+        message: "ID contact tidak boleh kosong"
+    }),
+    SavedUsernameContact: z.string().optional().or(z.literal(""))
+})

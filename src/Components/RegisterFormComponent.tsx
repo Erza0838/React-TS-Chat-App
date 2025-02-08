@@ -89,7 +89,7 @@ export default function RegisterFormComponent()
     <div className="flex justify-center translate-y-12"> 
     <h1 className="text-white">Halaman register</h1>
    </div>
-   <div className="flex justify-center mt-28">
+   <div className="flex justify-center mt-20">
       <div className="flex justify-center bg-cyan-900 w-80 h-96 rounded">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

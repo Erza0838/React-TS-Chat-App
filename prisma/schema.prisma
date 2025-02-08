@@ -19,14 +19,15 @@ model UserModel {
   id                 String  @id @default(cuid())
   Genders            String  @db.Char(100)
   Email              String  @db.VarChar(100)
-  Username           String  @db.VarChar(100)
+  Username           String  @db.VarChar(100) @unique
   Password           String  @unique @db.VarChar(100)
   UserProfilePicture String? @db.VarChar(255)
   // Emoji              String? @db.VarChar(10)
   // ProfilePicture Unsupported("blob")?
 
   UserDescription_Reference    UserDescription[]
-  User_Contacts_Id             User_Contacts[]
+  Default_Username_Reference    User_Contacts[] @relation("DefaultUsernameReference")
+  User_Contacts_Id             User_Contacts[] @relation("UserContactIdReference")
   Add_Member_Grup_From_Contact Grup_List_Member_Model[] @relation("Add_Grup_Member_From_Contact")
 
   @@map("user")
@@ -44,9 +45,12 @@ model UserDescription {
 
 // Model untuk menyimpan daftar kontak user
 model User_Contacts {
-  User_Id     UserModel @relation(fields: [Contacts_Id], references: [id])
   Contacts_Id String    @unique
-
+  DefaultUsername String 
+  // SavedUsernameContact String? @db.VarChar(100)
+  ContactInformation Json? @db.Json
+  User_Id     UserModel @relation("DefaultUsernameReference",fields: [Contacts_Id], references: [id])
+  UsernameReference     UserModel @relation("UserContactIdReference", fields: [DefaultUsername], references: [Username])
   Sender_Rechiever_Message_Id Personal_Chat_Model[]
 
   @@map("contact_List")
