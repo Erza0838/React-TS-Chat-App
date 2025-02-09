@@ -1252,8 +1252,7 @@ const ProfilePageComponent = () =>
             <div className="flex flex-col gap-2">
               <h4 className="text-zinc-400 font-bold">Email</h4>
               {ShowTagInputEmail()}
-              {/* <input className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4 border-b-cyan-700"  */}
-              <input className="focus:outline-none px-1 py-1 min-w-24 text-white bg-red-500 focus:border-b-4" 
+              <input className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4" 
                       value={UpdateEmail}
                       disabled
                       ref={DisplayNoneInputEmailRef}
@@ -1285,7 +1284,7 @@ const ProfilePageComponent = () =>
               <h4 className="text-zinc-400 font-bold">Info</h4>
               {ShowTagInputInformation()}
               <input type="text" 
-                    className="focus:outline-none px-1 py-1 min-w-24 text-white bg-red-500 focus:border-b-4" 
+                    className="focus:outline-none px-1 py-1 min-w-24 text-white bg-cyan-950 focus:border-b-4" 
                     ref={DisplayNoneInputInformationRef}
                     value={DescriptionProfile + SelectedEmojiValueDescriptionProfile || ""}
                     onChange={e => SetDescriptionProfile(e.target.value)}

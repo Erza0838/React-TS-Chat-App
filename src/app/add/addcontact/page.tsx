@@ -4,7 +4,7 @@ import { SidebarElement } from '@/app/SidebarElement'
 import z from "zod"
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from "react-hot-toast"
-import { useForm } from "react-hook-form"
+import { SubmitHandler, useForm } from "react-hook-form"
 import { Button } from "@/Components/ui/button"
 import { useSession } from "next-auth/react"
 
@@ -23,12 +23,49 @@ export default function AddContact()
       resolver: zodResolver(UserContactIdValidationSchema),
       defaultValues: 
       {
-        UserContactId: ""
+        UserContactId: "",
+        SavedUsernameContact: ""
       }
     })
     return {register,handleSubmit,formState}
   }
   const {register: AddNewContact,handleSubmit: SubmitNewContact,formState: {errors: AddNewContactErrors}} = AddNewContactForm()
+
+  const InsertNewContact:SubmitHandler<UserContactIdFormValue> = async (data: UserContactIdFormValue) => 
+  {
+    console.log("ID kontak: " +  data)
+    try 
+    {
+      const response = await fetch("/api/add/addcontact", 
+      {
+        method: "POST",
+        headers: 
+        {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      if(!response.ok)
+      {
+        throw new Error("Network response error")
+      }
+      if(data.UserContactId === session?.user.id) 
+      {
+        toast.error("Tidak bisa menambahkan id sendiri")
+        return
+      }
+      if(data.UserContactId !== session?.user.id) 
+      {
+        const result = await response.json()
+        toast.success("Kontak ditambahkan")
+        return result
+      }
+    } 
+    catch (error) 
+    {
+      console.error(error) 
+    }
+  }
 
   return (
     <div className="flex flex-row">
@@ -38,16 +75,25 @@ export default function AddContact()
             <div className="flex flex-row">
               <h2 className="text-white font-bold">Tambah kontak</h2>
             </div>
-            <div className="flex flex-col gap-6">
-              <input type="text"
-                      className="focus:outline-none rounded-lg pl-2 py-2 min-w-24 text-white bg-cyan-900 font-serif md:font-serif"
-                      {...AddNewContact("UserContactId")}
-                      placeholder="ID USER"/>
-              <Button
-                  type="submit"
-                  style={{backgroundColor: "#FFFFFF", color: "#164e63", width: "15vw", fontSize: "1.2vw"}}>
-                Tambah  
-              </Button>
+            <div className="flex flex-col">
+              <form onSubmit={SubmitNewContact(InsertNewContact)}>
+                <div className="flex flex-col gap-11">
+                  <input type="text"
+                          className="focus:outline-none rounded-lg pl-2 py-2 min-w-24 text-white bg-cyan-900 font-serif md:font-serif"
+                          {...AddNewContact("UserContactId")}
+                          placeholder="ID USER"/>
+                  {AddNewContactErrors.UserContactId && <p className="text-red-500 absolute top-24">{AddNewContactErrors.UserContactId.message}</p>}
+                  <input type="text"
+                          className="focus:outline-none rounded-lg pl-2 py-2 min-w-24 text-white bg-cyan-900 font-serif md:font-serif"
+                          {...AddNewContact("SavedUsernameContact")}
+                          placeholder="NAMA"/>
+                  <Button
+                      type="submit"
+                      style={{backgroundColor: "#FFFFFF", color: "#164e63", width: "15vw", fontSize: "1.2vw"}}>
+                    Tambah  
+                  </Button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
