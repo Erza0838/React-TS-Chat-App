@@ -4,7 +4,7 @@ import { Prisma } from "@prisma/client"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 
-export const POST = async (request: NextRequest) => 
+export const POST = async (request: NextRequest, response: NextResponse) => 
 {   
     const {UserContactId, SavedUsernameContact} = await request.json()
     const session = await getServerSession(authOptions)
@@ -27,13 +27,12 @@ export const POST = async (request: NextRequest) =>
           id: true
         }      
     })
-    
-    if(FindContact === UserContactId) 
-    {
-      console.log("ID kontak: " + JSON.stringify(UserContactInformation))
-    }
 
-    if(FindContact) 
+    console.log("ID kontak dari database : " + JSON.stringify(FindContact))
+    console.log("ID kontak dari tag input : " + JSON.stringify(FindContact))
+    console.log("ID kontak dari session : " + JSON.stringify(session?.user?.id))
+
+    if(FindContact !== session?.user?.id) 
     { 
       const AddNewContact = await prisma.user_Contacts.create(
       {
@@ -45,14 +44,15 @@ export const POST = async (request: NextRequest) =>
           }
       })
       console.log("Kontak ditemukan : " + UserContactId, SavedUsernameContact)
-      return NextResponse.json({UserContactId, SavedUsernameContact}) 
+      return NextResponse.json({AddNewContact}, {status: 200}) 
     }
-    if(FindContact === session?.user?.id) 
+    else if(FindContact === UserContactId) 
     { 
       console.log("Tidak bisa menambahkan id sendiri")
-      return NextResponse.json({error: "Tidak bisa menambahkan id sendiri"}, {status: 400}) 
       return null
+      return NextResponse.json({error: "Tidak bisa menambahkan id sendiri"}, {status: 400}) 
     }
+
     if(!FindContact) 
     {
       console.log("Kontak tidak ditemukan")

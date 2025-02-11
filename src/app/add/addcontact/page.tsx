@@ -45,20 +45,23 @@ export default function AddContact()
         },
         body: JSON.stringify(data)
       })
+
       if(!response.ok)
       {
         throw new Error("Network response error")
       }
-      if(data.UserContactId === session?.user.id) 
-      {
-        toast.error("Tidak bisa menambahkan id sendiri")
-        return
-      }
+
       if(data.UserContactId !== session?.user.id) 
       {
         const result = await response.json()
         toast.success("Kontak ditambahkan")
         return result
+      }
+
+      if(data.UserContactId === session?.user.id) 
+      { 
+        toast.error("Tidak bisa menambahkan id sendiri")
+        return null
       }
     } 
     catch (error) 
