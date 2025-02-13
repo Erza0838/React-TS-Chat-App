@@ -28,11 +28,7 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         }      
     })
 
-    console.log("ID kontak dari database : " + JSON.stringify(FindContact))
-    console.log("ID kontak dari tag input : " + JSON.stringify(FindContact))
-    console.log("ID kontak dari session : " + JSON.stringify(session?.user?.id))
-
-    if(FindContact !== session?.user?.id) 
+    if(FindContact) 
     { 
       const AddNewContact = await prisma.user_Contacts.create(
       {
@@ -45,12 +41,6 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
       })
       console.log("Kontak ditemukan : " + UserContactId, SavedUsernameContact)
       return NextResponse.json({AddNewContact}, {status: 200}) 
-    }
-    else if(FindContact === UserContactId) 
-    { 
-      console.log("Tidak bisa menambahkan id sendiri")
-      return null
-      return NextResponse.json({error: "Tidak bisa menambahkan id sendiri"}, {status: 400}) 
     }
 
     if(!FindContact) 

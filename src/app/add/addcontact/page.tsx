@@ -33,6 +33,11 @@ export default function AddContact()
 
   const InsertNewContact:SubmitHandler<UserContactIdFormValue> = async (data: UserContactIdFormValue) => 
   {
+    if(data.UserContactId === session?.user.id) 
+    { 
+      toast.error("Tidak bisa menambahkan id sendiri")
+      return null
+    }
     console.log("ID kontak: " +  data)
     try 
     {
@@ -56,12 +61,6 @@ export default function AddContact()
         const result = await response.json()
         toast.success("Kontak ditambahkan")
         return result
-      }
-
-      if(data.UserContactId === session?.user.id) 
-      { 
-        toast.error("Tidak bisa menambahkan id sendiri")
-        return null
       }
     } 
     catch (error) 
