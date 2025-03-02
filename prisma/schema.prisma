@@ -26,8 +26,9 @@ model UserModel {
   // ProfilePicture Unsupported("blob")?
 
   UserDescription_Reference    UserDescription[]
-  Default_Username_Reference    User_Contacts[] @relation("DefaultUsernameReference")
-  User_Contacts_Id             User_Contacts[] @relation("UserContactIdReference")
+  UserContactIdReference      User_Contacts[]
+  // Default_Username_Reference    User_Contacts[] @relation("DefaultUsernameReference")
+  // User_Contacts_Id             User_Contacts[] @relation("UserContactIdReference")
   Add_Member_Grup_From_Contact Grup_List_Member_Model[] @relation("Add_Grup_Member_From_Contact")
 
   @@map("user")
@@ -45,13 +46,17 @@ model UserDescription {
 
 // Model untuk menyimpan daftar kontak user
 model User_Contacts {
-  Contacts_Id String    @unique
-  DefaultUsername String 
+  // Contacts_Id String   @unique
+  // Contacts_Id String   @unique
+  Contact_Id_References String @unique
+  // DefaultUsername String
   // SavedUsernameContact String? @db.VarChar(100)
   ContactInformation Json? @db.Json
-  User_Id     UserModel @relation("DefaultUsernameReference",fields: [Contacts_Id], references: [id])
-  UsernameReference     UserModel @relation("UserContactIdReference", fields: [DefaultUsername], references: [Username])
-  Sender_Rechiever_Message_Id Personal_Chat_Model[]
+
+  UserContactId  UserModel @relation(fields: [Contact_Id_References], references: [id])
+  // User_Id     UserModel @relation("DefaultUsernameReference",fields: [Contacts_Id], references: [id])
+  // UsernameReference     UserModel @relation("UserContactIdReference", fields: [DefaultUsername], references: [Username])
+  // Sender_Rechiever_Message_Id Personal_Chat_Model[]
 
   @@map("contact_List")
 }
@@ -67,7 +72,7 @@ model Personal_Chat_Feature_Model {
 
 // Model untuk menyimpan obrolan pribadi
 model Personal_Chat_Model {
-  Existing_Personal_Contact_Id User_Contacts @relation(fields: [Existing_Contact_Id], references: [Contacts_Id])
+  // Existing_Personal_Contact_Id User_Contacts @relation(fields: [Existing_Contact_Id], references: [Contacts_Id])
   Existing_Contact_Id          String        @id @default(uuid())
 
   Sender_Rechiever_Personal_Message_Id Personal_Chat_Feature_Model @relation(fields: [Personal_Message_Id], references: [Personal_Messages_Id])

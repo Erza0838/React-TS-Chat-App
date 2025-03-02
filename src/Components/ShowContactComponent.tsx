@@ -16,21 +16,6 @@ export default function ShowContactComponent()
                 </div>
             </div>
         </div>
-        {/* <div className="flex flex-col gap-40 mx-72 overflow-hidden">
-            <div className="bg-slate-800 hidden h-14 w-96" id="NameAndPictureHeader">
-                <div className="flex flex-row">
-                    <FontAwesomeIcon icon={faUserCircle} style={{color: "#ffffff"}} className="w-5 cursor-pointer"/>
-                    <p className="text-white">Nama</p>
-                </div>
-            </div>    
-            <div className="bg-cyan-700 hidden h-16 w-96" id="InputMessages">
-                <div className="flex flex-row my-4">
-                    <form action="">
-                        <input type="text" name="" placeholder="ketik pesan" className="focus:outline-none rounded-md px-1 py-1 min-w-24"/>
-                    </form>
-                </div>
-            </div>    
-        </div> */}
     </>
   )
 }

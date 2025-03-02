@@ -2,7 +2,6 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
 import { useEffect } from 'react'
 import { useForm } from "react-hook-form"
 import { SubmitHandler } from 'react-hook-form'
@@ -901,7 +900,6 @@ const ProfilePageComponent = () =>
     switch(event.key) 
     {
       case "Escape" : setEditInformationClickEvent(false)
-                      // EditInformationClickEvent = false
         break
     }
   }
@@ -1214,7 +1212,6 @@ const ProfilePageComponent = () =>
                 </div>
               </div>
               <div className="flex flex-row">
-                {/* {InsertAndUpdateDescriptionProfileErrors.ProfileDescriptionValidation && <span className="text-red-500">{InsertAndUpdateDescriptionProfileErrors.ProfileDescriptionValidation?.message}</span>} */}
                 {InsertAndUpdateDescriptionProfileErrors.UserDescription && <span className="text-red-500">{InsertAndUpdateDescriptionProfileErrors.UserDescription?.message}</span>}
               </div>  
             </form>
