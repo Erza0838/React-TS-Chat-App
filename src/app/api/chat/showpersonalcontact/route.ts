@@ -7,7 +7,8 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
 {   
     const session = await getServerSession(authOptions)
     const FindContactOwner = await prisma.userModel.findFirst({
-        where: {
+        where: 
+        {
             id: session?.user.id ?? ""
         }
     })
@@ -19,8 +20,6 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
                 ContactInformation: true
             }
         })
-        // const MyContactList = ShowMyFriends.map(item => item.ContactInformation).join("")
-        // const CleanedStringMyContactList = 
         return NextResponse.json({contact: JSON.stringify(ShowMyFriends)}, {status: 200})
     }
 }

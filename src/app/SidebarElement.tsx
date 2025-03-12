@@ -14,9 +14,11 @@ export const SidebarElement = () =>
 
   function ChatIcon() 
   {
-    if(myLocation?.pathname === "/homepage")
+    // if(myLocation?.pathname === "/homepage")
+    if(myLocation?.pathname === "/contact")
     {
-        return <Link href={"/homepage"}>
+        // return <Link href={"/homepage"}>
+        return <Link href={"/contact"}>
           <div className="w-8 h-8 bg-cyan-950 cursor-pointer flex justify-center items-center rounded-full absolute right-4">
             <FontAwesomeIcon
               icon={faMessage}
@@ -25,14 +27,16 @@ export const SidebarElement = () =>
           </div>
         </Link>
     }
-    if(myLocation?.pathname !== "/homepage")
+    // if(myLocation?.pathname !== "/homepage")
+    if(myLocation?.pathname !== "/contact")
     {
-        return <Link href={"/homepage"}>
-            <FontAwesomeIcon
-              icon={faMessage}
-              style={{color: "#ffffff"}}
-              className="w-5 cursor-pointer"/>
-        </Link>
+        // return <Link href={"/homepage"}>
+        return <Link href={"/contact"}>
+                <FontAwesomeIcon
+                  icon={faMessage}
+                  style={{color: "#ffffff"}}
+                  className="w-5 cursor-pointer"/>
+              </Link>
     }
   }
 

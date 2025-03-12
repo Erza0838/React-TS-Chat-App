@@ -1,46 +1,42 @@
-"use client"
-import React, { useState } from "react"
+// "use client"
+import React from "react"
 import { SidebarComponents } from "@/Components/SidebarComponents"
 import SearchContactComponent from "@/Components/SearchContactComponent"
-import { useEffect } from "react"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
+import { prisma } from "../Database"
 
-type Contact = 
+interface ContactInfo 
 {
-  ContactId: string,
-  ContactInformation: {Email: string; Name?: string}
+  SaveContactName?: string
+  FriendId: string
 }
 
-export default function Home() 
+export default async function Home() 
 { 
-  const [ContactLit, SetContactList] = useState<Contact[]>([])
-  const [Loading, SetLoading] = useState<boolean>(true)
+  const session = await getServerSession(authOptions)
+  const FindContactOwner = await prisma.userModel.findFirst({
+      where: 
+      {
+          id: session?.user.id ?? ""
+      }
+  })
 
-  useEffect(() => 
+  const ChekContactOwnerId = await prisma.user_Contacts.findMany(
   {
-    async function ShowContactList() 
-    {
-      try 
+      where: 
       {
-        const response = await fetch("/api/chat/showpersonalcontact")  
-        const ContactListData:Contact[] = await response.json()
-        SetContactList(ContactListData)
-        console.log("Daftar kontak : " + ContactListData)
-        if(!response.ok) 
+        MyId: 
         {
-          throw new Error("Kontak bermasalah : " + response.statusText)
+          equals: session?.user.id ?? ""
         }
-      } 
-      catch(error)
+      },
+      select: 
       {
-        console.error(error)  
+        ContactInformation: true
       }
-      finally
-      {
-        SetLoading(false)
-      }
-    }
-    ShowContactList()
-  }, [])
+  }) as { ContactInformation: ContactInfo | null }[]
+  console.log("Kontak valid : " + JSON.stringify(ChekContactOwnerId))
 
   return (
     <div className="flex flex-row">
@@ -50,6 +46,20 @@ export default function Home()
               <h4 className="text-zinc-400 font-bold">Obrolan</h4>
               <SearchContactComponent></SearchContactComponent>
               <div className="flex flex-col gap-6 my-5">
+                {FindContactOwner ? (
+                  <ul>
+                    {ChekContactOwnerId.map((MyFriendsList) => 
+                    {
+                      return (
+                        <li key={FindContactOwner.id}>
+                         {JSON.stringify(MyFriendsList.ContactInformation?.SaveContactName ?? "")}
+                        </li>
+                      )
+                    })}
+                  </ul>
+                ) : (
+                  <p className="text-white">Kontak kosong</p>
+                )}
               </div>
           </div>
          </div>
