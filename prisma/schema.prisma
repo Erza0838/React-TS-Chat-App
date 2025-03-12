@@ -46,18 +46,10 @@ model UserDescription {
 
 // Model untuk menyimpan daftar kontak user
 model User_Contacts {
-  // Contacts_Id String   @unique
-  // Contacts_Id String   @unique
-  Contact_Id_References String @unique
-  // DefaultUsername String
-  // SavedUsernameContact String? @db.VarChar(100)
+  Contact_Id String @id @default(uuid()) 
   ContactInformation Json? @db.Json
-
-  UserContactId  UserModel @relation(fields: [Contact_Id_References], references: [id])
-  // User_Id     UserModel @relation("DefaultUsernameReference",fields: [Contacts_Id], references: [id])
-  // UsernameReference     UserModel @relation("UserContactIdReference", fields: [DefaultUsername], references: [Username])
-  // Sender_Rechiever_Message_Id Personal_Chat_Model[]
-
+  MyId String
+  UserContactId  UserModel @relation(fields: [MyId], references: [id])
   @@map("contact_List")
 }
 

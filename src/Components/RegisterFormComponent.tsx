@@ -91,16 +91,15 @@ export default function RegisterFormComponent()
    </div>
    <div className="flex justify-center mt-20">
       <div className="flex justify-center bg-cyan-900 w-80 h-96 rounded">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <Form {...form} >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-11 pt-7">
             <FormField
               control={form.control}
               name="Username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input {...field} className="font-medium"/>
+                      <Input {...field} placeholder="Username" className="font-medium"/>
                     </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -110,9 +109,8 @@ export default function RegisterFormComponent()
               name="Email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input {...field} className="font-medium"/>
+                      <Input {...field} placeholder="Email" className="font-medium"/>
                     </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -122,9 +120,8 @@ export default function RegisterFormComponent()
               name="Password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} className="font-medium"/>
+                      <Input type="password" {...field} placeholder="Password" className="font-medium"/>
                     </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -134,9 +131,8 @@ export default function RegisterFormComponent()
               name="Genders"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Jenis kelamin</FormLabel>
                     <FormControl>
-                      <Input type="text" {...field}/>
+                      <Input type="text" placeholder="Jenis kelamin" {...field}/>
                     </FormControl>
                   <FormMessage />
                 </FormItem>

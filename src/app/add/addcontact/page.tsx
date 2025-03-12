@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { SidebarElement } from '@/app/SidebarElement'
 import z from "zod"
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -17,8 +17,10 @@ type UserContactIdFormValue = z.infer<typeof UserContactIdValidationSchema>
 export default function AddContact() 
 {
   const {data: session} = useSession()
+  const [myLocation,setMyLocation] = useState<Location | null>(null)
+
   const AddNewContactForm = () =>
-  {
+  { 
     const {register,handleSubmit,formState} = useForm<UserContactIdFormValue>({
       resolver: zodResolver(UserContactIdValidationSchema),
       defaultValues: 
@@ -38,7 +40,6 @@ export default function AddContact()
       toast.error("Tidak bisa menambahkan id sendiri")
       return null
     }
-    console.log("ID kontak: " +  data)
     try 
     {
       const response = await fetch("/api/add/addcontact", 
@@ -67,6 +68,14 @@ export default function AddContact()
     {
       console.error(error) 
     }
+  }
+
+  function DeleteUnuseContactInformation() 
+  {
+    if(myLocation?.pathname === "/add/addcontact")
+      {
+        return 
+      }
   }
 
   return (

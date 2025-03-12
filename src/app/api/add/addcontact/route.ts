@@ -16,13 +16,12 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
       }
     ] as Prisma.JsonArray
 
-    // const CountContactId = await prisma.user_Contacts.count(
-    // {
-    //   where: 
-    //   {
-    //     Contact_Id_References: session?.user.id as string,
-    //   }      
-    // })
+    const FindUser = await prisma.userModel.findFirst({
+      where: 
+      {
+        Email: session?.user.email ?? ""
+      }
+    })
 
     const FindContact = await prisma.userModel.findFirst(
     {
@@ -38,7 +37,6 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
 
     if(FindContact) 
     {   
-      console.log("Jumlah id pribadi: 0")
       const AddNewContact = await prisma.user_Contacts.create(
       {
           data: 
@@ -46,10 +44,10 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
               ContactInformation: UserContactInformation,
               UserContactId: 
               {
-                  connect: 
-                  {
-                      id: session?.user?.id as string
-                  }
+                connect: 
+                {
+                  id: FindUser?.id
+                }
               }
           }
       })
