@@ -22,22 +22,39 @@ export default async function Home()
       }
   })
 
-  const ChekContactOwnerId = await prisma.user_Contacts.findMany(
+ const ChekContactOwnerId = await prisma.user_Contacts.findMany(
+ {
+  where: 
   {
-      where: 
-      {
-        MyId: 
-        {
-          equals: session?.user.id ?? ""
-        }
-      },
-      select: 
-      {
-        ContactInformation: true
-      }
-  }) as { ContactInformation: ContactInfo | null }[]
-  console.log("Kontak valid : " + JSON.stringify(ChekContactOwnerId))
+    MyId: 
+    {
+      equals: session?.user.id ?? ""
+    },
+    // ContactInformation: 
+    // {
+    //   path: '$[*].ContactId',
+    //   array_contains: session?.user.id 
+    // }
+  },
+  select: 
+  {
+    ContactInformation: true
+  }
+})
+console.log("Kontak ID ranggas : " + JSON.stringify(ChekContactOwnerId))
 
+const GetContactId = await prisma.user_Contacts.findMany(
+{
+    where: 
+    {
+      ContactInformation: 
+      {
+        path: '$[*].ContactId',
+        array_contains: 'cm3ch89u10000z925dyv4s4bm'
+      }
+    }
+})
+    
   return (
     <div className="flex flex-row">
       <SidebarComponents></SidebarComponents>
@@ -48,14 +65,17 @@ export default async function Home()
               <div className="flex flex-col gap-6 my-5">
                 {FindContactOwner ? (
                   <ul>
-                    {ChekContactOwnerId.map((MyFriendsList) => 
+                    <li className="text-white">
+                      {/* {JSON.stringify(GetContactId)} */}
+                    </li>
+                    {/* {ChekContactOwnerId.map((MyFriendsList) => 
                     {
                       return (
-                        <li key={FindContactOwner.id}>
-                         {JSON.stringify(MyFriendsList.ContactInformation?.SaveContactName ?? "")}
+                        <li key={FindContactOwner.id} className="text-white">
+                         {JSON.stringify(MyFriendsList.ContactInformation)}
                         </li>
                       )
-                    })}
+                    })} */}
                   </ul>
                 ) : (
                   <p className="text-white">Kontak kosong</p>
