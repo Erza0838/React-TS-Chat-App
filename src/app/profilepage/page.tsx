@@ -57,10 +57,17 @@ import { EleventhColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/
 import { TwlefthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
 import { ThirteenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
 import { FourteenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
+import { useRouter } from 'next/navigation'
 
 const ProfilePageComponent = () =>
 { 
   const {data: session, update} = useSession()
+  const router = useRouter()
+
+  if(session === null) 
+  { 
+    router.push("/login")
+  }
 
   // useRef untuk input tag
   const AutoFocusInputNameRef = useRef<HTMLInputElement>(null)
@@ -115,7 +122,6 @@ const ProfilePageComponent = () =>
     {
       SetUpdateEmail(session.user.email)
     }
-    // FetchDescriptionProfile()
   },[session])
   // Baris akhir useEffect
 

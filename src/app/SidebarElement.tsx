@@ -17,7 +17,7 @@ export const SidebarElement = () =>
     // if(myLocation?.pathname === "/homepage")
     if(myLocation?.pathname === "/contact")
     {
-        // return <Link href={"/homepage"}>
+        {/* return <Link href={"/homepage"}> */}
         return <Link href={"/contact"}>
           <div className="w-8 h-8 bg-cyan-950 cursor-pointer flex justify-center items-center rounded-full absolute right-4">
             <FontAwesomeIcon

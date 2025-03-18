@@ -14,12 +14,21 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
     })
     if(FindContactOwner) 
     {
-        const ShowMyFriends = await prisma.user_Contacts.findMany({
-            select: 
+         const ChekContactOwnerId = await prisma.user_Contacts.findMany(
+         {
+          where: 
+          {
+            MyId: 
             {
-                ContactInformation: true
+              equals: session?.user.id ?? ""
             }
+          },
+          select: 
+          {
+            ContactInformation: true,
+            Contact_Id: true
+          }
         })
-        return NextResponse.json({contact: JSON.stringify(ShowMyFriends)}, {status: 200})
+        return NextResponse.json({contact: JSON.stringify(ChekContactOwnerId)}, {status: 200})
     }
 }
