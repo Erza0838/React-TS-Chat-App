@@ -19,7 +19,7 @@ export const SidebarElement = () =>
     {
         {/* return <Link href={"/homepage"}> */}
         return <Link href={"/contact"}>
-          <div className="w-8 h-8 bg-cyan-950 cursor-pointer flex justify-center items-center rounded-full absolute right-4">
+          <div className="w-8 h-8 bg-cyan-950 cursor-pointer flex justify-center items-center rounded-full absolute right-4 top-2">
             <FontAwesomeIcon
               icon={faMessage}
               style={{color: "#ffffff"}}
@@ -82,7 +82,7 @@ export const SidebarElement = () =>
         <FontAwesomeIcon
         icon={faClone}
         style={{color: "#ffffff"}}
-        className="w-5 cursor-pointer translate-y-0"/>
+        className="w-5 cursor-pointer translate-y-1"/>
       </Link>
     }
   }

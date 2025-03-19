@@ -6,7 +6,8 @@ import { authOptions } from "@/lib/auth"
 export const GET = async (request: NextRequest, response: NextResponse) => 
 {   
     const session = await getServerSession(authOptions)
-    const FindContactOwner = await prisma.userModel.findFirst({
+    const FindContactOwner = await prisma.userModel.findFirst(
+    {
         where: 
         {
             id: session?.user.id ?? ""

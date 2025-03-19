@@ -16,7 +16,8 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
       }
     ] as Prisma.JsonArray
 
-    const FindUser = await prisma.userModel.findFirst({
+    const FindUser = await prisma.userModel.findFirst(
+    {
       where: 
       {
         Email: session?.user.email ?? ""
@@ -34,8 +35,28 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
           id: true
         }      
     })
+    console.log("Kontak yang dicari : " + JSON.stringify(FindContact))
 
-    if(FindContact) 
+    const CheckContactExist = await prisma.user_Contacts.findFirst(
+    {
+      where:
+      {
+        ContactInformation: 
+        {
+          path: "$.ContactId",
+          equals: UserContactId as string
+        }
+      }
+    })
+    console.log("Id yang sama : " + JSON.stringify(CheckContactExist))
+
+    if(FindContact === UserContactId) 
+    { 
+      console.log("Id sudah ada")
+      return NextResponse.json({error: "Kontak sudah ada"}, {status: 400})
+    }
+
+    if(FindContact && FindUser && !CheckContactExist) 
     {   
       const AddNewContact = await prisma.user_Contacts.create(
       {

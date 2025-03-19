@@ -12,6 +12,7 @@ import toast from 'react-hot-toast'
 import { faUserCircle,faEdit,faCheck,faClipboard,faSmile } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '@/Components/ui/button'
 import { SidebarElement } from '../SidebarElement'
+import { useReducer } from 'react'
 // Baris akhir import component
 
 // Import zod object
@@ -70,11 +71,11 @@ const ProfilePageComponent = () =>
   }
 
   // useRef untuk input tag
-  const AutoFocusInputNameRef = useRef<HTMLInputElement>(null)
+  // const AutoFocusInputNameRef = useRef<HTMLInputElement>(null)
   const DisplayNoneInputNameRef = useRef<HTMLInputElement>(null)
-  const AutoFocusInputEmailRef = useRef<HTMLInputElement>(null)
+  // const AutoFocusInputEmailRef = useRef<HTMLInputElement>(null)
   const DisplayNoneInputEmailRef = useRef<HTMLInputElement>(null)
-  const AutoFocusInputInformationRef = useRef<HTMLInputElement>(null)
+  // const AutoFocusInputInformationRef = useRef<HTMLInputElement>(null)
   const DisplayNoneInputInformationRef = useRef<HTMLInputElement>(null)
 
   // useRef untuk update button
@@ -134,7 +135,7 @@ const ProfilePageComponent = () =>
         const response = await fetch("/api/profileapi/showdescriptionprofile")    
         if(!response.ok) 
         {
-          throw new Error ("Deskripsi profile bermasalah : " + response.statusText)
+          throw new Error (response.statusText)
         }
         const DescriptionProfileValue: string = await response.json() 
         const CleanedStringDescriptionProfileValue = DescriptionProfileValue.replace(/^"|"$/g, "")

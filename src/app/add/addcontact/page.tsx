@@ -40,6 +40,11 @@ export default function AddContact()
       toast.error("Tidak bisa menambahkan id sendiri")
       return null
     }
+    // if(data.UserContactId === session?.user.id) 
+    // { 
+    //   toast.error("Tidak bisa menambahkan id sendiri")
+    //   return null
+    // }
     try 
     {
       const response = await fetch("/api/add/addcontact", 
