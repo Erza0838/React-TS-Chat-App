@@ -11,12 +11,14 @@ import { SidebarElement } from "@/app/SidebarElement"
 import { Button } from "@/Components/ui/button"
 import { useForm } from "react-hook-form"
 
+// import ErrorPage from "@/app/ServerActionDirectory/error/page"
+
 export default function page() 
-{
- // Validasi zod
- type UserContactIdFormValue = z.infer<typeof UserContactIdValidationSchema>
- const AddNewContactForm = () =>
- { 
+{   
+    // Validasi zod
+    type UserContactIdFormValue = z.infer<typeof UserContactIdValidationSchema>
+    const AddNewContactForm = () =>
+    { 
     const {register,handleSubmit,formState} = useForm<UserContactIdFormValue>(
     {
         resolver: zodResolver(UserContactIdValidationSchema),
@@ -27,8 +29,8 @@ export default function page()
         }
     })
     return {register,handleSubmit,formState}
-}
-const {register: AddNewContact,handleSubmit: SubmitNewContact,formState: {errors: AddNewContactErrors}} = AddNewContactForm()
+    }
+    const {register: AddNewContact,handleSubmit: SubmitNewContact,formState: {errors: AddNewContactErrors}} = AddNewContactForm()
 
  return (
     <div className="flex flex-row">

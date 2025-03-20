@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react'
 import { SidebarElement } from '@/app/SidebarElement'
-import z from "zod"
+import z, { set } from "zod"
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from "react-hot-toast"
 import { SubmitHandler, useForm } from "react-hook-form"
@@ -11,6 +11,9 @@ import { useSession } from "next-auth/react"
 // Import zod object
 import { UserContactIdValidationSchema } from "@/lib/validations/UserInformationValidation"
 
+// Import function server action
+import ValidateNewContact from '@/app/ServerActionDirectory/ValidateContactId'
+
 // Validasi zod
 type UserContactIdFormValue = z.infer<typeof UserContactIdValidationSchema>
 
@@ -19,7 +22,7 @@ export default function AddContact()
   const {data: session} = useSession()
   const AddNewContactForm = () =>
   { 
-    const {register,handleSubmit,formState,reset} = useForm<UserContactIdFormValue>(
+    const {register,handleSubmit,formState,reset,setError} = useForm<UserContactIdFormValue>(
     {
       resolver: zodResolver(UserContactIdValidationSchema),
       defaultValues: 
@@ -28,16 +31,16 @@ export default function AddContact()
         SavedUsernameContact: ""
       }
     })
-    return {register,handleSubmit,formState,reset}
+    return {register,handleSubmit,formState,reset,setError}
   }
-  const {register: AddNewContact,handleSubmit: SubmitNewContact,formState: {errors: AddNewContactErrors}, reset} = AddNewContactForm()
+  const {register: AddNewContact,handleSubmit: SubmitNewContact,formState: {errors: AddNewContactErrors}, reset, setError} = AddNewContactForm()
 
   const InsertNewContact:SubmitHandler<UserContactIdFormValue> = async (data: UserContactIdFormValue) => 
   {
     if(data.UserContactId === session?.user.id) 
     { 
       toast.error("Tidak bisa menambahkan id sendiri")
-      reset()
+      // reset()
       return null
     }
     try 
@@ -51,7 +54,7 @@ export default function AddContact()
         },
         body: JSON.stringify(data)
       })
-
+      const result = await response.json()
       if(!response.ok)
       {
         throw new Error("Network response error")
@@ -59,7 +62,6 @@ export default function AddContact()
 
       if(data.UserContactId !== session?.user.id) 
       {
-        const result = await response.json()
         toast.success("Kontak ditambahkan")
         return result
       }
@@ -69,6 +71,12 @@ export default function AddContact()
       console.error(error) 
     }
   }
+
+//  // Client action 
+//  const ClientActionValidation = async (AddContactFormData: FormData) => 
+//  {
+//    await ValidateNewContact()
+//  }
 
   return (
     <div className="flex flex-row">
@@ -80,6 +88,7 @@ export default function AddContact()
             </div>
             <div className="flex flex-col">
               <form onSubmit={SubmitNewContact(InsertNewContact)}>
+              {/* <form action={}> */}
                 <div className="flex flex-col gap-11">
                   <input type="text"
                           className="focus:outline-none rounded-lg pl-2 py-2 min-w-24 text-white bg-cyan-900 font-serif md:font-serif"
