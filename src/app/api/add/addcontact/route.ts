@@ -16,6 +16,8 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
       }
     ] as Prisma.JsonArray
 
+    console.log("ID kontak : " + UserContactId)
+
     const FindUser = await prisma.userModel.findFirst(
     {
       where: 

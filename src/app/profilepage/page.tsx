@@ -213,7 +213,8 @@ const ProfilePageComponent = () =>
         {
           "Content-Type":"application/json"
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        // credentials: 
       }) 
       if(!response.ok) 
       {
@@ -304,9 +305,7 @@ const ProfilePageComponent = () =>
     try 
     { 
       const isDescriptionProfileEmpty = !DescriptionProfile || DescriptionProfile.trim() === ""
-      const ProfileDescriptionApiEndPoint = DescriptionProfile 
-                                          ? "/api/profileapi/updatedescriptionprofile"  
-                                          : "/api/profileapi/insertdescriptionprofile"                         
+      const ProfileDescriptionApiEndPoint = DescriptionProfile ? "/api/profileapi/updatedescriptionprofile" : "/api/profileapi/insertdescriptionprofile"                         
       const ProfileDescriptionApiResponse = await fetch(ProfileDescriptionApiEndPoint, 
       {
         method: "POST",

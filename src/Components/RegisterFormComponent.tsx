@@ -27,11 +27,30 @@ import {
 } from "@/Components/ui/select"
 import { Button } from "./ui/button"
 import { NewAccountDataValidationSchema } from "@/lib/validations/UserInformationValidation"
+import { register } from "module"
 
 export default function RegisterFormComponent()
 {   
   const [isLoading,setLoading] = useState<boolean>(false)
-  const [UpdateUsername,SetUpdateUsername] = useState<string>("")
+  // const InsertAndUpdateDescriptionProfileForm = () =>
+  //   {
+  //     const { register, handleSubmit,formState } = useForm<DescriptionFormValue>(
+  //     {
+  //       resolver: zodResolver(DescriptionProfileSchema),
+  //       defaultValues:
+  //       {
+  //         UserDescription: "",
+  //       }
+  //     })
+  //     return { register, handleSubmit, formState}
+  //   }
+  //   const {register: InsertAndUpdateDescriptionProfile,handleSubmit: InsertAndUpdatehandleDescriptionProfileSubmit,formState: {errors: InsertAndUpdateDescriptionProfileErrors}} = InsertAndUpdateDescriptionProfileForm()
+
+  // const InsertRegisterData = () => 
+  // {
+    
+  // }
+
 
   const form = useForm<z.infer<typeof NewAccountDataValidationSchema>>
   ({
@@ -71,7 +90,6 @@ export default function RegisterFormComponent()
       if(!response.ok) 
       {
         throw new Error("Network response error")
-        
       }
     } 
     catch (error) 

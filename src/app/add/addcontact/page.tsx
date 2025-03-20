@@ -17,11 +17,10 @@ type UserContactIdFormValue = z.infer<typeof UserContactIdValidationSchema>
 export default function AddContact() 
 {
   const {data: session} = useSession()
-  const [myLocation,setMyLocation] = useState<Location | null>(null)
-
   const AddNewContactForm = () =>
   { 
-    const {register,handleSubmit,formState} = useForm<UserContactIdFormValue>({
+    const {register,handleSubmit,formState,reset} = useForm<UserContactIdFormValue>(
+    {
       resolver: zodResolver(UserContactIdValidationSchema),
       defaultValues: 
       {
@@ -29,22 +28,18 @@ export default function AddContact()
         SavedUsernameContact: ""
       }
     })
-    return {register,handleSubmit,formState}
+    return {register,handleSubmit,formState,reset}
   }
-  const {register: AddNewContact,handleSubmit: SubmitNewContact,formState: {errors: AddNewContactErrors}} = AddNewContactForm()
+  const {register: AddNewContact,handleSubmit: SubmitNewContact,formState: {errors: AddNewContactErrors}, reset} = AddNewContactForm()
 
   const InsertNewContact:SubmitHandler<UserContactIdFormValue> = async (data: UserContactIdFormValue) => 
   {
     if(data.UserContactId === session?.user.id) 
     { 
       toast.error("Tidak bisa menambahkan id sendiri")
+      reset()
       return null
     }
-    // if(data.UserContactId === session?.user.id) 
-    // { 
-    //   toast.error("Tidak bisa menambahkan id sendiri")
-    //   return null
-    // }
     try 
     {
       const response = await fetch("/api/add/addcontact", 
@@ -73,14 +68,6 @@ export default function AddContact()
     {
       console.error(error) 
     }
-  }
-
-  function DeleteUnuseContactInformation() 
-  {
-    if(myLocation?.pathname === "/add/addcontact")
-      {
-        return 
-      }
   }
 
   return (

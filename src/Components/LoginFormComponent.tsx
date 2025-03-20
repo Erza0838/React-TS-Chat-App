@@ -92,7 +92,7 @@ export default function LoginFormComponent()
                         name="email"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Email</FormLabel>
+                            <FormLabel className="text-white">Email</FormLabel>
                                 <FormControl>
                                 <Input {...field}  className="text-base"/>
                                 </FormControl>
@@ -104,7 +104,7 @@ export default function LoginFormComponent()
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
-                                <FormLabel>Password</FormLabel>
+                                <FormLabel className="text-white">Password</FormLabel>
                                     <FormControl>
                                     <Input type="password" {...field} className="text-base"/>
                                     </FormControl>
