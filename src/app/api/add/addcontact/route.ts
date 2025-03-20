@@ -43,17 +43,18 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         }      
     })
     console.log("Kontak yang dicari : " + JSON.stringify(FindContact))
-    const CheckContactExist = await prisma.user_Contacts.findFirst(
+    const CheckContactExist = await prisma.user_Contacts.findMany(
     {
       where:
       {
         ContactInformation: 
         {
-          path: '$.ContactId',
-          // equals: UserContactId as string
-          array_contains: 'cm37fkilf0000aw7fw432xvdb'
+          path: "$.ContactId",
+          equals: UserContactId as string
+          // array_contains: 'cm37fkilf0000aw7fw432xvdb'
+          // equals: "cm37fkilf0000aw7fw432xvdb"
         },
-        // MyId: session?.user.id ?? ""
+        MyId: session?.user.id ?? ""
       }
     })
     console.log("Id yang sama : " + JSON.stringify(CheckContactExist))
