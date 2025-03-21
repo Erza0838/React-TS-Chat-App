@@ -56,9 +56,9 @@ export default async function Home()
                        <li key={info.ContactId} className="text-white cursor-pointer">
                          {info.SavedContactName ? 
                          (
-                          <p>{info.SavedContactName}</p> 
+                          <p className="underline underline-offset-4">{info.SavedContactName}</p> 
                          ) :
-                          (<p>{info.ContactId}</p>)}
+                          (<p className="underline underline-offset-4">{info.ContactId}</p>)}
                        </li>
                      ))
                     })}

@@ -40,7 +40,7 @@ export default function AddContact()
     if(data.UserContactId === session?.user.id) 
     { 
       toast.error("Tidak bisa menambahkan id sendiri")
-      // reset()
+      reset()
       return null
     }
     try 
@@ -57,26 +57,24 @@ export default function AddContact()
       const result = await response.json()
       if(!response.ok)
       {
-        throw new Error("Network response error")
+        toast.error("Kontak sudah ada")
+        reset()
+        return 
       }
 
       if(data.UserContactId !== session?.user.id) 
       {
         toast.success("Kontak ditambahkan")
+        reset()
         return result
       }
     } 
     catch (error) 
     {
       console.error(error) 
+      toast.error("Terjadi kesalahan")
     }
   }
-
-//  // Client action 
-//  const ClientActionValidation = async (AddContactFormData: FormData) => 
-//  {
-//    await ValidateNewContact()
-//  }
 
   return (
     <div className="flex flex-row">
@@ -88,7 +86,6 @@ export default function AddContact()
             </div>
             <div className="flex flex-col">
               <form onSubmit={SubmitNewContact(InsertNewContact)}>
-              {/* <form action={}> */}
                 <div className="flex flex-col gap-11">
                   <input type="text"
                           className="focus:outline-none rounded-lg pl-2 py-2 min-w-24 text-white bg-cyan-900 font-serif md:font-serif"
