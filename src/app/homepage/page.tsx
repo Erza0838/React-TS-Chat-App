@@ -3,6 +3,7 @@ import SearchContactComponent from "@/Components/SearchContactComponent"
 import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+import ShowPersonalContactPageComponent from "@/Components/ContactListComponent"
 
 interface ContactInfo 
 {
@@ -38,6 +39,22 @@ export default async function Home()
     }
  })
 
+ const contacts = ChekContactOwnerId.flatMap((contact) => 
+ {
+    const contactInfoArray = Array.isArray(contact.ContactInformation) ? (contact.ContactInformation as unknown as ContactInfo[]) : []  
+    // return contactInfoArray.map(info => 
+    // {
+    //    UserContactId: info.ContactId,
+    //    SavedUserContact: info.SavedContactName;,
+    // })
+    return contactInfoArray.map(info => 
+    ({
+        Contactid: info.ContactId,
+        SavedContact: info.SavedContactName, // Assuming SavedContactId can be derived from ContactId
+        ...info
+    }))
+ })
+
   return (
       <div className="flex flex-row">
         <SidebarComponents></SidebarComponents>
@@ -47,6 +64,12 @@ export default async function Home()
                 <SearchContactComponent></SearchContactComponent>
                 <div className="flex flex-col my-5">
                 {FindContactOwner ? (
+                  <ShowPersonalContactPageComponent contacts={contacts} />
+                 ) : (
+                  <p className="text-white">Kontak Kosong</p>
+                 )
+               }
+                {/* {FindContactOwner ? (
                   <ul className="flex flex-col gap-2">
                     {ChekContactOwnerId.map(contact => 
                     {
@@ -64,7 +87,7 @@ export default async function Home()
                     })}
                   </ul>) :
                    (<p className="text-white">Kontak kosong</p>)
-                }
+                } */}
                 </div>
             </div>
           </div>
