@@ -4,6 +4,7 @@ import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import ShowPersonalContactPageComponent from "@/Components/ContactListComponent"
+import PersonalChatPage from "../chatpage/personalchat/[chatid]/page"
 
 interface ContactInfo 
 {
@@ -42,11 +43,6 @@ export default async function Home()
  const contacts = ChekContactOwnerId.flatMap((contact) => 
  {
     const contactInfoArray = Array.isArray(contact.ContactInformation) ? (contact.ContactInformation as unknown as ContactInfo[]) : []  
-    // return contactInfoArray.map(info => 
-    // {
-    //    UserContactId: info.ContactId,
-    //    SavedUserContact: info.SavedContactName;,
-    // })
     return contactInfoArray.map(info => 
     ({
         Contactid: info.ContactId,
@@ -62,7 +58,7 @@ export default async function Home()
             <div className="flex flex-col gap-4 mx-3 my-6">
                 <h4 className="text-zinc-400 font-bold">Obrolan</h4>
                 <SearchContactComponent></SearchContactComponent>
-                <div className="flex flex-col my-5">
+                <div className="flex flex-col my-5 gap-6">
                 {FindContactOwner ? (
                   <ShowPersonalContactPageComponent contacts={contacts} />
                  ) : (
@@ -91,6 +87,7 @@ export default async function Home()
                 </div>
             </div>
           </div>
+          <PersonalChatPage params={{ chatid: "123" }} />
       </div>
     )
 }
