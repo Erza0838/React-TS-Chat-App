@@ -1,35 +1,44 @@
 "use client"
-import React, { useRef, useState, useContext } from "react"
-import PersonalChatPage from "@/app/chatpage/personalchat/[chatid]/page"
-import { useRouter,redirect } from "next/navigation"
-import { ClickContactContext } from "@/useContext/PersonalChatContext"
-import { EventContextInterface } from "@/useContext/PersonalChatContext"
+import React, { useRef, useState, useContext, useEffect } from "react"
 import { ContactListProops } from "@/app/Interface/PersonalChatPageInterface"
-import { UseClickContext } from "@/useContext/PersonalChatContext"
+import { useClickContext } from "@/useContext/PersonalChatContext"
 
 const ShowPersonalContactPageComponent: React.FC<ContactListProops> = ({ contacts }) =>
 {   
-    const context = UseClickContext()
+    // const ShowPersonalChat = useRef<HTMLDivElement>(null)
+    const context = useClickContext()
+    const { Click, setClick } = context
+    // useEffect(() => 
+    // {
+    //     console.log(Click)
+    // }, [Click])
+
     if(!context) 
     {
-        throw new Error("ClickContactContext must be used within a ClickContactContext.Provider");
+        // throw new Error("ClickContactContext must be used within a ClickContactContext.Provider");
+        console.log("ClickContactContext must be used within a ClickContactContext.Provider");
+        return null
     }
-    const { Click, setClick } = context
-    const ClickContact = (contactId: string) =>
-    {   
-        setClick({ ClickUserContact: true })
+
+    // Function to update state
+    const ClickContact = () => 
+    {      
+        setClick((prev) => ({ ...prev, ClickUserContact: true }))
+        console.log(Click.ClickUserContact)
     }
+
     return (
         <ul className="flex flex-col gap-2">
-            {contacts.map((info) => (
+            {contacts.map((info) => 
+            (
                 <li key={info.ContactId} className="text-white cursor-pointer">
                     {info.SavedContactName ? (
                         <p className="underline underline-offset-4"
-                           onClick={() => ClickContact(info.ContactId)}>
-                            {info.SavedContactName}
+                           onClick={() => ClickContact}>
+                           {info.SavedContactName}
                         </p>
                     ) : (
-                        <p className="underline underline-offset-4" onClick={() => ClickContact(info.ContactId)}>{info.ContactId}</p>
+                        <p className="underline underline-offset-4">{info.ContactId}</p>
                     )}
                 </li>
             ))}

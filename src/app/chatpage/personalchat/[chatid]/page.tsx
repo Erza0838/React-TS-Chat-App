@@ -6,15 +6,13 @@ import { EventContextInterface,ClickContactContextInterface ,ClickContactContext
 // const PersonalChatPage: FC<PageProps> = ({ params }: PageProps) =>
 const PersonalChatPage = () =>
 { 
-  const [Click, setClick] = useState<EventContextInterface>
-  ({
-      ClickUserContact: false
-  })
+  const [Click, setClick] = useState({ClickUserContact: false})
 
   const ContextValue: ClickContactContextInterface = { Click,setClick }
 
   return (
-    <ClickContactContext.Provider value={ContextValue}>
+    // <ClickContactContext.Provider value={ContextValue}>
+    <ClickContactContext.Provider value={{Click, setClick}}>
       {/* <PersonalChatPageComponent params={{ chatid: "123", clickAction: clickContact}}/> */}
       <PersonalChatPageComponent/>
     </ClickContactContext.Provider>
