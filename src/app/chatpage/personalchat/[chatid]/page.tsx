@@ -1,22 +1,23 @@
-// "use client"
-import React, { FC } from "react"
+"use client"
+import React, { FC, useState, useContext, createContext } from "react"
+import PersonalChatPageComponent from "@/Components/PersonalPageClickEventComponent"
+import { EventContextInterface,ClickContactContextInterface ,ClickContactContext } from "@/useContext/PersonalChatContext"
 
-interface PageProps 
-{
-  params: 
-  {
-    chatid: string
-  }
-}
-
-const PersonalChatPage: FC<PageProps> = ({ params }: PageProps) =>
+// const PersonalChatPage: FC<PageProps> = ({ params }: PageProps) =>
+const PersonalChatPage = () =>
 { 
-  // const {personalchatId} = params
+  const [Click, setClick] = useState<EventContextInterface>
+  ({
+      ClickUserContact: false
+  })
+
+  const ContextValue: ClickContactContextInterface = { Click,setClick }
+
   return (
-    <div className="flex flex-col justify-center mx-14 z-10">
-      <p className="text-white">ID : {params.chatid}</p>
-      <p className="text-white">Obrolan pribadi</p>
-    </div> 
+    <ClickContactContext.Provider value={ContextValue}>
+      {/* <PersonalChatPageComponent params={{ chatid: "123", clickAction: clickContact}}/> */}
+      <PersonalChatPageComponent/>
+    </ClickContactContext.Provider>
   )
 }
 

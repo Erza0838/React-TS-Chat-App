@@ -11,7 +11,7 @@ import { useRef } from 'react'
 import toast from 'react-hot-toast'
 import { faUserCircle,faEdit,faCheck,faClipboard,faSmile } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '@/Components/ui/button'
-import { SidebarElement } from '../SidebarElement'
+import { SidebarElement } from '@/app/SidebarElement'
 import { useReducer } from 'react'
 // Baris akhir import component
 
@@ -60,7 +60,7 @@ import { ThirteenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollectio
 import { FourteenthColumnAnimalEmoji } from '@/Helper/ProfilePage/EmojiCollection/AnimalEmoji'
 import { useRouter } from 'next/navigation'
 
-const ProfilePage = () =>
+const ProfilePageComponent = () =>
 { 
   const {data: session, update} = useSession()
   const router = useRouter()
@@ -1304,4 +1304,4 @@ const ProfilePage = () =>
   )
 }
 
-export default ProfilePage
+export default ProfilePageComponent

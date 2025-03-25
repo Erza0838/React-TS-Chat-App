@@ -1,10 +1,10 @@
 import React from 'react'
-import ProfilePage from '../profilepage/page'
+import ProfilePageComponent from '@/Components/ProfilePageComponent'
 
 function Profile() 
 {
   return (
-    <ProfilePage></ProfilePage>
+    <ProfilePageComponent></ProfilePageComponent>
   )
 }
 

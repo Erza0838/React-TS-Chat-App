@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import ShowPersonalContactPageComponent from "@/Components/ContactListComponent"
 import PersonalChatPage from "../chatpage/personalchat/[chatid]/page"
+import PersonalContactWrapper from "@/Components/WrapperComponents/PersonalChatWrapperComponent"
 
 interface ContactInfo 
 {
@@ -60,7 +61,8 @@ export default async function Home()
                 <SearchContactComponent></SearchContactComponent>
                 <div className="flex flex-col my-5 gap-6">
                 {FindContactOwner ? (
-                  <ShowPersonalContactPageComponent contacts={contacts} />
+                  // <ShowPersonalContactPageComponent contacts={contacts} />
+                  <PersonalContactWrapper contacts={contacts}></PersonalContactWrapper>
                  ) : (
                   <p className="text-white">Kontak Kosong</p>
                  )
@@ -87,7 +89,7 @@ export default async function Home()
                 </div>
             </div>
           </div>
-          <PersonalChatPage params={{ chatid: "123" }} />
+          <PersonalChatPage></PersonalChatPage>
       </div>
     )
 }

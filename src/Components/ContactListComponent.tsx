@@ -1,45 +1,23 @@
 "use client"
-
-import React, { useRef } from "react"
+import React, { useRef, useState, useContext } from "react"
 import PersonalChatPage from "@/app/chatpage/personalchat/[chatid]/page"
 import { useRouter,redirect } from "next/navigation"
-
-interface ContactInterface 
-{   
-    // ContactInformation: string
-    ContactId: string
-    SavedContactName: string
-}
-
-interface ContactListProops 
-{
-    contacts: ContactInterface[]
-}
+import { ClickContactContext } from "@/useContext/PersonalChatContext"
+import { EventContextInterface } from "@/useContext/PersonalChatContext"
+import { ContactListProops } from "@/app/Interface/PersonalChatPageInterface"
+import { UseClickContext } from "@/useContext/PersonalChatContext"
 
 const ShowPersonalContactPageComponent: React.FC<ContactListProops> = ({ contacts }) =>
 {   
-    const EscapeKeyRef = useRef<HTMLInputElement>(null)
-    const router = useRouter()
-
-    const BackToContactListPage = (event: React.KeyboardEvent<HTMLInputElement>) => 
+    const context = UseClickContext()
+    if(!context) 
     {
-        switch(event.key) 
-        {
-            case "Escape" : 
-                            if(EscapeKeyRef.current) 
-                            {   
-                                console.log("Escape key pressed")
-                                router.push("/homepage")
-                            }
-                break
-        }
+        throw new Error("ClickContactContext must be used within a ClickContactContext.Provider");
     }
-
+    const { Click, setClick } = context
     const ClickContact = (contactId: string) =>
     {   
-        // console.log("Halaman kontak pribadi")
-        // return <PersonalChatPage params={{ chatid: contactId }} />
-        router.push(`/chatpage/personalchat/${contactId}`)
+        setClick({ ClickUserContact: true })
     }
     return (
         <ul className="flex flex-col gap-2">
@@ -47,8 +25,7 @@ const ShowPersonalContactPageComponent: React.FC<ContactListProops> = ({ contact
                 <li key={info.ContactId} className="text-white cursor-pointer">
                     {info.SavedContactName ? (
                         <p className="underline underline-offset-4"
-                           onClick={() => ClickContact(info.ContactId)}
-                           onKeyDown={BackToContactListPage}>
+                           onClick={() => ClickContact(info.ContactId)}>
                             {info.SavedContactName}
                         </p>
                     ) : (

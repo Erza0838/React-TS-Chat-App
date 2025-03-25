@@ -42,9 +42,11 @@ export const SidebarElement = () =>
 
   function ProfileIcon()
   {
-    if(myLocation?.pathname === "/profilepage") 
+    // if(myLocation?.pathname === "/profilepage") 
+    if(myLocation?.pathname === "/profile") 
     {
-        return <Link href={"/profilepage"}>
+        // return <Link href={"/profilepage"}>
+        return <Link href={"/profile"}>
             <div className="w-8 h-8 bg-cyan-950 cursor-pointer flex justify-center items-center rounded-full absolute right-4 top-32">
               <FontAwesomeIcon 
                   icon={faUserCircle} 
@@ -52,9 +54,11 @@ export const SidebarElement = () =>
             </div>
         </Link>
     }
-    if(myLocation?.pathname !== "/profilepage") 
+    // if(myLocation?.pathname !== "/profilepage") 
+    if(myLocation?.pathname !== "/profile") 
     {
-        return <Link href={"/profilepage"}>
+        // return <Link href={"/profilepage"}>
+        return <Link href={"/profile"}>
         <FontAwesomeIcon 
             icon={faUserCircle} 
             style={{color: "#ffffff"}}
