@@ -7,17 +7,16 @@ interface PageProps
 {
   params: 
   {
-    chatid: string
-    clickAction: boolean
+    // chatid: string
+    ContactId: string
+    SavedContactName: string
+    // contactname: string
   }
 }
 
-// const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
-const PersonalChatPageComponent = () =>
+// const PersonalChatPageComponent = () =>
+const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
 { 
-  const EscapeKeyRef = useRef<HTMLInputElement>(null)
-  const ShowPersonalChat = useRef<HTMLDivElement>(null)
-  // const ClickEventContext = useContext(ClickContactContext)
   const {Click, setClick} = useClickContext()
   
   function ShowElement() 
@@ -25,14 +24,13 @@ const PersonalChatPageComponent = () =>
     if(Click.ClickUserContact === true) 
     { 
       return <div className="flex flex-col justify-center mx-14 z-10"> 
-              <p className="text-white">Obrolan pribadi display flex</p>
+              {/* <p className="text-white">{params.chatid}</p> */}
+              <p className="text-white">{params.ContactId}</p>
             </div> 
     }
     if(Click.ClickUserContact === false) 
     {
-      return <div className="hidden mx-14 z-10"> 
-              <p className="text-white">Obrolan pribadi false</p>
-             </div>   
+      return   
     }
   }
 

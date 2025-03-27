@@ -1,10 +1,8 @@
-// "use client"
-
-import { createContext, ReactNode, useContext, useState } from "react"
+import { createContext, useContext } from "react"
 
 export interface EventContextInterface 
 {
-    ClickUserContact: boolean,
+    ClickUserContact: boolean | undefined,
 }
 
 export interface ClickContactContextInterface 
@@ -24,11 +22,3 @@ export function useClickContext()
     }
     return context
 }
-
-// export const ChatProvider = ({ children }: { children: ReactNode }) => 
-// {
-//     const [clickState, setClickState] = useState<EventContextInterface>(
-//     {
-//         ClickUserContact: false
-//     })
-// }
