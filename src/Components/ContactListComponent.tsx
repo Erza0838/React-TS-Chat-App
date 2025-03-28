@@ -3,13 +3,16 @@ import React, { useRef, useState, useContext, useEffect, KeyboardEvent } from "r
 import { ContactListProops } from "@/app/Interface/PersonalChatPageInterface"
 import { ClickContactContext, useClickContext } from "@/useContext/PersonalChatContext"
 import PersonalChatPageComponent from "./PersonalPageClickEventComponent"
-import { useRouter } from "next/navigation"
 
 const ShowPersonalContactPageComponent: React.FC<ContactListProops> = ({ contacts }) =>
 {   
     const context = useClickContext()
-    const router = useRouter()
+
     const { Click, setClick } = context
+    const [selectedContact, setSelectedContact] = useState<{
+        SelectedContactId: string
+        SelectedSavedContactName? : string
+    } | null>(null)
 
     useEffect(() => 
     {
@@ -30,10 +33,10 @@ const ShowPersonalContactPageComponent: React.FC<ContactListProops> = ({ contact
             
     }, [setClick])
 
-    // Function to update state
-    const ClickContact = () => 
+    const ClickContact = (SelectedContactId: string, SelectedSavedContactName: string) => 
     {      
         setClick(() => ({ ClickUserContact: true }))
+        setSelectedContact({SelectedContactId, SelectedSavedContactName})
     }
         
     if(!context) 
@@ -41,31 +44,36 @@ const ShowPersonalContactPageComponent: React.FC<ContactListProops> = ({ contact
         throw new Error("ClickContactContext must be used within a ClickContactContext.Provider")
     }
 
-    function RenderPersonalChatPage() 
-    {
-        return <ClickContactContext.Provider value={{Click, setClick}}>
-                {/* <PersonalChatPageComponent params={{ chatid: contacts[0]?.ContactId, contactname: contacts[0]?.SavedContactName || "" }}/> */}
-                <PersonalChatPageComponent params={{ ContactId: contacts[0]?.ContactId, SavedContactName: contacts[0]?.SavedContactName || "" }}/>
-               </ClickContactContext.Provider>  
-    }
-
     return (
-        <ul className="flex flex-col gap-5">
-            {contacts.map((info) => 
-            (
-                <li key={info.ContactId} className="text-white cursor-pointer">
-                    {info.SavedContactName ? (
-                        <p className="underline underline-offset-4 font-bold"
-                            onClick={ClickContact}>
-                           {info.SavedContactName}
-                        </p>
-                    ) : (
-                        <p className="underline underline-offset-4 font-bold">{info.ContactId}</p>
-                    )}
-                </li>
-            ))}
-            {RenderPersonalChatPage()}
-        </ul>
+        <>
+            <ul className="flex flex-col gap-5">
+                {contacts.map((info) => 
+                (
+                    <li key={info.ContactId} className="text-white cursor-pointer">
+                        {info.SavedContactName ? (
+                            <p className="underline underline-offset-4 font-bold"
+                            onClick={() => ClickContact(info.ContactId, info.SavedContactName)}>
+                            {info.SavedContactName}
+                            </p>
+                        ) : (
+                            <p className="underline underline-offset-4 font-bold" 
+                            onClick={() => ClickContact(info.ContactId, info.SavedContactName)}>
+                            {info.ContactId}
+                            </p>
+                        )}
+                    </li>
+                ))}
+            </ul>
+            <div className="flex flex-col z-10 translate-x-10">
+            {selectedContact && (
+                    <ClickContactContext.Provider value={{Click, setClick}}>
+                        <PersonalChatPageComponent params={{
+                            ContactId: selectedContact.SelectedContactId, 
+                            SavedContactName: selectedContact.SelectedSavedContactName || ""}}/>
+                    </ClickContactContext.Provider>  
+                )}
+            </div>
+        </>
     )
 }
 

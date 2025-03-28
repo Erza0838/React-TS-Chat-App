@@ -24,8 +24,8 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
     if(Click.ClickUserContact === true) 
     { 
       return <div className="flex flex-col justify-center mx-14 z-10"> 
-              {/* <p className="text-white">{params.chatid}</p> */}
               <p className="text-white">{params.ContactId}</p>
+              {/* <p className="text-white">{params.SavedContactName}</p> */}
             </div> 
     }
     if(Click.ClickUserContact === false) 

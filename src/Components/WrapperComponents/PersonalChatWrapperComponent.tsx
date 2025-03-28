@@ -9,8 +9,8 @@ import PersonalChatPage from "@/app/chatpage/personalchat/[chatid]/page"
 
 const PersonalContactWrapper: React.FC<ContactListProops> = ({contacts}) => 
 {
-    // const [Click, setClick] = useState<EventContextInterface>({ClickUserContact: false})
-    const [Click, setClick] = useState<EventContextInterface>({ClickUserContact: true})
+    const [Click, setClick] = useState<EventContextInterface>({ClickUserContact: false})
+    // const [Click, setClick] = useState<EventContextInterface>({ClickUserContact: true})
     return (
         // <ClickContactContext.Provider value={ContextValue}>
         <ClickContactContext.Provider value={{ Click, setClick}}>

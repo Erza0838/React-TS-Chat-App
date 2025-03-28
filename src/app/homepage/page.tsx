@@ -55,7 +55,7 @@ export default async function Home()
   return (
       <div className="flex flex-row">
         <SidebarComponents></SidebarComponents>
-        <div className="inline-block bg-cyan-950 h-lvh w-80 overflow-auto touch-pan-x absolute left-16">
+        <div className="inline-block bg-cyan-950 h-lvh w-80 overflow-auto touch-pan-x absolute left-16 no-scroll-bar">
             <div className="flex flex-col gap-4 mx-3 my-6">
                 <h4 className="text-zinc-400 font-bold">Obrolan</h4>
                 <SearchContactComponent></SearchContactComponent>
@@ -89,7 +89,7 @@ export default async function Home()
                 </div>
             </div>
           </div>
-          <PersonalChatPage></PersonalChatPage>
+          {/* <PersonalChatPage></PersonalChatPage> */}
       </div>
     )
 }
