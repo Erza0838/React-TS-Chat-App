@@ -4,8 +4,11 @@ import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import ShowPersonalContactPageComponent from "@/Components/ContactListComponent"
-import PersonalChatPage from "../chatpage/personalchat/[chatid]/page"
+// import PersonalChatPage from "../chatpage/personalchat/[chatid]/page"
 import PersonalContactWrapper from "@/Components/WrapperComponents/PersonalChatWrapperComponent"
+import DisplayPersonalChatWrapperComponent from "@/Components/WrapperComponents/DisplayPersonalChatWrapperComponent"
+// import { useState } from "react"
+import DisplayPersonalContactComponent from "@/Components/DisplayPersonalContactComponent"
 
 interface ContactInfo 
 {
@@ -17,6 +20,10 @@ interface ContactInfo
 export default async function Home() 
 { 
  const session = await getServerSession(authOptions)
+//  const [selectedContact, setSelectedContact] = useState<{
+//     ContactId: string;
+//     SavedContactName?: string;
+//   } | null>(null)
  const FindContactOwner = await prisma.userModel.findFirst(
  {
     where: 
@@ -52,6 +59,12 @@ export default async function Home()
     }))
  })
 
+//  const HandleContactClick = (ContactId: string, SavedContactName?: string) => 
+//  {
+//   setSelectedContact({ ContactId, SavedContactName })
+
+//  }
+
   return (
       <div className="flex flex-row">
         <SidebarComponents></SidebarComponents>
@@ -62,7 +75,8 @@ export default async function Home()
                 <div className="flex flex-col my-5 gap-6">
                 {FindContactOwner ? (
                   // <ShowPersonalContactPageComponent contacts={contacts} />
-                  <PersonalContactWrapper contacts={contacts}></PersonalContactWrapper>
+                  // <PersonalContactWrapper contacts={contacts}></PersonalContactWrapper>
+                  <PersonalContactWrapper contacts={contacts}/>
                  ) : (
                   <p className="text-white">Kontak Kosong</p>
                  )
@@ -88,8 +102,9 @@ export default async function Home()
                 } */}
                 </div>
             </div>
-          </div>
-          {/* <PersonalChatPage></PersonalChatPage> */}
+        </div>
+        <div className="flex flex-col ml-80">
+        </div> 
       </div>
     )
 }

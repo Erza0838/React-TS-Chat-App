@@ -3,6 +3,7 @@ import React, { useRef, useState, useContext, useEffect, KeyboardEvent } from "r
 import { ContactListProops } from "@/app/Interface/PersonalChatPageInterface"
 import { ClickContactContext, useClickContext } from "@/useContext/PersonalChatContext"
 import PersonalChatPageComponent from "./PersonalPageClickEventComponent"
+import DisplayPersonalContactComponent from "./DisplayPersonalContactComponent"
 
 const ShowPersonalContactPageComponent: React.FC<ContactListProops> = ({ contacts }) =>
 {   
@@ -64,15 +65,20 @@ const ShowPersonalContactPageComponent: React.FC<ContactListProops> = ({ contact
                     </li>
                 ))}
             </ul>
-            <div className="flex flex-col z-10 translate-x-10">
             {selectedContact && (
+                <ClickContactContext.Provider value={{ Click, setClick}}>
+                    <DisplayPersonalContactComponent params={{
+                        ContactId: selectedContact.SelectedContactId, 
+                        SavedContactName: selectedContact.SelectedSavedContactName!}}/>
+                </ClickContactContext.Provider>
+            )}
+            {/* {selectedContact && (
                     <ClickContactContext.Provider value={{Click, setClick}}>
                         <PersonalChatPageComponent params={{
                             ContactId: selectedContact.SelectedContactId, 
                             SavedContactName: selectedContact.SelectedSavedContactName || ""}}/>
                     </ClickContactContext.Provider>  
-                )}
-            </div>
+            )} */}
         </>
     )
 }
