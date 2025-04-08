@@ -3,14 +3,43 @@ import { faClone, faMessage, faSquarePlus, faUserCircle, faGear,faEdit } from '@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
+import { useClickContext } from '@/useContext/PersonalChatContext'
+import { ContactInfo } from './privatechat/[ContactId]/page'
+import { ContactListProops } from './Interface/PersonalChatPageInterface'
 
+export interface PageProps 
+{
+    params: 
+    {
+        ContactId: string
+        SavedContactName?: string
+    }
+}
+
+// export const SidebarElement = ({ params } : PageProps) =>
+// export const SidebarElement: React.FC<ContactListProops> = ({ contacts } ) =>
 export const SidebarElement = () =>
 { 
-  const [myLocation,setMyLocation] = useState<Location | null>(null)
   useEffect(() =>
   {
     setMyLocation(window.location)  
   },[])
+
+  // const context = useClickContext()
+  // const { Click, setClick } = context
+  const [selectedContact, setSelectedContact] = useState<{
+    SelectedContactId: string
+    SelectedSavedContactName? : string
+  } | null>(null)
+  const [myLocation,setMyLocation] = useState<Location | null>(null)
+  
+  // const ClickPersonalChatIcon = (SelectedPersonalContactId: string, SelectedPersonalContactName: string) => 
+  const ClickPersonalChatIcon = () => 
+  {
+    console.log("Berhasil")
+    // setClick(() => ({ ClickUserContact: true }))
+    // setSelectedContact({SelectedContactId: SelectedPersonalContactId, SelectedSavedContactName: SelectedPersonalContactName})    
+  }
 
   function ChatIcon() 
   {
@@ -19,13 +48,27 @@ export const SidebarElement = () =>
     {
         {/* return <Link href={"/homepage"}> */}
         return <Link href={"/contact"}>
-          <div className="w-8 h-8 bg-cyan-950 cursor-pointer flex justify-center items-center rounded-full absolute right-4 top-2">
-            <FontAwesomeIcon
-              icon={faMessage}
-              style={{color: "#ffffff"}}
-              className="w-5 bg-cyan-950 cursor-pointer"/>
-          </div>
-        </Link>
+                  <div className="w-8 h-8 bg-cyan-950 cursor-pointer flex justify-center items-center rounded-full absolute right-4 top-2">
+                    <FontAwesomeIcon
+                      icon={faMessage}
+                      style={{color: "#ffffff"}}
+                      className="w-5 bg-cyan-950 cursor-pointer"/>
+                  </div>
+                </Link>
+    }
+    // if(myLocation?.pathname === `/privatechat/${params.ContactId}`)
+    if(myLocation?.pathname === `/privatechat/`)
+    {
+        {/* return <Link href={"/homepage"}> */}
+        return <Link href={"/contact"}>
+                <div className="w-8 h-8 bg-cyan-950 cursor-pointer flex justify-center items-center rounded-full absolute right-4 top-2">
+                  <FontAwesomeIcon
+                    icon={faMessage}
+                    style={{color: "#ffffff"}}
+                    className="w-5 bg-cyan-950 cursor-pointer"
+                    onClick={ClickPersonalChatIcon}/>
+                </div>
+              </Link>
     }
     // if(myLocation?.pathname !== "/homepage")
     if(myLocation?.pathname !== "/contact")
@@ -35,7 +78,8 @@ export const SidebarElement = () =>
                 <FontAwesomeIcon
                   icon={faMessage}
                   style={{color: "#ffffff"}}
-                  className="w-5 cursor-pointer"/>
+                  className="w-5 cursor-pointer"
+                  onClick={ClickPersonalChatIcon}/>
               </Link>
     }
   }

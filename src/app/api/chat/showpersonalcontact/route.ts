@@ -15,8 +15,8 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
     })
     if(FindContactOwner) 
     {
-         const ChekContactOwnerId = await prisma.user_Contacts.findMany(
-         {
+        const ChekContactOwnerId = await prisma.user_Contacts.findMany(
+        {
           where: 
           {
             MyId: 
@@ -30,6 +30,7 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
             Contact_Id: true
           }
         })
+        console.log(JSON.stringify(ChekContactOwnerId))
         return NextResponse.json({contact: JSON.stringify(ChekContactOwnerId)}, {status: 200})
     }
 }

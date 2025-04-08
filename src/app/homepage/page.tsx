@@ -1,101 +1,171 @@
+"use client"
+import { useEffect, useState } from "react"
 import { SidebarComponents } from "@/Components/SidebarComponents"
 import SearchContactComponent from "@/Components/SearchContactComponent"
 import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+import Link from "next/link"
 import ShowPersonalContactPageComponent from "@/Components/ContactListComponent"
-// import PersonalChatPage from "../chatpage/personalchat/[chatid]/page"
 import PersonalContactWrapper from "@/Components/WrapperComponents/PersonalChatWrapperComponent"
 import DisplayPersonalChatWrapperComponent from "@/Components/WrapperComponents/DisplayPersonalChatWrapperComponent"
-// import { useState } from "react"
 import DisplayPersonalContactComponent from "@/Components/DisplayPersonalContactComponent"
+import SidebarWrapperComponent from "@/Components/WrapperComponents/SidebarWrapperComponent"
+import SearchContactWrapperComponent from "@/Components/WrapperComponents/SearchContactWrapperComponent"
+import router from "next/navigation"
 
 interface ContactInfo 
 {
   ContactInformation: string
   ContactId: string
-  SavedContactName: string
+  SavedContactName?: string
 }
 
-export default async function Home() 
+// export default async function Home() 
+export default function Home() 
 { 
- const session = await getServerSession(authOptions)
-//  const [selectedContact, setSelectedContact] = useState<{
-//     ContactId: string;
-//     SavedContactName?: string;
-//   } | null>(null)
- const FindContactOwner = await prisma.userModel.findFirst(
- {
-    where: 
-    {
-        id: session?.user.id ?? ""
-    }
- })
-
- const ChekContactOwnerId = await prisma.user_Contacts.findMany(
- {
-    where: 
-    {
-      MyId: 
-      {
-        equals: session?.user.id ?? ""
-      }
-    },
-    select: 
-    {
-      ContactInformation: true,
-      MyId: true
-    }
- })
-
- const contacts = ChekContactOwnerId.flatMap((contact) => 
- {
-    const contactInfoArray = Array.isArray(contact.ContactInformation) ? (contact.ContactInformation as unknown as ContactInfo[]) : []  
-    return contactInfoArray.map(info => 
-    ({
-        Contactid: info.ContactId,
-        SavedContact: info.SavedContactName, // Assuming SavedContactId can be derived from ContactId
-        ...info
-    }))
- })
-
-//  const HandleContactClick = (ContactId: string, SavedContactName?: string) => 
+//  const session = await getServerSession(authOptions)
+//  const FindContactOwner = await prisma.userModel.findFirst(
 //  {
-//   setSelectedContact({ ContactId, SavedContactName })
+//     where: 
+//     {
+//         id: session?.user.id ?? ""
+//     }
+//  })
 
-//  }
+//  const ChekContactOwnerId = await prisma.user_Contacts.findMany(
+//  {
+//     where: 
+//     {
+//       MyId: 
+//       {
+//         equals: session?.user.id ?? ""
+//       }
+//     },
+//     select: 
+//     {
+//       ContactInformation: true,
+//       MyId: true
+//     }
+//  })
+
+//  const contacts = ChekContactOwnerId.flatMap((contact) => 
+//  {
+//     // Assuming SavedContactId can be derived from ContactId
+//     const contactInfoArray = Array.isArray(contact.ContactInformation) ? (contact.ContactInformation as unknown as ContactInfo[]) : []  
+//     return contactInfoArray.map(info => 
+//     ({
+//         Contactid: info.ContactId,
+//         SavedContact: info.SavedContactName, 
+//         ...info
+//     }))
+//  })
+const [contacts, setContact] = useState<ContactInfo[]>([])
+useEffect(() => 
+{
+  async function FetchPersonalContact() 
+  {
+    try 
+    {
+        const response = await fetch("/api/chat/showpersonalcontact")
+        const PersonalContactList = await response.json()
+        if(!response.ok) 
+        {
+            throw new Error("Gagal mendapatkan data kontak")
+        }
+        if(PersonalContactList) 
+        {
+            const parsedData = JSON.parse(PersonalContactList.contact)
+            const ChekContactOwnerId = parsedData.map((contact: ContactInfo) => 
+            { 
+                const contactInfoArray = Array.isArray(contact.ContactInformation) ? (contact.ContactInformation as unknown as ContactInfo[]) : []  
+                return contactInfoArray.map(info => 
+                ({
+                    Contactid: info.ContactId,
+                    SavedContact: info.SavedContactName, 
+                    ...info
+                }))
+            })
+            setContact(ChekContactOwnerId)
+            console.log("Kontak pribadi : " + ChekContactOwnerId)
+            // Do something with ChekContactOwnerId if needed
+        }
+        else
+        {
+          console.warn("Gagal mendapatkan data kontak")
+        }
+    } 
+    catch (error) 
+    {
+      console.error(error) 
+    }
+  }
+  FetchPersonalContact()
+}, [])
 
   return (
       <div className="flex flex-row">
-        <SidebarComponents></SidebarComponents>
+        <SidebarWrapperComponent />
         <div className="inline-block bg-cyan-950 h-lvh w-80 overflow-auto touch-pan-x absolute left-16 no-scroll-bar">
             <div className="flex flex-col gap-4 mx-3 my-6">
                 <h4 className="text-zinc-400 font-bold">Obrolan</h4>
-                <SearchContactComponent></SearchContactComponent>
-                <div className="flex flex-col my-5 gap-6">
-                {FindContactOwner ? (
-                  // <ShowPersonalContactPageComponent contacts={contacts} />
-                  // <PersonalContactWrapper contacts={contacts}></PersonalContactWrapper>
-                  <PersonalContactWrapper contacts={contacts}/>
+                <SearchContactWrapperComponent/>
+                {/* <ShowPersonalContactPageComponent contacts={}/> */}
+                {/* {FindContactOwner ? (
+                  // <ShowPersonalContactPageComponent contacts={contacts}/>
+                  <Link href={"/personalchat/" + contacts[0].Contactid}>
+                    <PersonalContactWrapper contacts={contacts}/>
+                  </Link>
                  ) : (
                   <p className="text-white">Kontak Kosong</p>
                  )
-               }
+               } */}
+                <div className="flex flex-col my-5 gap-6">
+                {contacts.length > 0 ? (
+                  <ul className="flex flex-col gap-2">
+                    {contacts.map((info, index) => 
+                        <li key={info.ContactId || index} className="text-white cursor-pointer">
+                          {info.SavedContactName ? (
+                              <Link href={`/privatechat/${info.ContactId}`}>
+                                <p className="underline underline-offset-4">
+                                  {info.SavedContactName}
+                                </p> 
+                              </Link> 
+                          ) : (
+                            <Link href={`/privatechat/${info.ContactId}`}>
+                              <p className="underline underline-offset-4">
+                                {info.ContactId}
+                              </p>
+                            </Link>
+                          )}
+                        </li>
+                    )}
+                  </ul>) : (<p className="text-white">Kontak kosong</p>)
+                }
                 {/* {FindContactOwner ? (
                   <ul className="flex flex-col gap-2">
                     {ChekContactOwnerId.map(contact => 
                     {
-                     const contactInfoArray = Array.isArray(contact.ContactInformation) ? (contact.ContactInformation as unknown as ContactInfo[]) : []
-                     return contactInfoArray.map(info => 
-                     (
-                       <li key={info.ContactId} className="text-white cursor-pointer">
-                         {info.SavedContactName ? 
-                         (
-                          <p className="underline underline-offset-4">{info.SavedContactName}</p> 
-                         ) :
-                          (<p className="underline underline-offset-4">{info.ContactId}</p>)}
-                       </li>
-                     ))
+                      const contactInfoArray = Array.isArray(contact.ContactInformation) ? (contact.ContactInformation as unknown as ContactInfo[]) : []
+                      return contactInfoArray.map(info => 
+                      (
+                        <li key={info.ContactId} className="text-white cursor-pointer">
+                          {info.SavedContactName ? 
+                          (
+                              <Link href={`/privatechat/${info.ContactId }`}>
+                                <p className="underline underline-offset-4">
+                                  {info.SavedContactName}
+                                </p> 
+                              </Link> 
+                          ) : (
+                            <Link href={`/privatechat/${info.ContactId}`}>
+                              <p className="underline underline-offset-4">
+                                {info.ContactId}
+                              </p>
+                            </Link>
+                            )}
+                        </li>
+                      ))
                     })}
                   </ul>) :
                    (<p className="text-white">Kontak kosong</p>)
@@ -103,8 +173,8 @@ export default async function Home()
                 </div>
             </div>
         </div>
-        <div className="flex flex-col ml-80">
-        </div> 
+        {/* <div className="flex flex-col ml-80">
+        </div>  */}
       </div>
     )
 }

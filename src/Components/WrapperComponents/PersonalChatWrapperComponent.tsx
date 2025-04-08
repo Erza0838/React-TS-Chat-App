@@ -5,7 +5,6 @@ import { ClickContactContext } from "@/useContext/PersonalChatContext"
 import { EventContextInterface } from "@/useContext/PersonalChatContext"
 import { ContactListProops } from "@/app/Interface/PersonalChatPageInterface"
 import PersonalChatPageComponent from "../PersonalPageClickEventComponent"
-import PersonalChatPage from "@/app/chatpage/personalchat/[chatid]/page"
 
 // interface PersonalContactWrapperProps extends ContactListProops 
 // {

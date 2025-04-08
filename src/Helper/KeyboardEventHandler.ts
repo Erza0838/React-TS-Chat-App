@@ -1,11 +1,8 @@
-"use client"
+import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { useRouter } from "next/navigation"
-import React from "react"
-import ChatInputPersonalComponent from "@/Components/ChatInputPersonalComponent"
 
-const PrivateChatPage = () => 
-{   
+export default function PressEscapekey() 
+{
     const router = useRouter()
     useEffect(() => 
     {
@@ -24,13 +21,4 @@ const PrivateChatPage = () =>
         }
 
     }, [router])
-
-    return (
-        <>
-            <h1 className="text-white">Obrolan pribadi</h1>
-            <ChatInputPersonalComponent/>
-        </>
-    )
 }
-
-export default PrivateChatPage

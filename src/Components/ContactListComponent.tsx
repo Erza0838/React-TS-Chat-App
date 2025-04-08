@@ -8,7 +8,6 @@ import DisplayPersonalContactComponent from "./DisplayPersonalContactComponent"
 const ShowPersonalContactPageComponent: React.FC<ContactListProops> = ({ contacts }) =>
 {   
     const context = useClickContext()
-
     const { Click, setClick } = context
     const [selectedContact, setSelectedContact] = useState<{
         SelectedContactId: string
@@ -53,13 +52,13 @@ const ShowPersonalContactPageComponent: React.FC<ContactListProops> = ({ contact
                     <li key={info.ContactId} className="text-white cursor-pointer">
                         {info.SavedContactName ? (
                             <p className="underline underline-offset-4 font-bold"
-                            onClick={() => ClickContact(info.ContactId, info.SavedContactName)}>
-                            {info.SavedContactName}
+                               onClick={() => ClickContact(info.ContactId, info.SavedContactName)}>
+                                {info.SavedContactName}
                             </p>
                         ) : (
                             <p className="underline underline-offset-4 font-bold" 
-                            onClick={() => ClickContact(info.ContactId, info.SavedContactName)}>
-                            {info.ContactId}
+                               onClick={() => ClickContact(info.ContactId, info.SavedContactName)}>
+                                {info.ContactId}
                             </p>
                         )}
                     </li>
