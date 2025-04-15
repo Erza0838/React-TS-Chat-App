@@ -32,14 +32,7 @@ export const SidebarElement = () =>
     SelectedSavedContactName? : string
   } | null>(null)
   const [myLocation,setMyLocation] = useState<Location | null>(null)
-  
-  // const ClickPersonalChatIcon = (SelectedPersonalContactId: string, SelectedPersonalContactName: string) => 
-  const ClickPersonalChatIcon = () => 
-  {
-    console.log("Berhasil")
-    // setClick(() => ({ ClickUserContact: true }))
-    // setSelectedContact({SelectedContactId: SelectedPersonalContactId, SelectedSavedContactName: SelectedPersonalContactName})    
-  }
+
 
   function ChatIcon() 
   {
@@ -65,8 +58,7 @@ export const SidebarElement = () =>
                   <FontAwesomeIcon
                     icon={faMessage}
                     style={{color: "#ffffff"}}
-                    className="w-5 bg-cyan-950 cursor-pointer"
-                    onClick={ClickPersonalChatIcon}/>
+                    className="w-5 bg-cyan-950 cursor-pointer"/>
                 </div>
               </Link>
     }
@@ -78,8 +70,7 @@ export const SidebarElement = () =>
                 <FontAwesomeIcon
                   icon={faMessage}
                   style={{color: "#ffffff"}}
-                  className="w-5 cursor-pointer"
-                  onClick={ClickPersonalChatIcon}/>
+                  className="w-5 cursor-pointer"/>
               </Link>
     }
   }

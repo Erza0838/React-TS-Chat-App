@@ -30,7 +30,6 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
             Contact_Id: true
           }
         })
-        console.log(JSON.stringify(ChekContactOwnerId))
         return NextResponse.json({contact: ChekContactOwnerId}, {status: 200})
     }
 }

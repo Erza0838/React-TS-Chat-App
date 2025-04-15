@@ -1,44 +1,29 @@
 "use client"
 import React, { createContext, FC, useContext, useState } from "react"
-import { useRef } from "react"
-import { ClickContactContext, useClickContext } from "@/useContext/PersonalChatContext"
 
 interface PageProps 
 {
   params: 
   {
-    // chatid: string
     ContactId: string
     SavedContactName: string
-    // contactname: string
   }
 }
 
-// const PersonalChatPageComponent = () =>
 const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
 { 
-  const {Click, setClick} = useClickContext()
-  
-  function ShowElement() 
-  {
-    if(Click.ClickUserContact === true) 
-    { 
-      return <div className="flex flex-col justify-center mx-14 z-10"> 
-              <p className="text-white">{params.ContactId}</p>
-              {/* <p className="text-white">{params.SavedContactName}</p> */}
-            </div> 
-    }
-    if(Click.ClickUserContact === false) 
-    {
-      return   
-    }
-  }
-
-  return (
-    <>
-      {ShowElement()}
-    </>
-  )
+  return ( params.SavedContactName ? 
+  (
+    <div className="flex flex-col mx-60 size-full"> 
+      <div className="block h-14 pl-96 size-lvw bg-cyan-800">
+        <p className="text-white mx-5 my-2">{params.SavedContactName}</p>
+      </div>
+    </div> 
+  ) : (
+    <div className="flex flex-col mx-12"> 
+      <p className="text-white">{params.ContactId}</p>
+    </div> 
+  ))  
 }
 
 export default PersonalChatPageComponent

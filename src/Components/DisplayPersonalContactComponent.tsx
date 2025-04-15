@@ -9,31 +9,21 @@ interface PageProps
 {
   params: 
   {
-    // chatid: string
     ContactId: string 
     SavedContactName: string | null
-    // contactname: string
   }
 }
 
 const DisplayPersonalContactComponent: React.FC<PageProps> = ({ params }: PageProps) =>
 {
-    const context = useClickContext()
-    const { Click, setClick } = context
-    
   return (
-    <div>
-        {/* {selectedContact && (
-            // <ClickContactContext.Provider value={{Click, setClick}}>
-            // </ClickContactContext.Provider>  
-        )} */}
-        <PersonalChatPageComponent 
-        params=
+    <>
+        <PersonalChatPageComponent params=
         {{
             ContactId: params.ContactId, 
             SavedContactName: params.SavedContactName || ""
         }}/>
-    </div>
+    </>
   )
 }
 
