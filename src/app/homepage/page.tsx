@@ -14,11 +14,21 @@ import SidebarWrapperComponent from "@/Components/WrapperComponents/SidebarWrapp
 import SearchContactWrapperComponent from "@/Components/WrapperComponents/SearchContactWrapperComponent"
 import router from "next/navigation"
 
-interface ContactInfo 
+interface ContactInfoEntry 
 {
-  ContactInformation: string
   ContactId: string
   SavedContactName?: string
+}
+
+interface ContactInfo 
+{
+  ContactInformation: ContactInfoEntry[]
+}
+
+interface FlattenedContact 
+{
+  ContactId: string;
+  SavedContactName?: string;
 }
 
 // export default async function Home() 
@@ -60,39 +70,44 @@ export default function Home()
 //         ...info
 //     }))
 //  })
-const [contacts, setContact] = useState<ContactInfo[]>([])
+const [contacts, setContact] = useState<FlattenedContact[]>([])
+// const [contacts, setContact] = useState([])
 useEffect(() => 
 {
   async function FetchPersonalContact() 
   {
     try 
     {
+      // const parsedData = JSON.parse(PersonalContactList.contact)
+      // const ChekContactOwnerId = parsedData.map((contact: ContactInfo) => 
+      // { 
+      //     const contactInfoArray = Array.isArray(contact.ContactInformation) ? (contact.ContactInformation as unknown as ContactInfo[]) : []  
+      //     return contactInfoArray.map(info => 
+      //     ({
+      //         Contactid: info.ContactId,
+      //         SavedContact: info.SavedContactName, 
+      //         ...info
+      //     }))
+      // })
+      // setContact(ChekContactOwnerId)
         const response = await fetch("/api/chat/showpersonalcontact")
-        const PersonalContactList = await response.json()
         if(!response.ok) 
         {
             throw new Error("Gagal mendapatkan data kontak")
         }
-        if(PersonalContactList) 
+        if(response.ok) 
         {
-            const parsedData = JSON.parse(PersonalContactList.contact)
-            const ChekContactOwnerId = parsedData.map((contact: ContactInfo) => 
-            { 
-                const contactInfoArray = Array.isArray(contact.ContactInformation) ? (contact.ContactInformation as unknown as ContactInfo[]) : []  
-                return contactInfoArray.map(info => 
-                ({
-                    Contactid: info.ContactId,
-                    SavedContact: info.SavedContactName, 
-                    ...info
-                }))
-            })
-            setContact(ChekContactOwnerId)
-            console.log("Kontak pribadi : " + ChekContactOwnerId)
-            // Do something with ChekContactOwnerId if needed
-        }
-        else
-        {
-          console.warn("Gagal mendapatkan data kontak")
+          const data = await response.json()
+          const dataContacts: ContactInfo[] = data.contact || []
+          const flattened = dataContacts.map((item) => 
+          {
+            const info = item.ContactInformation[0]
+            return {
+              ContactId: info.ContactId,
+              SavedContactName: info.SavedContactName,
+            }
+          })
+          setContact(flattened)
         }
     } 
     catch (error) 
@@ -121,27 +136,25 @@ useEffect(() =>
                  )
                } */}
                 <div className="flex flex-col my-5 gap-6">
-                {contacts.length > 0 ? (
+                {Array.isArray(contacts) && contacts.length > 0 ? (
                   <ul className="flex flex-col gap-2">
-                    {contacts.map((info, index) => 
-                        <li key={info.ContactId || index} className="text-white cursor-pointer">
-                          {info.SavedContactName ? (
-                              <Link href={`/privatechat/${info.ContactId}`}>
-                                <p className="underline underline-offset-4">
-                                  {info.SavedContactName}
-                                </p> 
-                              </Link> 
-                          ) : (
-                            <Link href={`/privatechat/${info.ContactId}`}>
-                              <p className="underline underline-offset-4">
-                                {info.ContactId}
-                              </p>
-                            </Link>
-                          )}
-                        </li>
-                    )}
-                  </ul>) : (<p className="text-white">Kontak kosong</p>)
-                }
+                    {contacts.map((info, index) => (
+                      <li key={info.ContactId} className="text-white cursor-pointer">
+                        {info.SavedContactName ? (
+                          <Link href={`/privatechat/${info.ContactId}`}>
+                            <p className="underline underline-offset-4">{info.SavedContactName}</p>
+                          </Link>
+                        ) : (
+                          <Link href={`/privatechat/${info.ContactId}`}>
+                            <p className="underline underline-offset-4">{info.ContactId}</p>
+                          </Link>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-white">Kontak kosong</p>
+                )}
                 {/* {FindContactOwner ? (
                   <ul className="flex flex-col gap-2">
                     {ChekContactOwnerId.map(contact => 

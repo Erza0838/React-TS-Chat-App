@@ -31,6 +31,6 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
           }
         })
         console.log(JSON.stringify(ChekContactOwnerId))
-        return NextResponse.json({contact: JSON.stringify(ChekContactOwnerId)}, {status: 200})
+        return NextResponse.json({contact: ChekContactOwnerId}, {status: 200})
     }
 }
