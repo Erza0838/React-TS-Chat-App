@@ -112,8 +112,8 @@ export default function Home()
                 </div>
             </div>
         </div>
-        {/* <div className="hidden flex-row mx-72 overflow-y-scroll no-scrollbar" ref={DisplayFlexSelectedPersonalContactRef}> */}
-        <div className="hidden flex-row mx-72" ref={DisplayFlexSelectedPersonalContactRef}>
+        {/* <div className="hidden flex-row mx-72" ref={DisplayFlexSelectedPersonalContactRef}> */}
+        <div className="hidden flex-row mx-72 overflow-x-auto scrollbar-hide" ref={DisplayFlexSelectedPersonalContactRef}>
           <DisplayPersonalContactComponent params={{ContactId: selectedContact?.SelectedContactId!, SavedContactName: selectedContact?.SelectedSavedContactName!}}/>
         </div>
       </div>
