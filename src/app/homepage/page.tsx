@@ -79,11 +79,12 @@ export default function Home()
   function ShowPersonalContact(SelectedContactId: string, SelectedSavedContactName: string) 
   {
     setSelectedContact({SelectedContactId: SelectedContactId,SelectedSavedContactName: SelectedSavedContactName})
-    if(DisplayFlexSelectedPersonalContactRef.current) 
-    { 
-      console.log(DisplayFlexSelectedPersonalContactRef.current.style.display)
-      DisplayFlexSelectedPersonalContactRef.current.style.display = "flex"
-    }
+    setShowPersonalContact(!showPersonalContactState)
+    // if(DisplayFlexSelectedPersonalContactRef.current) 
+    // { 
+    //   console.log(DisplayFlexSelectedPersonalContactRef.current.style.display)
+    //   DisplayFlexSelectedPersonalContactRef.current.style.display = "flex"
+    // }
   }
 
   return (
@@ -99,9 +100,13 @@ export default function Home()
                     {contacts.map((info, index) => (
                       <li key={info.ContactId} className="text-white cursor-pointer">
                         {info.SavedContactName ? (
-                          <p onClick={() => ShowPersonalContact(info.ContactId, info.SavedContactName!)} className="underline underline-offset-4">{info.SavedContactName}</p>
+                          <p onClick={() => ShowPersonalContact(info.ContactId, info.SavedContactName!)} className="underline underline-offset-4">
+                            {info.SavedContactName}
+                          </p>
                         ) : (
-                          <p onClick={() => ShowPersonalContact(info.ContactId, info.SavedContactName!)} className="underline underline-offset-4">{info.ContactId}</p>
+                          <p onClick={() => ShowPersonalContact(info.ContactId, info.SavedContactName!)} className="underline underline-offset-4">
+                            {info.ContactId}
+                          </p>
                         )}
                       </li>
                     ))}
@@ -112,10 +117,24 @@ export default function Home()
                 </div>
             </div>
         </div>
-        {/* <div className="hidden flex-row mx-72" ref={DisplayFlexSelectedPersonalContactRef}> */}
-        <div className="hidden flex-row mx-72 overflow-x-auto scrollbar-hide" ref={DisplayFlexSelectedPersonalContactRef}>
-          <DisplayPersonalContactComponent params={{ContactId: selectedContact?.SelectedContactId!, SavedContactName: selectedContact?.SelectedSavedContactName!}}/>
+        
+        {showPersonalContactState ? (
+        <div className="mx-72 flex flex-row">
+          <DisplayPersonalContactComponent params=
+          {{
+            ContactId: selectedContact?.SelectedContactId!,
+            SavedContactName: selectedContact?.SelectedSavedContactName!
+          }}/>
         </div>
+        ) : (
+          <div className="mx-72 hidden flex-row">
+            <DisplayPersonalContactComponent params=
+            {{
+              ContactId: selectedContact?.SelectedContactId!,
+              SavedContactName: selectedContact?.SelectedSavedContactName!
+            }}/>
+        </div>
+        )}
       </div>
     )
 }
