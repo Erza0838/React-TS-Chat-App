@@ -18,11 +18,6 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
       }
     ] as Prisma.JsonArray
 
-    if(!GetContactIdFromInput.success) 
-    {
-      
-    }
-
     const FindUser = await prisma.userModel.findFirst(
     {
       where: 
@@ -41,7 +36,7 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         {
           id: true
         }      
-    })
+    })  
     
     const CheckContactExist = await prisma.user_Contacts.findMany(
     {
@@ -67,6 +62,7 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
       return NextResponse.json({error: "ID kontak tidak ada"}, {status: 400})
     }
 
+    // if(FindContact && FindUser) 
     if(FindContact && FindUser && !CheckContactExist) 
     {   
       const AddNewContact = await prisma.user_Contacts.create(

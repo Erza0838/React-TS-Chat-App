@@ -62,7 +62,7 @@ export default function AddContact()
         return 
       }
 
-      if(data.UserContactId !== session?.user.id) 
+      if(data.UserContactId !== session?.user.id && response.ok)  
       {
         toast.success("Kontak ditambahkan")
         reset()
