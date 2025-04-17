@@ -86,3 +86,11 @@ export const UserContactIdValidationSchema = z.object(
     }),
     SavedUsernameContact: z.string().optional().or(z.literal(""))
 })
+
+// export const PersonalMessageValidationSchema = z.object(
+// {
+//      :z.string().min(1,
+//     {
+//         message: "Pesan tidak boleh kosong"
+//     })
+// })

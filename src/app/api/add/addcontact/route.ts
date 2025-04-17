@@ -9,7 +9,7 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
 {   
     const {UserContactId, SavedUsernameContact} = await request.json()
     const session = await getServerSession(authOptions)
-    const GetContactIdFromInput = UserContactIdValidationSchema.safeParse(UserContactId)
+    // const GetContactIdFromInput = UserContactIdValidationSchema.safeParse(UserContactId)
     const UserContactInformation = 
     [
       {

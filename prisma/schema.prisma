@@ -54,28 +54,31 @@ model User_Contacts {
 }
 
 // Model untuk melakukan operasi CRUD pada pesan obrolan pribadi
-model Personal_Chat_Feature_Model {
-  Personal_Messages_Id String @id @default(uuid())
+// model Personal_Chat_Feature_Model {
+//   Personal_Messages_Id String @id @default(uuid())
 
-  Sender_Rechiever_Message_Id Personal_Chat_Model[]
+//   Sender_Rechiever_Message_Id Personal_Chat_Model[]
 
-  @@map("personal_Chat_Feature")
-}
+//   @@map("personal_Chat_Feature")
+// }
 
 // Model untuk menyimpan obrolan pribadi
 model Personal_Chat_Model {
   // Existing_Personal_Contact_Id User_Contacts @relation(fields: [Existing_Contact_Id], references: [Contacts_Id])
-  Existing_Contact_Id          String        @id @default(uuid())
+  // Existing_Contact_Id          String        @id @default(uuid())
 
-  Sender_Rechiever_Personal_Message_Id Personal_Chat_Feature_Model @relation(fields: [Personal_Message_Id], references: [Personal_Messages_Id])
-  Personal_Message_Id                  String                      @db.VarChar(255)
+  // Sender_Rechiever_Personal_Message_Id Personal_Chat_Feature_Model @relation(fields: [Personal_Message_Id], references: [Personal_Messages_Id])
+  // Personal_Message_Id                  String                      @db.VarChar(255)
 
-  My_Messages             String    @db.Text()
-  Messages_To_All         String    @db.Text()
-  // Delete_Personal_Message DateTime? @updatedAt
-  Delete_Personal_Message DateTime? @default(now())
-  Update_Personal_Message DateTime? @default(now())
-  Create_Personal_Message DateTime? @default(now())
+  // My_Messages             String    @db.Text()
+  // Messages_To_All         String    @db.Text()
+  Perconal_Chat_Id        String  @id @default(uuid())
+  My_Messages             Json?   @db.Json
+  Messages_To_All         Json?   @db.Json
+
+  // Delete_Personal_Message DateTime? @default(now())
+  // Update_Personal_Message DateTime? @default(now())
+  // Create_Personal_Message DateTime? @default(now())
 
   @@map("personal_Chat")
 }

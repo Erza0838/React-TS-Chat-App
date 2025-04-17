@@ -11,9 +11,6 @@ import { useSession } from "next-auth/react"
 // Import zod object
 import { UserContactIdValidationSchema } from "@/lib/validations/UserInformationValidation"
 
-// Import function server action
-import ValidateNewContact from '@/app/ServerActionDirectory/ValidateContactId'
-
 // Validasi zod
 type UserContactIdFormValue = z.infer<typeof UserContactIdValidationSchema>
 
