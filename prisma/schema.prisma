@@ -78,7 +78,7 @@ model Personal_Chat_Model {
 
   // Delete_Personal_Message DateTime? @default(now())
   // Update_Personal_Message DateTime? @default(now())
-  // Create_Personal_Message DateTime? @default(now())
+  Create_Personal_Message DateTime? @default(now())
 
   @@map("personal_Chat")
 }

@@ -11,9 +11,17 @@ interface PageProps
   }
 }
 
+interface SenderPersonalMessage 
+{
+  SenderPersonalMessageId: string
+  PersonalMessageText: string
+  SenderPersonalMessageName: string
+}
+
 const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
 { 
   const [Personalmessage, setPersonalMessage] = useState<string>("")
+  // const [SenderPersonalMessageText, setSenderPersonalMessageText] = useState;
 
   const HandlePersonalMessageText = (event: React.ChangeEvent<HTMLTextAreaElement>) => 
   {
@@ -46,7 +54,6 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
         if(PersonalMessageData.ok || PersonalMessageData.status === 200) 
         {
           const PersonalMessageResponse = await PersonalMessageData.json()
-          console.log("Pesan terkirim : " + PersonalMessageResponse)
           setPersonalMessage("") 
         }
       } 
@@ -55,6 +62,23 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
         console.error("Pesan pribadi error : " + error)
       }
   }
+
+  // const GetSenderPersonalMessage = async () => 
+  const GetSenderPersonalMessage = async (): Promise<SenderPersonalMessage> => 
+  { 
+    const SenderPersonalMessaegeData = await fetch("/api/chat/showpersonalmessages")
+    const SenderPersonalMessaegeResponse = await SenderPersonalMessaegeData.json()
+    console.log("Pesan pribadi : " + JSON.stringify(SenderPersonalMessaegeResponse)) 
+    return SenderPersonalMessaegeResponse
+    try 
+    {
+    } 
+    catch (error) 
+    {
+      console.error(error)  
+    }
+  }
+  GetSenderPersonalMessage()
 
   return ( params.SavedContactName ? (
     <div className="flex flex-col mx-7"> 
@@ -91,7 +115,9 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
         <form onSubmit={SendPersonalMessage} className="flex flex-row gap-11 absolute top-[90vh] min-w-[1200%] bg-cyan-800 h-16">
           <div className="flex flex-row gap-5 translate-x-8 translate-y-3">
             <TextareaAutoSize className="rounded-md h-16 focus:outline-none pl-6 resize-none" placeholder="Ketik pesan"/>
-            <button className="bg-white rounded-md w-11 h-6">Kirim</button>
+            <button className="bg-white rounded-md w-11 h-6">
+              Kirim
+            </button>
           </div>
         </form>
       </div>
