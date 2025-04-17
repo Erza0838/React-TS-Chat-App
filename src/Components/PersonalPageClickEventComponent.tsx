@@ -60,9 +60,11 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
     <div className="flex flex-col mx-7"> 
       <div className="inline-block h-16 min-w-[1200%] bg-cyan-800">
         <p className="text-white mx-5 my-2">{params.SavedContactName}</p>
-
-         {/* <div className="-z-10 w-[71vw] translate-y-6 translate-x-3 md:overflow-y-scroll h-[100vh]"> */}
-         <div className="-z-10 w-[71vw] translate-y-11 translate-x-3 md:overflow-y-auto h-[100vh]">
+         <div className="-z-10 w-[80vw] h-[100vh] translate-y-5 -translate-x-1 md:overflow-y-auto bg-slate-900">
+            <div className="flex flex-col gap-5 mx-8 my-6">
+                <p className="text-black bg-white w-20 h-6 text-center rounded-sm">
+                </p>
+            </div>
          </div>
 
         <form onSubmit={SendPersonalMessage} className="flex flex-row gap-11 absolute top-[90vh] min-w-[1100%] bg-cyan-800 h-16">

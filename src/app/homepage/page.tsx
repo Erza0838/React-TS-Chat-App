@@ -30,7 +30,6 @@ interface FlattenedContact
   SavedContactName?: string;
 }
 
-// export default async function Home() 
 export default function Home() 
 { 
   const DisplayFlexSelectedPersonalContactRef = useRef<HTMLParagraphElement>(null)
@@ -80,17 +79,12 @@ export default function Home()
   {
     setSelectedContact({SelectedContactId: SelectedContactId,SelectedSavedContactName: SelectedSavedContactName})
     setShowPersonalContact(!showPersonalContactState)
-    // if(DisplayFlexSelectedPersonalContactRef.current) 
-    // { 
-    //   console.log(DisplayFlexSelectedPersonalContactRef.current.style.display)
-    //   DisplayFlexSelectedPersonalContactRef.current.style.display = "flex"
-    // }
   }
 
   return (
       <div className="flex flex-row">
         <SidebarWrapperComponent />
-        <div className="inline-block bg-cyan-950 h-lvh w-80 overflow-auto touch-pan-x absolute left-16 no-scroll-bar">
+        <div className="inline-block bg-cyan-950 h-lvh w-80 overflow-auto touch-pan-x absolute left-16 no-scroll-bar z-10">
             <div className="flex flex-col gap-4 mx-3 my-6">
                 <h4 className="text-zinc-400 font-bold">Obrolan</h4>
                 <SearchContactWrapperComponent/>
