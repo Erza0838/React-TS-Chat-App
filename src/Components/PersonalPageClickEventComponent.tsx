@@ -1,6 +1,9 @@
 "use client"
+import { Session, url } from "inspector"
+import { useSession } from "next-auth/react"
 import React, { createContext, FC, useContext, useState } from "react"
 import TextareaAutoSize from "react-textarea-autosize"
+import useSWR from "swr"
 
 interface PageProps 
 {
@@ -20,8 +23,34 @@ interface SenderPersonalMessage
 
 const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
 { 
+  const fetcher = (url: string) => fetch(url).then((res) => res.json())
   const [Personalmessage, setPersonalMessage] = useState<string>("")
-  // const [SenderPersonalMessageText, setSenderPersonalMessageText] = useState;
+  const session = useSession()
+
+  function ShowPersonalMessages()
+  {
+    const { data, isLoading, isValidating, error } = useSWR(
+      "/api/chat/showpersonalmessages",
+      fetcher, 
+      {
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false
+      }
+    )
+    if(data) 
+    {
+      return <p className="text-white">{data}</p> 
+    }
+    if(isLoading) 
+    {
+      return <p className="text-white">Memuat pesan....</p> 
+    }
+    if(error) 
+    {
+      return <p className="text-white">Gagal memuat pesan</p> 
+    }
+  }
+  ShowPersonalMessages()
 
   const HandlePersonalMessageText = (event: React.ChangeEvent<HTMLTextAreaElement>) => 
   {
@@ -33,7 +62,7 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
       event.preventDefault()
       try 
       {
-        const PersonalMessageData = await fetch("/api/chat/personal", 
+        const PersonalMessageData = await fetch("/api/chat/personalchat", 
         {
           method: "POST",
           headers: 
@@ -41,7 +70,8 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            SenderMessageId: params.ContactId,
+            // SenderMessageId: params.ContactId,
+            SenderMessageId: session.data?.user.id,
             SenderMessageContactName: params.SavedContactName,
             PersonalMessageText: Personalmessage
           })
@@ -63,20 +93,11 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
       }
   }
 
-  // const GetSenderPersonalMessage = async () => 
   const GetSenderPersonalMessage = async (): Promise<SenderPersonalMessage> => 
   { 
     const SenderPersonalMessaegeData = await fetch("/api/chat/showpersonalmessages")
     const SenderPersonalMessaegeResponse = await SenderPersonalMessaegeData.json()
-    console.log("Pesan pribadi : " + JSON.stringify(SenderPersonalMessaegeResponse)) 
     return SenderPersonalMessaegeResponse
-    try 
-    {
-    } 
-    catch (error) 
-    {
-      console.error(error)  
-    }
   }
   GetSenderPersonalMessage()
 
@@ -86,8 +107,7 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
         <p className="text-white mx-5 my-2">{params.SavedContactName}</p>
          <div className="-z-10 w-[80vw] h-[100vh] translate-y-5 -translate-x-1 md:overflow-y-auto bg-slate-900">
             <div className="flex flex-col gap-5 mx-8 my-6">
-                <p className="text-black bg-white w-20 h-6 text-center rounded-sm">
-                </p>
+              {/* {ShowPersonalMessages()} */}
             </div>
          </div>
 
