@@ -3,7 +3,7 @@ import { Session, url } from "inspector"
 import { useSession } from "next-auth/react"
 import React, { createContext, FC, useContext, useState } from "react"
 import TextareaAutoSize from "react-textarea-autosize"
-import useSWR from "swr"
+import useSWR, { Fetcher } from "swr"
 
 interface PageProps 
 {
@@ -21,36 +21,23 @@ interface SenderPersonalMessage
   SenderPersonalMessageName: string
 }
 
+interface PersonalMessageData 
+{
+  PersonalMessageList: SenderPersonalMessage[]
+}
+
 const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
 { 
   const fetcher = (url: string) => fetch(url).then((res) => res.json())
+  const { data, isLoading, isValidating, error } = useSWR<PersonalMessageData>("/api/chat/showpersonalmessages", 
+    fetcher,
+    {
+      revalidateOnFocus: false, 
+      revalidateOnReconnect: false
+    }
+  )
   const [Personalmessage, setPersonalMessage] = useState<string>("")
   const session = useSession()
-
-  function ShowPersonalMessages()
-  {
-    const { data, isLoading, isValidating, error } = useSWR(
-      "/api/chat/showpersonalmessages",
-      fetcher, 
-      {
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false
-      }
-    )
-    if(data) 
-    {
-      return <p className="text-white">{data}</p> 
-    }
-    if(isLoading) 
-    {
-      return <p className="text-white">Memuat pesan....</p> 
-    }
-    if(error) 
-    {
-      return <p className="text-white">Gagal memuat pesan</p> 
-    }
-  }
-  ShowPersonalMessages()
 
   const HandlePersonalMessageText = (event: React.ChangeEvent<HTMLTextAreaElement>) => 
   {
@@ -107,7 +94,31 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
         <p className="text-white mx-5 my-2">{params.SavedContactName}</p>
          <div className="-z-10 w-[80vw] h-[100vh] translate-y-5 -translate-x-1 md:overflow-y-auto bg-slate-900">
             <div className="flex flex-col gap-5 mx-8 my-6">
-              {/* {ShowPersonalMessages()} */}
+              { data ? (
+                <p className="text-white text-sm">
+                  
+                </p>
+                // data.map((value, index) =>
+                // ( 
+                //   <p className="text-white text-sm" key={index}>
+                //     {value.PersonalMessageList[0].PersonalMessageText}
+                //   </p>
+                ) : (
+                <p className="text-white text-sm">Pesan kosong</p>
+              )}
+              
+              {/* {data && data.length > 0 ? (
+                data.map((value: SenderPersonalMessage, index: string) => 
+                {
+                  <p className="text-white text-sm" key={index}>
+                    {value.PersonalMessageText}
+                  </p>
+                })
+              ) : (
+                <p className="text-white text-sm">
+                  Pesan kosong
+                </p>
+              )} */}
             </div>
          </div>
 
