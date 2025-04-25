@@ -25,7 +25,6 @@ export const GET = async (request: NextRequest,response: NextResponse) =>
             UserDescription: true
         }
     })  
-    console.log(JSON.stringify(SelectDescriptionProfile)) 
     if(!SelectDescriptionProfile || SelectDescriptionProfile.length === 0) 
     {   
         return NextResponse.json({error: "Deskripsi profile tidak ditemukan"}, {status: 404})
