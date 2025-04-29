@@ -21,7 +21,8 @@ const DisplayPersonalContactComponent: React.FC<PageProps> = ({ params }: PagePr
         <PersonalChatPageComponent params=
         {{
             ContactId: params.ContactId, 
-            SavedContactName: params.SavedContactName || ""
+            SavedContactName: params.SavedContactName || "",
+            PersonalMessageRecipientId: params.ContactId
         }}/>
     </>
   )

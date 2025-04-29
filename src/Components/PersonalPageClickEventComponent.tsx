@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import React, { createContext, FC, useContext, useState } from "react"
 import TextareaAutoSize from "react-textarea-autosize"
 import useSWR from "swr"
+import ShowPersonalMessagesWrapperComponent from "./WrapperComponents/ShowPersonalMessagesWrapperComponent"
 
 interface PageProps 
 {
@@ -11,6 +12,7 @@ interface PageProps
   {
     ContactId: string
     SavedContactName: string
+    PersonalMessageRecipientId: string
   }
 }
 
@@ -23,25 +25,27 @@ interface SenderPersonalMessage
 
 const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
 { 
-  const fetcher = (url: string) => fetch(url).then((res) => res.json())
-  const { data, isLoading, isValidating, error } = useSWR<string>(`/api/chat/showpersonalmessages/${params.ContactId}`, 
-    fetcher,
-    {
-      revalidateOnFocus: false, 
-        revalidateOnReconnect: false
-    }
-  )
+  // const fetcher = (url: string) => fetch(url).then((res) => res.json())
+  // const { data, isLoading, isValidating, error } = useSWR<string>(`/api/chat/showpersonalmessages/${params.ContactId}`, 
+  //   fetcher,
+  //   {
+  //     revalidateOnFocus: false, 
+  //     revalidateOnReconnect: false
+  //   }
+  // )
+  const [selectedContact, setSelectedContact] = useState<{
+    SelectedContactId: string
+  } | null>(null)
   const [Personalmessage, setPersonalMessage] = useState<string>("")
   const session = useSession()
-  const UserId = session.data?.user.id
 
-  useEffect(() => 
-  {
-    if(data !== null) 
-    { 
-      setPersonalMessage("")
-    }
-  },[data])
+  // useEffect(() => 
+  // {
+  //   if(data !== null) 
+  //   { 
+  //     setPersonalMessage("")
+  //   }
+  // },[data])
 
   const HandlePersonalMessageText = (event: React.ChangeEvent<HTMLTextAreaElement>) => 
   {
@@ -89,11 +93,12 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
         <p className="text-white mx-5 my-2">{params.SavedContactName}</p>
          <div className="-z-10 w-[80vw] h-[100vh] translate-y-5 -translate-x-1 md:overflow-y-auto bg-slate-900">
             <div className="flex flex-col gap-5 mx-8 my-6">
-                {data && data.length > 0 && params.ContactId ? ( 
-                  <p className="text-slate-900 bg-white rounded-md w-24 h-7 text-center">
+            <ShowPersonalMessagesWrapperComponent params={{PersonalMessageRecipientId: params.ContactId}}/>
+                {/* {data && data.length > 0 && params.ContactId ? ( 
+                  <p className="text-slate-900 bg-white rounded-md w-64 h-7 text-center">
                     {data}
                   </p>
-                ) : (<p></p>)}
+                ) : (<p className="text-slate-900 bg-white rounded-md w-40 h-7 text-center">Pesan kosong</p>)} */}
             </div>
          </div>
 
@@ -108,6 +113,7 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
             </button>
           </div>
         </form>
+
       </div>
     </div> 
   ) : (
@@ -116,11 +122,11 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
         <p className="text-white mx-5 my-2">{params.ContactId}</p>
         <div className="-z-10 w-[80vw] h-[100vh] translate-y-4 -translate-x-1 md:overflow-y-auto bg-slate-900">
             <div className="flex flex-col gap-5 mx-8 my-6">
-            {data && data.length > 0 && params.ContactId ? ( 
-                  <p className="text-slate-900 bg-white rounded-md w-24 h-7 text-center">
+            <ShowPersonalMessagesWrapperComponent params={{PersonalMessageRecipientId: params.ContactId}}/>
+            {/* {data && data.length > 0 ? ( 
+                  <p className="text-slate-900 bg-white rounded-md w-64 h-7 text-center">
                     {data}
-                  </p>
-              ) : (<p></p>)}
+                  </p>) : (<p className="text-black bg-white rounded-md w-40 h-7 text-center">Pesan kosong</p>)} */}
             </div>
          </div>
 

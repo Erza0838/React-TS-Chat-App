@@ -90,7 +90,7 @@ export default function Home()
                 <div className="flex flex-col my-5 gap-6">
                 {Array.isArray(contacts) && contacts.length > 0 ? (
                   <ul className="flex flex-col gap-6">
-                    {contacts.map((info, index) => (
+                    {contacts.map((info) => (
                       <li key={info.ContactId} className="text-white cursor-pointer">
                         {info.SavedContactName ? (
                           <p onClick={() => ShowPersonalContact(info.ContactId, info.SavedContactName!)} className="underline underline-offset-4">
