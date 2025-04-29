@@ -71,13 +71,6 @@ const ShowPersonalContactPageComponent: React.FC<ContactListProops> = ({ contact
                         SavedContactName: selectedContact.SelectedSavedContactName!}}/>
                 </ClickContactContext.Provider>
             )}
-            {/* {selectedContact && (
-                    <ClickContactContext.Provider value={{Click, setClick}}>
-                        <PersonalChatPageComponent params={{
-                            ContactId: selectedContact.SelectedContactId, 
-                            SavedContactName: selectedContact.SelectedSavedContactName || ""}}/>
-                    </ClickContactContext.Provider>  
-            )} */}
         </>
     )
 }

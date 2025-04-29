@@ -70,6 +70,20 @@ const ProfilePageComponent = () =>
     router.push("/login")
   }
 
+  // UseEffect untuk menyimpan nilai pada state variable saat ada perubahan pada session
+  useEffect(() => 
+  { 
+    if(session && session.user.name) 
+    {
+      SetUpdateUsername(session.user.name)
+    }
+    if(session && session.user.email) 
+    {
+      SetUpdateEmail(session.user.email)
+    }
+  },[session])
+  // Baris akhir useEffect
+
   // useRef untuk input tag
   // const AutoFocusInputNameRef = useRef<HTMLInputElement>(null)
   const DisplayNoneInputNameRef = useRef<HTMLInputElement>(null)
@@ -111,20 +125,6 @@ const ProfilePageComponent = () =>
   type UpdateUsernameFormValue = z.infer<typeof UpdateUsernameValidationSchema>
   type UpdateEmailFormValue = z.infer<typeof UpdateEmailValidationSchema>
   type DescriptionFormValue = z.infer<typeof DescriptionProfileSchema>
-
-  // UseEffect untuk menyimpan nilai pada state variable saat ada perubahan pada session
-  useEffect(() => 
-  { 
-    if(session && session.user.name) 
-    {
-      SetUpdateUsername(session.user.name)
-    }
-    if(session && session.user.email) 
-    {
-      SetUpdateEmail(session.user.email)
-    }
-  },[session])
-  // Baris akhir useEffect
 
   useEffect(() => 
   {

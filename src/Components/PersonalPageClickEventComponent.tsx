@@ -1,5 +1,6 @@
 "use client"
 import { useSession } from "next-auth/react"
+import { useEffect } from "react"
 import React, { createContext, FC, useContext, useState } from "react"
 import TextareaAutoSize from "react-textarea-autosize"
 import useSWR from "swr"
@@ -27,11 +28,20 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
     fetcher,
     {
       revalidateOnFocus: false, 
-      revalidateOnReconnect: false
+        revalidateOnReconnect: false
     }
   )
   const [Personalmessage, setPersonalMessage] = useState<string>("")
   const session = useSession()
+  const UserId = session.data?.user.id
+
+  useEffect(() => 
+  {
+    if(data !== null) 
+    { 
+      setPersonalMessage("")
+    }
+  },[data])
 
   const HandlePersonalMessageText = (event: React.ChangeEvent<HTMLTextAreaElement>) => 
   {
@@ -52,6 +62,7 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
           },
           body: JSON.stringify({
             SenderMessageId: session.data?.user.id,
+            MessageRecipientId: params.ContactId,
             SenderMessageContactName: params.SavedContactName,
             PersonalMessageText: Personalmessage
           })
@@ -62,8 +73,8 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
         }
         if(PersonalMessageData.ok || PersonalMessageData.status === 200) 
         {
-          const PersonalMessageResponse = await PersonalMessageData.json()
           setPersonalMessage("") 
+          const PersonalMessageResponse = await PersonalMessageData.json()
         }
       } 
       catch (error) 
@@ -78,7 +89,7 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
         <p className="text-white mx-5 my-2">{params.SavedContactName}</p>
          <div className="-z-10 w-[80vw] h-[100vh] translate-y-5 -translate-x-1 md:overflow-y-auto bg-slate-900">
             <div className="flex flex-col gap-5 mx-8 my-6">
-                {data && data.length > 0 ? ( 
+                {data && data.length > 0 && params.ContactId ? ( 
                   <p className="text-slate-900 bg-white rounded-md w-24 h-7 text-center">
                     {data}
                   </p>
@@ -105,7 +116,7 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
         <p className="text-white mx-5 my-2">{params.ContactId}</p>
         <div className="-z-10 w-[80vw] h-[100vh] translate-y-4 -translate-x-1 md:overflow-y-auto bg-slate-900">
             <div className="flex flex-col gap-5 mx-8 my-6">
-            {data && data.length > 0 ? ( 
+            {data && data.length > 0 && params.ContactId ? ( 
                   <p className="text-slate-900 bg-white rounded-md w-24 h-7 text-center">
                     {data}
                   </p>

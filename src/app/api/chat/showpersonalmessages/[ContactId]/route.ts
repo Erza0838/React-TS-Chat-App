@@ -15,12 +15,14 @@ function IsPersonalMessageArray(value: unknown): value is Array<PersonalMessageI
     return Array.isArray(value) && value.every(item => "PersonalMessage" in item && "SenderPersonalMessageId" in item)
 }
 
+// export const GET = async (request: NextRequest, response: NextResponse, {params} : {params: {ContactId: string}}) => 
 export const GET = async (request: NextRequest, response: NextResponse) => 
 {   
+    // console.log("ContactId : " + params.ContactId)
     const session = await getServerSession(authOptions)
     const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany() 
     const FilteredPersonalMeessages = GetSenderPersonalMessage.flatMap(chat => 
-    {
+    {   
         const MyMessages = chat.My_Messages as unknown as PersonalMessageInterface[]
         if(IsPersonalMessageArray(MyMessages)) 
         {
@@ -32,7 +34,7 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
     })
     if(FilteredPersonalMeessages !== null) 
     {   
-        return NextResponse.json(FilteredPersonalMeessages.toString(), {status: 200})
+        return NextResponse.json(FilteredPersonalMeessages.toString())
     }
     if(FilteredPersonalMeessages === null) 
     {

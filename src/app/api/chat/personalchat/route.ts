@@ -4,11 +4,12 @@ import { Prisma } from "@prisma/client"
 
 export const POST = async (request: NextRequest, response: NextResponse) => 
 {
-    const {SenderMessageId, SenderMessageContactName, PersonalMessageText} = await request.json()
+    const {SenderMessageId,SenderMessageContactName,PersonalMessageText,MessageRecipientId} = await request.json()
     const PersonalMessageInformation = 
     [
         {
             SenderPersonalMessageId: SenderMessageId,
+            PersonalMessageRecipientId: MessageRecipientId,
             SenderPersonalMessageName: SenderMessageContactName,
             PersonalMessage: PersonalMessageText
         }

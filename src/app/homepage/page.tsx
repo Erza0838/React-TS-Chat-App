@@ -32,7 +32,6 @@ interface FlattenedContact
 
 export default function Home() 
 { 
-  const DisplayFlexSelectedPersonalContactRef = useRef<HTMLParagraphElement>(null)
   const [contacts, setContact] = useState<FlattenedContact[]>([])
   const [showPersonalContactState, setShowPersonalContact] = useState<boolean>(false)
   const [selectedContact, setSelectedContact] = useState<{
@@ -113,13 +112,13 @@ export default function Home()
         </div>
         
         {showPersonalContactState ? (
-        <div className="mx-72 flex flex-row">
-          <DisplayPersonalContactComponent params=
-          {{
-            ContactId: selectedContact?.SelectedContactId!,
-            SavedContactName: selectedContact?.SelectedSavedContactName!
-          }}/>
-        </div>
+          <div className="mx-72 flex flex-row">
+            <DisplayPersonalContactComponent params=
+            {{
+              ContactId: selectedContact?.SelectedContactId!,
+              SavedContactName: selectedContact?.SelectedSavedContactName!
+            }}/>
+          </div>
         ) : (
           <div className="mx-72 hidden flex-row">
             <DisplayPersonalContactComponent params=
@@ -127,7 +126,7 @@ export default function Home()
               ContactId: selectedContact?.SelectedContactId!,
               SavedContactName: selectedContact?.SelectedSavedContactName!
             }}/>
-        </div>
+          </div>
         )}
       </div>
     )
