@@ -2,21 +2,29 @@
 
 import React, { useEffect } from 'react'
 import useSWR from "swr"
+import { useSession } from 'next-auth/react'
+
+interface PersonalMessageProperties 
+{
+    RecipientId: string
+}
 
 interface PageProps 
 {
     params:
     {
         PersonalMessageRecipientId: string
+        PersonalMessageSenderId: string
         // ContactId: string
     }
 }
 
 const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) =>
 {
-  console.log("ID Teman : " + params.PersonalMessageRecipientId)
   const fetcher = (url: string) => fetch(url).then((res) => res.json())
-  const { data, isLoading, isValidating, error } = useSWR<string>(`/api/chat/showpersonalmessages/${params.PersonalMessageRecipientId}`, 
+  const session = useSession()
+//   const { data, isLoading, isValidating, error } = useSWR<string>(`/api/chat/showpersonalmessages/${params.PersonalMessageRecipientId}`, 
+  const { data, isLoading, isValidating, error } = useSWR<string>(`/api/chat/showpersonalmessages`, 
         fetcher,
     {
         revalidateOnFocus: false, 
@@ -33,10 +41,8 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) =>
 
   return (
     <>
-     {params.PersonalMessageRecipientId && params.PersonalMessageRecipientId.length > 0 ? ( 
-        <p className="text-slate-900 bg-white rounded-md w-64 h-7 text-center">
-            {params.PersonalMessageRecipientId}
-        </p>) : (<p className="text-slate-900 bg-white rounded-md w-40 h-7 text-center">Pesan kosong</p>)} 
+     {params.PersonalMessageSenderId == session.data?.user.id? ( 
+        <p className="text-white bg-cyan-700 rounded-md w-64 h-7 text-center">{data}</p>) : (<p></p>)} 
      {/* {data && data.length > 0 ? ( 
         <p className="text-slate-900 bg-white rounded-md w-64 h-7 text-center">
             {data}
