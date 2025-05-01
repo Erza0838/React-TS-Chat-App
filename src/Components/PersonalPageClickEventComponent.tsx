@@ -113,7 +113,7 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
     <div className="inline-block h-14 min-w-[1200%] bg-cyan-800">
         <p className="text-white mx-5 my-2">{params.ContactId}</p>
         <div className="-z-10 w-[80vw] h-[100vh] translate-y-4 -translate-x-1 md:overflow-y-auto bg-slate-900">
-            <div className="flex flex-col gap-5 mx-8 my-6">
+            <div className="flex flex-col gap-5 mx-[48vw] my-6">
               {/* <ShowPersonalMessagesWrapperComponent params={{PersonalMessageRecipientId: params.ContactId, PersonalMessageSenderId: params.PersonalMessageSenderId}}/> */}
               {params.PersonalMessageSenderId && params.PersonalMessageSenderId == session.data?.user.id ? (
                 <ShowPersonalMessagesWrapperComponent params={{PersonalMessageRecipientId: params.ContactId, PersonalMessageSenderId: params.PersonalMessageSenderId}}/>

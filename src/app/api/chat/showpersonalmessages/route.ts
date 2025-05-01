@@ -20,30 +20,31 @@ function IsPersonalMessageArray(value: unknown): value is Array<PersonalMessageI
 export const GET = async (request: NextRequest, response: NextResponse) => 
 {   
     const session = await getServerSession(authOptions)
-    // const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findUnique({
-    //     where: 
-    //     {
-
-    //     }
-    // }) 
     const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany() 
-    const FilteredPersonalMeessages = GetSenderPersonalMessage.flatMap(chat => 
+    // const FilteredPersonalMeessages = GetSenderPersonalMessage.flatMap(chat => 
+    // {   
+    //     const MyMessages = chat.My_Messages as unknown as PersonalMessageInterface[]
+    //     if(IsPersonalMessageArray(MyMessages)) 
+    //     {
+    //         return MyMessages.filter(Messages => Messages.SenderPersonalMessageId !== null &&
+    //                 Messages.PersonalMessage !== null).map(PersonalMessage => PersonalMessage.PersonalMessage && PersonalMessage.PersonalMessageRecipientId) 
+    //     }
+    // })
+    // if(FilteredPersonalMeessages !== null) 
+    // {   
+    //     // return NextResponse.json(FilteredPersonalMeessages.toString())
+    //     return NextResponse.json(FilteredPersonalMeessages)
+    // }
+    // if(FilteredPersonalMeessages === null) 
+    // {
+    //     return NextResponse.json({error: "Pesan pribadi kosong"}, {status: 400})
+    // }
+    if(GetSenderPersonalMessage !== null) 
     {   
-        const MyMessages = chat.My_Messages as unknown as PersonalMessageInterface[]
-        if(IsPersonalMessageArray(MyMessages)) 
-        {
-            // return MyMessages.filter(Messages => Messages.SenderPersonalMessageId === session?.user.id &&
-            //        Messages.PersonalMessage !== null).map(PersonalMessage => PersonalMessage.PersonalMessage)
-            return MyMessages.filter(Messages => Messages.SenderPersonalMessageId !== null &&
-                   Messages.PersonalMessage !== null).map(PersonalMessage => PersonalMessage.PersonalMessage)
-                //    Messages.PersonalMessage !== null).map(PersonalMessage => PersonalMessage.PersonalMessageRecipientId)
-        }
-    })
-    if(FilteredPersonalMeessages !== null) 
-    {   
-        return NextResponse.json(FilteredPersonalMeessages.toString())
+        // return NextResponse.json(FilteredPersonalMeessages.toString())
+        return NextResponse.json(GetSenderPersonalMessage)
     }
-    if(FilteredPersonalMeessages === null) 
+    if(GetSenderPersonalMessage === null) 
     {
         return NextResponse.json({error: "Pesan pribadi kosong"}, {status: 400})
     }
