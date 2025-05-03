@@ -11,7 +11,10 @@ interface PersonalMessageProperties
     PersonalMessageText: string
 }
 
-type PersonalMessagePropertieList = PersonalMessageProperties[]
+// interface PersonalMessagePropertieList 
+// {
+//   Properties: PersonalMessageProperties[]
+// }
 
 interface PageProps 
 {
@@ -38,7 +41,7 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) =>
   // console.log("Pesan pribadi : " + PersonalMessagesText)
   useEffect(() => 
   {
-    async function FetchPersonalMessages(): Promise<PersonalMessageProperties | void> 
+    async function FetchPersonalMessages(): Promise<void> 
     {
       try 
       {
@@ -47,23 +50,19 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) =>
         {
           throw new Error("Gagal mengambil pesan pribadi")
         }
-        const FetchPersonalMessageData: PersonalMessagePropertieList = await FetchPersonalMessageResponse.json()
-        console.log("API : " + JSON.stringify(FetchPersonalMessageData[0].PersonalMessageText))
-        // const FetchPersonalMessageData: PersonalMessagePropertieList = await FetchPersonalMessageResponse.json()
-        // FetchPersonalMessageData.map((item) =>
-        // {
-        //   console.log("Pesan pribadi : " + item.PersonalMessageText)
-        //   console.log("ID Pengirim : " + item.RecipientId)
-        // })
-        // setPersonalMessagesFriendId(FetchPersonalMessageData[0].RecipientId)
-        // setPersonalMessagesText(FetchPersonalMessageData[0].PersonalMessageText)
-        setPersonalMessagesFriendId(FetchPersonalMessageData[3].RecipientId)
-        setPersonalMessagesText(FetchPersonalMessageData[0].PersonalMessageText)
+        const FetchPersonalMessageData: PersonalMessageProperties = await FetchPersonalMessageResponse.json()
+
+        // setPersonalMessagesFriendId(FetchPersonalMessageData.PersonalMessageText)
+        // console.log("API RESPONSE:", FetchPersonalMessageData.PersonalMessageText)
+        setPersonalMessagesFriendId(FetchPersonalMessageData.RecipientId)
+        setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageText)
+        console.log("API RESPONSE:", FetchPersonalMessageData.RecipientId)
       } 
       catch (error) 
       {
         console.error(error)
       }
+      // return []
     }
     FetchPersonalMessages()
   }, [])
@@ -72,10 +71,11 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) =>
     <>
      {/* {params.PersonalMessageSenderId == session.data?.user.id && params.PersonalMessageRecipientId == data ? ( 
         <p className="text-white bg-cyan-700 rounded-md w-64 h-7 text-center">{data.RecipientId}</p>) : (<p></p>)}  */}
+     {/* {params.PersonalMessageSenderId == session.data?.user.id ? (  */}
      {params.PersonalMessageSenderId == session.data?.user.id && params.PersonalMessageRecipientId == PersonalMessagesFriendId ? ( 
         <p className="text-white bg-cyan-700 rounded-md w-64 h-7 text-center">
+          {PersonalMessagesFriendId}
           {PersonalMessagesText}
-          {/* Halo */}
         </p>
         ) : (<p></p>)} 
     </>
