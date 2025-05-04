@@ -27,18 +27,19 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
         const MyMessages = chat.My_Messages as unknown as PersonalMessageInterface[]
         if(IsPersonalMessageArray(MyMessages)) 
         {
-            return MyMessages.filter(Messages => Messages.SenderPersonalMessageId !== null 
-                && Messages.PersonalMessage !== null).map((PersonalMessage) => 
-                ({
-                    RecipientId: PersonalMessage.PersonalMessageRecipientId,
-                    Message: PersonalMessage.PersonalMessage,
-                }))
+            return MyMessages.filter(Messages => Messages.SenderPersonalMessageId !== null && Messages.PersonalMessage !== null).map((PersonalMessage) => 
+            ({
+                PersonalMessageRecipientId: PersonalMessage.PersonalMessageRecipientId,
+                PersonalMessageText: PersonalMessage.PersonalMessage,
+                // RecipientId: PersonalMessage.PersonalMessageRecipientId,
+                // PersonalMessages: PersonalMessage.PersonalMessage,
+            }))
         }
         return []
     })
     if(FilteredPersonalMeessages !== null) 
     {   
-        // console.log(FilteredPersonalMeessages[0].Message)
+        console.log(FilteredPersonalMeessages[0])
         const FilterMessage = FilteredPersonalMeessages[0]
         // const FilterMessage = FilteredPersonalMeessages.map((messages) => 
         // ({

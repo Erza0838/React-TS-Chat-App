@@ -89,7 +89,12 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
             <div className="flex flex-col gap-5 mx-8 my-6">
               {/* <ShowPersonalMessagesWrapperComponent params={{PersonalMessageRecipientId: params.ContactId, PersonalMessageSenderId: params.PersonalMessageSenderId}}/> */}
             {params.PersonalMessageSenderId && params.PersonalMessageSenderId == session.data?.user.id ? (
-              <ShowPersonalMessagesWrapperComponent params={{PersonalMessageRecipientId: params.ContactId, PersonalMessageSenderId: params.PersonalMessageSenderId}}/>
+              <ShowPersonalMessagesWrapperComponent params=
+              {{
+                PersonalMessageRecipientId: params.PersonalMessageRecipientId, 
+                PersonalMessageSenderId: params.PersonalMessageSenderId, 
+                ContactId: params.ContactId
+              }}/>
             ) : ( <></> )}
             </div>
          </div>
@@ -116,7 +121,12 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
             <div className="flex flex-col gap-5 mx-[48vw] my-6">
               {/* <ShowPersonalMessagesWrapperComponent params={{PersonalMessageRecipientId: params.ContactId, PersonalMessageSenderId: params.PersonalMessageSenderId}}/> */}
               {params.PersonalMessageSenderId && params.PersonalMessageSenderId == session.data?.user.id ? (
-                <ShowPersonalMessagesWrapperComponent params={{PersonalMessageRecipientId: params.ContactId, PersonalMessageSenderId: params.PersonalMessageSenderId}}/>
+                <ShowPersonalMessagesWrapperComponent params=
+                {{
+                  PersonalMessageRecipientId: params.ContactId, 
+                  PersonalMessageSenderId: params.PersonalMessageSenderId, 
+                  ContactId: params.ContactId
+                }}/>
               ) : ( <></> )}
             </div>
          </div>
