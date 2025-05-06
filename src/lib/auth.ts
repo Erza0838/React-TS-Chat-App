@@ -19,17 +19,19 @@ export const authOptions: NextAuthOptions =
     providers: 
     [
         CredentialsProvider({
+            name: "credentials",
             credentials: 
             {
-                email: {},
-                password: {},
+                email: {label: "Email", type: "text"},
+                password: {label: "Password", type: "password"},
                 
             },
             async authorize(credentials) 
             {
-                if(!credentials) 
-                {
-                    return null
+                if(!credentials?.email || !credentials.password) 
+                {   
+                    throw new Error("Email dan Password salah")
+                    // return null
                 }
                 try 
                 {
@@ -38,32 +40,32 @@ export const authOptions: NextAuthOptions =
                         where: 
                         {
                             Email: credentials.email
-                        },
-                        select: 
-                        {
-                            Email: true,
-                            Password: true,
-                            id: true,
-                            Username: true
                         }
                     })
 
                     if(!user) 
                     {   
-                        console.log("User email : " + credentials.email + "tidak ada") 
-                        return null
+                        throw new Error("Email salah")
+                        // console.log("User email : " + credentials.email + "tidak ada") 
+                        // return null
                     }
 
                     const isPasswordValid = await bcrypt.compare(credentials?.password, user?.Password)
-                    if(isPasswordValid && user)
-                    {   
-                        return {
-                            id: user?.id,
-                            email: user?.Email, 
-                            name: user?.Username
-                        }
-                    }   
-                    return user
+                    if(!isPasswordValid) 
+                    {
+                        throw new Error("Password salah")
+                    }
+
+                    // if(isPasswordValid && user)
+                    // {   
+                    //     return {
+                    //         id: user?.id,
+                    //         email: user?.Email, 
+                    //         name: user?.Username
+                    //     }
+                    // }   
+                    // return user
+                    return {id: user.id, email: user.Email, name: user.Username,  image: user.UserProfilePicture}
                 }
                 catch(error) 
                 {

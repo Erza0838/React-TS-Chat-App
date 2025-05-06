@@ -28,12 +28,12 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <SignedIn>
           <UserButton />
         </SignedIn> */}
+        <Toaster position="top-center"></Toaster>
         <SessionProvider>
           {/* <SessionWrapper> */}
             {children}
           {/* </SessionWrapper> */}
         </SessionProvider>
-        <Toaster position="top-center"></Toaster>
       </body>
     </html>
   )

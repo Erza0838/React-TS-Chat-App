@@ -43,7 +43,7 @@ export default function LoginFormComponent()
         {
             const response = await signIn("credentials",
             {   
-                callbackUrl: "/homepage",
+                callbackUrl: "/contact",
                 redirect: false,
                 email: values.email,
                 password: values.password,
@@ -54,18 +54,22 @@ export default function LoginFormComponent()
                 throw new Error("No response from auth server")
             }
 
-            if(response?.error)
-            {                           
-                if(response.error === "CredentialsSignin") 
-                {
-                    toast.error("Email atau password salah!")
-                    redirect("/login")
-                }
+            if(response.error)
+            {   
+                console.log("Error response : " + response.error)                        
+                toast.error(response.error || "Login gagal!")
+                return 
+                // if(response.error === "CredentialsSignin") 
+                // {
+                //     toast.error(response.error || "Login gagal!")
+                //     return 
+                //     redirect("/login")
+                // }
             }
             if(response.ok) 
             {
                 toast.success("Login berhasil!")
-                router.push("/homepage")
+                router.push("/contact")
             }
         } 
         catch(error: any) 
