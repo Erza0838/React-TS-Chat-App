@@ -23,11 +23,11 @@ interface PageProps
 
 const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) =>
 {
-  const [PersonalMessagesFriendId, setPersonalMessagesFriendId] = useState<string>("")
+const [PersonalMessagesFriendId, setPersonalMessagesFriendId] = useState<string>("")
   const [PersonalMessagesText, setPersonalMessagesText] = useState<string>("")
   const fetcher = (url: string) => fetch(url).then((res) => res.json())
   const session = useSession()
-  // console.log(params.PersonalMessageSenderId)
+  // console.log("Id Penerima : " + params.PersonalMessageRecipientId)
 
   useEffect(() => 
   {
@@ -54,7 +54,8 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) =>
 
   return (
     <>
-     {params.PersonalMessageSenderId == session.data?.user.id && params.PersonalMessageRecipientId == PersonalMessagesFriendId ? ( 
+     {params.PersonalMessageSenderId == session.data?.user.id && params.PersonalMessageRecipientId 
+     && params.PersonalMessageRecipientId == PersonalMessagesFriendId ? ( 
         <p className="text-white bg-cyan-700 rounded-md w-64 h-7 text-center">
           {PersonalMessagesText}
         </p>

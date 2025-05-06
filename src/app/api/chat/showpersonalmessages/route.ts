@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { ReceiptIcon } from "lucide-react"
 
 interface PersonalMessageInterface 
 {
@@ -31,32 +30,19 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
             ({
                 PersonalMessageRecipientId: PersonalMessage.PersonalMessageRecipientId,
                 PersonalMessageText: PersonalMessage.PersonalMessage,
-                // RecipientId: PersonalMessage.PersonalMessageRecipientId,
-                // PersonalMessages: PersonalMessage.PersonalMessage,
             }))
         }
         return []
     })
     if(FilteredPersonalMeessages !== null) 
     {   
-        console.log(FilteredPersonalMeessages[0])
         const FilterMessage = FilteredPersonalMeessages[0]
-        // const FilterMessage = FilteredPersonalMeessages.map((messages) => 
-        // ({
-        //     RecipientId: messages.RecipientId,
-        //     Message: messages.Message,
-        // }))
         return NextResponse.json(FilterMessage)
     }
     if(FilteredPersonalMeessages === null) 
     {
         return NextResponse.json({error: "Pesan pribadi kosong"}, {status: 400})
     }
-    // if(GetSenderPersonalMessage !== null) 
-    // {   
-    //     // return NextResponse.json(FilteredPersonalMeessages.toString())
-    //     return NextResponse.json(GetSenderPersonalMessage)
-    // }
     if(GetSenderPersonalMessage === null) 
     {
         return NextResponse.json({error: "Pesan pribadi kosong"}, {status: 400})

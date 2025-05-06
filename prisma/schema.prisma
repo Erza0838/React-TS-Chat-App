@@ -75,10 +75,11 @@ model Personal_Chat_Model {
   Perconal_Chat_Id        String  @id @default(uuid())
   My_Messages             Json?   @db.Json
   Messages_To_All         Json?   @db.Json
-
+  Personal_ContactId  String
   // Delete_Personal_Message DateTime? @default(now())
   // Update_Personal_Message DateTime? @default(now())
   Create_Personal_Message DateTime? @default(now())
+  // Personal_ContactId_Reference  User_Contacts @relation(fields: [Personal_ContactId], references: [UserContactId])
 
   @@map("personal_Chat")
 }

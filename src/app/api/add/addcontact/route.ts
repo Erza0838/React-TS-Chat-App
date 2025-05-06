@@ -26,7 +26,7 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
       }
     })
 
-    const FindContact = await prisma.userModel.findFirst(
+    const FindContact = await prisma.userModel.findUnique(
     {
         where: 
         {
@@ -51,7 +51,7 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
       }
     })
 
-    if(CheckContactExist) 
+    if(CheckContactExist && FindUser) 
     { 
       console.log(`Kontak dengan id : ${UserContactId} sudah ada`)
       return NextResponse.json({error: "Kontak sudah ada"}, {status: 400})
