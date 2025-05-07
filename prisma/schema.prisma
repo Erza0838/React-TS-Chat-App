@@ -48,8 +48,10 @@ model UserDescription {
 model User_Contacts {
   Contact_Id String @id @default(uuid()) 
   ContactInformation Json? @db.Json
-  MyId String
+  MyId String 
   UserContactId  UserModel @relation(fields: [MyId], references: [id])
+
+  PersonalChatOWnerReference Personal_Chat_Model[]
   @@map("contact_List")
 }
 
@@ -75,12 +77,12 @@ model Personal_Chat_Model {
   Perconal_Chat_Id        String  @id @default(uuid())
   My_Messages             Json?   @db.Json
   Messages_To_All         Json?   @db.Json
-  Personal_ContactId  String
+  Personal_Chat_Owner_Id  String 
   // Delete_Personal_Message DateTime? @default(now())
   // Update_Personal_Message DateTime? @default(now())
   Create_Personal_Message DateTime? @default(now())
-  // Personal_ContactId_Reference  User_Contacts @relation(fields: [Personal_ContactId], references: [UserContactId])
-
+  
+  Personal_Chat_Owner User_Contacts @relation(fields: [Personal_Chat_Owner_Id], references: [Contact_Id])
   @@map("personal_Chat")
 }
 

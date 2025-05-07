@@ -14,6 +14,12 @@ import { UserContactIdValidationSchema } from "@/lib/validations/UserInformation
 // Validasi zod
 type UserContactIdFormValue = z.infer<typeof UserContactIdValidationSchema>
 
+interface AddNewContactResponse 
+{
+  error?: string
+  success?: boolean
+}
+
 export default function AddContact() 
 {
   const {data: session} = useSession()
@@ -51,10 +57,11 @@ export default function AddContact()
         },
         body: JSON.stringify(data)
       })
-      const result = await response.json()
+      const result: AddNewContactResponse = await response.json()
       if(!response.ok)
-      {
-        toast.error("Kontak sudah ada")
+      { 
+        // console.log(response.error)
+        toast.error(result.error || "Tambah kontak gagal")
         reset()
         return 
       }
@@ -70,6 +77,7 @@ export default function AddContact()
     {
       console.error(error) 
       toast.error("Terjadi kesalahan")
+      reset()
     }
   }
 

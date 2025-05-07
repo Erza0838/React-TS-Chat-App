@@ -9,7 +9,6 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
 {   
     const {UserContactId, SavedUsernameContact} = await request.json()
     const session = await getServerSession(authOptions)
-    // const GetContactIdFromInput = UserContactIdValidationSchema.safeParse(UserContactId)
     const UserContactInformation = 
     [
       {
@@ -26,18 +25,20 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
       }
     })
 
-    const FindContact = await prisma.userModel.findUnique(
+    const FindContactId = await prisma.userModel.findUnique(
     {
         where: 
         {
             id: UserContactId
-        },
-        select: 
-        {
-          id: true
-        }      
+        }
     })  
     
+    if(!FindContactId) 
+    { 
+      console.log(`Kontak id : ${UserContactId} tidak ada`)
+      return NextResponse.json({error: `Kontak id : ${UserContactId} tidak ada`}, {status: 400})
+    }
+
     const CheckContactExist = await prisma.user_Contacts.findMany(
     {
       where:
@@ -47,23 +48,18 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
           path: "$.ContactId",
           equals: UserContactId as string
         },
-        MyId: session?.user.id ?? ""
+        MyId: session?.user.id! 
       }
     })
+    console.log(CheckContactExist)
 
-    if(CheckContactExist && FindUser) 
+    if(CheckContactExist.length > 0) 
     { 
-      console.log(`Kontak dengan id : ${UserContactId} sudah ada`)
-      return NextResponse.json({error: "Kontak sudah ada"}, {status: 400})
-    }
-    if(!CheckContactExist) 
-    { 
-      console.log("ID kontak tidak ada")
-      return NextResponse.json({error: "ID kontak tidak ada"}, {status: 400})
+      console.log(`Kontak id : ${UserContactId} sudah ada`)
+      return NextResponse.json({error: `Kontak : ${UserContactId} sudah ada`}, {status: 400})
     }
 
-    // if(FindContact && FindUser) 
-    if(FindContact && FindUser && !CheckContactExist) 
+    if(FindContactId && FindUser && CheckContactExist.length === 0) 
     {   
       const AddNewContact = await prisma.user_Contacts.create(
       {
@@ -74,16 +70,11 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
               {
                 connect: 
                 {
-                  id: FindUser?.id
+                  id: session?.user.id!
                 }
               }
           }
       })
-      return NextResponse.json({AddNewContact}, {status: 200}) 
-    }
-    
-    if(!FindContact) 
-    {
-      return NextResponse.json({error: "User tidak ditemukan"}, {status: 400})
+      return NextResponse.json({success: AddNewContact}, {status: 200}) 
     }
 }

@@ -56,7 +56,6 @@ export default function LoginFormComponent()
 
             if(response.error)
             {   
-                console.log("Error response : " + response.error)                        
                 toast.error(response.error || "Login gagal!")
                 return 
                 // if(response.error === "CredentialsSignin") 
@@ -116,7 +115,7 @@ export default function LoginFormComponent()
                                 </FormItem>
                             )}/>
                         <div className="flex flex-row">
-                            <Link href={"/"} className="text-white">Belum punya akun?</Link>
+                            <Link href={"/register"} className="text-white">Belum punya akun?</Link>
                         </div>
                         <Button type="submit" disabled={isLoading}>
                             {isLoading ? "Loading..." : "Login"}
