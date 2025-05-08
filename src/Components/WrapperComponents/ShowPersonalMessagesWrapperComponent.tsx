@@ -4,12 +4,13 @@ import React, { useEffect } from 'react'
 import useSWR from "swr"
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
+import { ifError } from 'assert'
 
 interface PersonalMessageProperties 
 {
     PersonalMessageRecipientId: string
-    PersonalMessageText: string
-    PersonalChatOwnerId: string
+    PersonalMessageField: string
+    PersonalContactOwnerId: string
 }
 
 interface PageProps 
@@ -24,7 +25,7 @@ interface PageProps
 
 const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) =>
 {
-  const [PersonalMessagesFriendId, setPersonalMessagesFriendId] = useState<string>("")
+  // const [PersonalMessagesFriendId, setPersonalMessagesFriendId] = useState<string>("")
   const [PersonalMessagesText, setPersonalMessagesText] = useState<string>("")
   const [PersonalMessagesOwnerId, setPersonalMessagesOwnerId] = useState<string>("")
   const fetcher = (url: string) => fetch(url).then((res) => res.json())
@@ -42,11 +43,8 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) =>
           throw new Error("Gagal mengambil pesan pribadi")
         }
         const FetchPersonalMessageData: PersonalMessageProperties = await FetchPersonalMessageResponse.json()
-        setPersonalMessagesFriendId(FetchPersonalMessageData.PersonalMessageRecipientId)
-        console.log("Pesan pribadi : " + setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageText))
-        console.log("ID pemilik kontak : " + setPersonalMessagesText(FetchPersonalMessageData.PersonalChatOwnerId))
-        // setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageText)
-        // setPersonalMessagesOwnerId(FetchPersonalMessageData.PersonalChatOwnerId)
+        setPersonalMessagesOwnerId(FetchPersonalMessageData.PersonalContactOwnerId)
+        setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageField)
       } 
       catch (error) 
       {
@@ -56,10 +54,12 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) =>
     FetchPersonalMessages()
   }, [])
 
+  console.log("ID dari params : " + params.PersonalMessageSenderId)
+  console.log("ID dari state : " + PersonalMessagesOwnerId)
+
   return (
     <>
-     {params.PersonalMessageSenderId === session.data?.user.id 
-      && params.PersonalMessageSenderId === PersonalMessagesOwnerId ? ( 
+     {params.PersonalMessageSenderId === session.data?.user.id && PersonalMessagesOwnerId === params.PersonalMessageSenderId ? ( 
         <p className="text-white bg-cyan-700 rounded-md w-64 h-7 text-center">
           {PersonalMessagesText}
         </p>
