@@ -11,6 +11,8 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+  // relationMode = "foreignKeys"
+  relationMode = "prisma"
 }
 
 // Model untuk menyimpan informasi pengguna yang melakukan registrasi
@@ -42,6 +44,8 @@ model UserDescription {
   updatedAt         DateTime @updatedAt
 
   UserIdReference UserModel @relation(fields: [UserId], references: [id])
+
+  @@index([UserId])
 }
 
 // Model untuk menyimpan daftar kontak user
@@ -52,7 +56,9 @@ model User_Contacts {
   UserContactId  UserModel @relation(fields: [MyId], references: [id])
 
   PersonalChatOWnerReference Personal_Chat_Model[]
+@@index([MyId])
   @@map("contact_List")
+  // @@index([UserContactId])
 }
 
 // Model untuk melakukan operasi CRUD pada pesan obrolan pribadi
@@ -66,20 +72,10 @@ model User_Contacts {
 
 // Model untuk menyimpan obrolan pribadi
 model Personal_Chat_Model {
-  // Existing_Personal_Contact_Id User_Contacts @relation(fields: [Existing_Contact_Id], references: [Contacts_Id])
-  // Existing_Contact_Id          String        @id @default(uuid())
-
-  // Sender_Rechiever_Personal_Message_Id Personal_Chat_Feature_Model @relation(fields: [Personal_Message_Id], references: [Personal_Messages_Id])
-  // Personal_Message_Id                  String                      @db.VarChar(255)
-
-  // My_Messages             String    @db.Text()
-  // Messages_To_All         String    @db.Text()
   Perconal_Chat_Id        String  @id @default(uuid())
   My_Messages             Json?   @db.Json
   Messages_To_All         Json?   @db.Json
-  Personal_Chat_Owner_Id  String 
-  // Delete_Personal_Message DateTime? @default(now())
-  // Update_Personal_Message DateTime? @default(now())
+  Personal_Chat_Owner_Id  String @unique
   Create_Personal_Message DateTime? @default(now())
   
   Personal_Chat_Owner User_Contacts @relation(fields: [Personal_Chat_Owner_Id], references: [Contact_Id])
@@ -114,6 +110,8 @@ model Grup_Chat_Information_Model {
   Update_Grup_Message       DateTime? @default(now())
   Create_Grup_Message       DateTime? @default(now())
 
+
+  @@index([Chat_Grup_Id])
   @@map("grup_chat_information")
 }
 

@@ -8,6 +8,7 @@ interface PersonalMessageInterface
     SenderPersonalMessageId: string
     PersonalMessageRecipientId: string
     PersonalMessage: string
+    PersonalChatOwnerId: string
 }
 
 // function IsPersonalMessageArray(value: unknown): value is PersonalMessageInterface[]
@@ -19,24 +20,29 @@ function IsPersonalMessageArray(value: unknown): value is Array<PersonalMessageI
 // export const GET = async (request: NextRequest, response: NextResponse) => 
 export const GET = async (request: NextRequest, response: NextResponse) => 
 {   
-    const session = await getServerSession(authOptions)
+    // const session = await getServerSession(authOptions)
     const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany() 
     const FilteredPersonalMeessages = GetSenderPersonalMessage.flatMap(chat => 
     {   
         const MyMessages = chat.My_Messages as unknown as PersonalMessageInterface[]
         if(IsPersonalMessageArray(MyMessages)) 
         {
-            return MyMessages.filter(Messages => Messages.SenderPersonalMessageId !== null && Messages.PersonalMessage !== null).map((PersonalMessage) => 
+            return MyMessages.filter(Messages => 
+                                     Messages.SenderPersonalMessageId !== null && 
+                                     Messages.PersonalMessage !== null && 
+                                     Messages.PersonalChatOwnerId !== null).map((PersonalMessage) => 
             ({
                 PersonalMessageRecipientId: PersonalMessage.PersonalMessageRecipientId,
                 PersonalMessageText: PersonalMessage.PersonalMessage,
+                PersonalChatOwnerId: PersonalMessage.PersonalChatOwnerId
             }))
         }
         return []
     })
-    if(FilteredPersonalMeessages !== null) 
+    if(FilteredPersonalMeessages !== null && FilteredPersonalMeessages.length > 0) 
     {   
         const FilterMessage = FilteredPersonalMeessages[0]
+        console.log(FilterMessage.PersonalChatOwnerId)
         return NextResponse.json(FilterMessage)
     }
     if(FilteredPersonalMeessages === null) 

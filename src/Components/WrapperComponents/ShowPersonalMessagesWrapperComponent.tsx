@@ -9,6 +9,7 @@ interface PersonalMessageProperties
 {
     PersonalMessageRecipientId: string
     PersonalMessageText: string
+    PersonalChatOwnerId: string
 }
 
 interface PageProps 
@@ -23,11 +24,11 @@ interface PageProps
 
 const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) =>
 {
-const [PersonalMessagesFriendId, setPersonalMessagesFriendId] = useState<string>("")
+  const [PersonalMessagesFriendId, setPersonalMessagesFriendId] = useState<string>("")
   const [PersonalMessagesText, setPersonalMessagesText] = useState<string>("")
+  const [PersonalMessagesOwnerId, setPersonalMessagesOwnerId] = useState<string>("")
   const fetcher = (url: string) => fetch(url).then((res) => res.json())
   const session = useSession()
-  // console.log("Id Penerima : " + params.PersonalMessageRecipientId)
 
   useEffect(() => 
   {
@@ -42,7 +43,10 @@ const [PersonalMessagesFriendId, setPersonalMessagesFriendId] = useState<string>
         }
         const FetchPersonalMessageData: PersonalMessageProperties = await FetchPersonalMessageResponse.json()
         setPersonalMessagesFriendId(FetchPersonalMessageData.PersonalMessageRecipientId)
-        setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageText)
+        console.log("Pesan pribadi : " + setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageText))
+        console.log("ID pemilik kontak : " + setPersonalMessagesText(FetchPersonalMessageData.PersonalChatOwnerId))
+        // setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageText)
+        // setPersonalMessagesOwnerId(FetchPersonalMessageData.PersonalChatOwnerId)
       } 
       catch (error) 
       {
@@ -54,8 +58,8 @@ const [PersonalMessagesFriendId, setPersonalMessagesFriendId] = useState<string>
 
   return (
     <>
-     {params.PersonalMessageSenderId == session.data?.user.id && params.PersonalMessageRecipientId 
-     && params.PersonalMessageRecipientId == PersonalMessagesFriendId ? ( 
+     {params.PersonalMessageSenderId === session.data?.user.id 
+      && params.PersonalMessageSenderId === PersonalMessagesOwnerId ? ( 
         <p className="text-white bg-cyan-700 rounded-md w-64 h-7 text-center">
           {PersonalMessagesText}
         </p>

@@ -25,7 +25,8 @@ const DisplayPersonalContactComponent: React.FC<PageProps> = ({ params }: PagePr
             ContactId: params.ContactId, 
             SavedContactName: params.SavedContactName || "",
             PersonalMessageRecipientId: params.ContactId,
-            PersonalMessageSenderId: session.data?.user.id || ""
+            PersonalMessageSenderId: session.data?.user.id!,
+            PersonalMessagesOwnerId: session.data?.user.id!
         }}/>
     </>
   )

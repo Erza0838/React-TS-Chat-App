@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/app/Database"
 import { Prisma } from "@prisma/client"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 
 export const POST = async (request: NextRequest, response: NextResponse) => 
-{
+{   
+    const session = await getServerSession(authOptions)
     const {SenderMessageId,SenderMessageContactName,PersonalMessageText,MessageRecipientId} = await request.json()
     const PersonalMessageInformation = 
     [
@@ -15,12 +18,16 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         }
     ] as Prisma.JsonArray   
 
+    console.log("Pesan pribadi : " + JSON.stringify(PersonalMessageInformation))
+
     const InsertPersonalMessage = await prisma.personal_Chat_Model.create(
     {
         data:
         { 
             My_Messages: PersonalMessageInformation,
             Messages_To_All: PersonalMessageInformation,
+            Personal_Chat_Owner_Id: SenderMessageId,
+            Create_Personal_Message: new Date()
         }        
     })
     if(InsertPersonalMessage) 

@@ -14,26 +14,19 @@ interface PageProps
     SavedContactName: string
     PersonalMessageRecipientId: string
     PersonalMessageSenderId: string
+    PersonalMessagesOwnerId: string
   }
 }
 
-interface SenderPersonalMessage 
-{
-  SenderPersonalMessageId: string
-  PersonalMessageText: string
-  SenderPersonalMessageName: string
-}
+// interface SenderPersonalMessage 
+// {
+//   SenderPersonalMessageId: string
+//   PersonalMessageText: string
+//   SenderPersonalMessageName: string
+// }
 
 const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
 { 
-  // const fetcher = (url: string) => fetch(url).then((res) => res.json())
-  // const { data, isLoading, isValidating, error } = useSWR<string>(`/api/chat/showpersonalmessages/${params.ContactId}`, 
-  //   fetcher,
-  //   {
-  //     revalidateOnFocus: false, 
-  //     revalidateOnReconnect: false
-  //   }
-  // )
   const [selectedContact, setSelectedContact] = useState<{
     SelectedContactId: string, 
     SelectedSavedContactName? : string
@@ -62,7 +55,8 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
             SenderMessageId: session.data?.user.id,
             MessageRecipientId: params.ContactId,
             SenderMessageContactName: params.SavedContactName,
-            PersonalMessageText: Personalmessage
+            PersonalMessageText: Personalmessage, 
+            PersonalMessagesOwnerId: session.data?.user.id
           })
         })
         if(!PersonalMessageData.ok || PersonalMessageData.status !== 200) 
