@@ -3,7 +3,7 @@ import { prisma } from "@/app/Database"
 import { Prisma } from "@prisma/client"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { UserContactIdValidationSchema } from "@/lib/validations/UserInformationValidation"
+import { randomUUID, UUID } from "crypto"
 
 export const POST = async (request: NextRequest, response: NextResponse) => 
 {   

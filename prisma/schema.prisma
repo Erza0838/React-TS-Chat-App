@@ -11,8 +11,8 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
-  // relationMode = "foreignKeys"
-  relationMode = "prisma"
+  relationMode = "foreignKeys"
+  // relationMode = "prisma"
 }
 
 // Model untuk menyimpan informasi pengguna yang melakukan registrasi
@@ -45,7 +45,7 @@ model UserDescription {
 
   UserIdReference UserModel @relation(fields: [UserId], references: [id])
 
-  @@index([UserId])
+  // @@index([UserId])
 }
 
 // Model untuk menyimpan daftar kontak user
@@ -53,32 +53,29 @@ model User_Contacts {
   Contact_Id String @id @default(uuid()) 
   ContactInformation Json? @db.Json
   MyId String 
-  UserContactId  UserModel @relation(fields: [MyId], references: [id])
 
-  PersonalChatOWnerReference Personal_Chat_Model[]
-@@index([MyId])
+  UserContactId  UserModel @relation(fields: [MyId], references: [id])
+  // PersonalMessagesIdReference Personal_Chat_Model @relation("Reference_Personal_ChatId", fields: [PersonalChatId], references: [Personal_Chat_Id], onDelete: NoAction, onUpdate: NoAction)
+
+  PersonalChatOWnerReference Personal_Chat_Model[] @relation("Reference_Personal_Chat_Owner_Id")
+  // PersonalChatOWnerReference Personal_Chat_Model[] @relation("Reference_Personal_Chat_Owner_Id")
+  // PersonalChatOWnerReference Personal_Chat_Model[] @relation("ReferencePersonalChatOwnerId")
+  // @@index([MyId,PersonalChatId])
   @@map("contact_List")
   // @@index([UserContactId])
 }
 
-// Model untuk melakukan operasi CRUD pada pesan obrolan pribadi
-// model Personal_Chat_Feature_Model {
-//   Personal_Messages_Id String @id @default(uuid())
-
-//   Sender_Rechiever_Message_Id Personal_Chat_Model[]
-
-//   @@map("personal_Chat_Feature")
-// }
 
 // Model untuk menyimpan obrolan pribadi
 model Personal_Chat_Model {
-  Perconal_Chat_Id        String  @id @default(uuid())
+  Personal_Chat_Id        String  @id @default(uuid())
   My_Messages             Json?   @db.Json
   Messages_To_All         Json?   @db.Json
   Personal_Chat_Owner_Id  String @unique
   Create_Personal_Message DateTime? @default(now())
   
-  Personal_Chat_Owner User_Contacts @relation(fields: [Personal_Chat_Owner_Id], references: [Contact_Id])
+  Personal_Chat_Owner User_Contacts @relation("Reference_Personal_Chat_Owner_Id", fields: [Personal_Chat_Owner_Id], references: [Contact_Id],onDelete: NoAction, onUpdate: NoAction)
+  // PersonalChatIdReference User_Contacts[] @relation("Reference_Personal_ChatId")
   @@map("personal_Chat")
 }
 
@@ -87,7 +84,6 @@ model Grup_Chat_Feature_Model {
   Grup_Messages_Id String @id @default(uuid())
 
   Grup_Sender_Rechiever_Message_Id Grup_Chat_Information_Model[]
-
   @@map("Grup_Chat_Feature")
 }
 
@@ -111,7 +107,7 @@ model Grup_Chat_Information_Model {
   Create_Grup_Message       DateTime? @default(now())
 
 
-  @@index([Chat_Grup_Id])
+  // @@index([Chat_Grup_Id])
   @@map("grup_chat_information")
 }
 

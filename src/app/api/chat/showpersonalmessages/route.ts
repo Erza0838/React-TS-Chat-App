@@ -9,6 +9,7 @@ interface PersonalMessageInterface
     SenderPersonalMessageId: string
     PersonalMessageRecipientId: string
     PersonalMessage: string
+    PersonalMessageId: string
 }
 
 function IsPersonalMessageArray(value: unknown): value is Array<PersonalMessageInterface>
@@ -26,17 +27,24 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
         {
             return MyMessages.filter(Messages => 
                                      Messages.SenderPersonalMessageId !== null && 
-                                     Messages.PersonalMessage !== null).map((PersonalMessage) => 
+                                     Messages.PersonalMessage !== null && Messages.PersonalMessageId !== null).map((PersonalMessage) => 
             ({
                 PersonalMessageRecipientId: PersonalMessage.PersonalMessageRecipientId,
-                PersonalMessageText: PersonalMessage.PersonalMessage
+                PersonalMessageText: PersonalMessage.PersonalMessage,
+                PersonalMessageId: PersonalMessage.PersonalMessageId
             }))
         }
         return []
     })
-    if(FilteredPersonalMeessages !== null && FilteredPersonalMeessages.length > 0 && GetSenderPersonalMessage[0].Personal_Chat_Owner_Id !== null) 
+    if(FilteredPersonalMeessages !== null && FilteredPersonalMeessages.length > 0 
+        && GetSenderPersonalMessage[0].Personal_Chat_Owner_Id !== null) 
     {   
-        return NextResponse.json({PersonalMessageField: FilteredPersonalMeessages[0].PersonalMessageText, PersonalContactOwnerId: GetSenderPersonalMessage[0].Personal_Chat_Owner_Id}, {status: 200})
+        return NextResponse.json(
+            {
+              PersonalMessageField: FilteredPersonalMeessages[0].PersonalMessageText, 
+              PersonalChatOwnerId: GetSenderPersonalMessage[0].Personal_Chat_Owner_Id,
+            }, {status: 200}
+        )
     }
     if(FilteredPersonalMeessages === null) 
     {

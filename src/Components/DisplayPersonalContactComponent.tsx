@@ -12,6 +12,8 @@ interface PageProps
   {
     ContactId: string 
     SavedContactName: string | null
+    // PersonalMessageId: string
+    PersonalchatOwnerId: string
   }
 }
 
@@ -26,7 +28,8 @@ const DisplayPersonalContactComponent: React.FC<PageProps> = ({ params }: PagePr
             SavedContactName: params.SavedContactName || "",
             PersonalMessageRecipientId: params.ContactId,
             PersonalMessageSenderId: session.data?.user.id!,
-            PersonalMessagesOwnerId: session.data?.user.id!
+            PersonalChatOwnerId: params.PersonalchatOwnerId!,
+            // PersonalMessageId: params.PersonalMessageId
         }}/>
     </>
   )

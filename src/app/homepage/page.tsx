@@ -15,9 +15,20 @@ import SearchContactWrapperComponent from "@/Components/WrapperComponents/Search
 
 interface ContactInfoEntry 
 {
+  Contact_Id: string
   ContactId: string
+  PersonalMessageId: string
+  PersonalChatOwnerId: string
   SavedContactName?: string
 }
+
+// interface ContactInfoEntry 
+// {
+//   MyId: string
+//   PersonalMessageId: string
+//   PersonalChatOwnerId: string
+//   SavedContactName?: string
+// }
 
 interface ContactInfo 
 {
@@ -25,9 +36,12 @@ interface ContactInfo
 }
 
 interface FlattenedContact 
-{
-  ContactId: string;
-  SavedContactName?: string;
+{ 
+  Contact_Id: string
+  ContactId: string
+  PersonalMessageId: string
+  PersonalChatOwnerId: string
+  SavedContactName?: string
 }
 
 export default function Home() 
@@ -36,7 +50,8 @@ export default function Home()
   const [showPersonalContactState, setShowPersonalContact] = useState<boolean>(false)
   const [selectedContact, setSelectedContact] = useState<{
     SelectedContactId: string, 
-    SelectedSavedContactName? : string
+    SelectedPersonalContactId: string
+    SelectedSavedNameContact: string
   } | null>(null)
   
   useEffect(() => 
@@ -52,14 +67,23 @@ export default function Home()
           }
           if(response.ok) 
           {
+            // const data: ContactInfo[] = await response.json()
+            // console.log("Nama kontak : " + data[0].ContactInformation[0])
+            // const flattened = data.map((item) => 
+
             const data = await response.json()
             const dataContacts: ContactInfo[] = data.contact || []
+            // console.log(dataContacts[0].ContactInformation)
             const flattened = dataContacts.map((item) => 
             {
               const info = item.ContactInformation[0]
               return {
                 ContactId: info.ContactId,
+                PersonalMessageId: info.PersonalMessageId,
+                PersonalChatOwnerId: info.PersonalChatOwnerId,
                 SavedContactName: info.SavedContactName,
+                // EKsperimen
+                Contact_Id: info.Contact_Id
               }
             })
             setContact(flattened)
@@ -74,9 +98,14 @@ export default function Home()
   }, [])
 
 
-  function ShowPersonalContact(SelectedContactId: string, SelectedSavedContactName: string) 
+  function ShowPersonalContact(SelectedContactId: string, SelectedSavedContactName: string, SelectedPersonalContactId: string) 
   {
-    setSelectedContact({SelectedContactId: SelectedContactId,SelectedSavedContactName: SelectedSavedContactName})
+    setSelectedContact(
+    {
+      SelectedContactId: SelectedContactId,
+      SelectedSavedNameContact: SelectedSavedContactName,
+      SelectedPersonalContactId: SelectedPersonalContactId
+    })
     setShowPersonalContact(!showPersonalContactState)
   }
 
@@ -93,11 +122,17 @@ export default function Home()
                     {contacts.map((info) => (
                       <li key={info.ContactId} className="text-white cursor-pointer">
                         {info.SavedContactName ? (
-                          <p onClick={() => ShowPersonalContact(info.ContactId, info.SavedContactName!)} className="underline underline-offset-4">
+                          <p onClick={() => ShowPersonalContact(
+                                                            info.ContactId, 
+                                                            info.SavedContactName!, 
+                                                            info.PersonalChatOwnerId)} className="underline underline-offset-4">
                             {info.SavedContactName}
                           </p>
                         ) : (
-                          <p onClick={() => ShowPersonalContact(info.ContactId, info.SavedContactName!)} className="underline underline-offset-4">
+                          <p onClick={() => ShowPersonalContact(
+                                                            info.ContactId, 
+                                                            info.SavedContactName!, 
+                                                            info.PersonalChatOwnerId)} className="underline underline-offset-4">
                             {info.ContactId}
                           </p>
                         )}
@@ -116,7 +151,8 @@ export default function Home()
             <DisplayPersonalContactComponent params=
             {{
               ContactId: selectedContact?.SelectedContactId!,
-              SavedContactName: selectedContact?.SelectedSavedContactName!
+              SavedContactName: selectedContact?.SelectedSavedNameContact!, 
+              PersonalchatOwnerId: selectedContact?.SelectedPersonalContactId!
             }}/>
           </div>
         ) : (
@@ -124,7 +160,8 @@ export default function Home()
             <DisplayPersonalContactComponent params=
             {{
               ContactId: selectedContact?.SelectedContactId!,
-              SavedContactName: selectedContact?.SelectedSavedContactName!
+              SavedContactName: selectedContact?.SelectedSavedNameContact!, 
+              PersonalchatOwnerId: selectedContact?.SelectedPersonalContactId!
             }}/>
           </div>
         )}

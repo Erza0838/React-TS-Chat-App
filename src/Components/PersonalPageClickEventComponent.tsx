@@ -14,7 +14,9 @@ interface PageProps
     SavedContactName: string
     PersonalMessageRecipientId: string
     PersonalMessageSenderId: string
-    PersonalMessagesOwnerId: string
+    PersonalChatOwnerId: string
+    // PersonalMessagesOwnerId: string
+    // PersonalMessageId: string
   }
 }
 
@@ -56,7 +58,7 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
             MessageRecipientId: params.ContactId,
             SenderMessageContactName: params.SavedContactName,
             PersonalMessageText: Personalmessage, 
-            PersonalMessagesOwnerId: session.data?.user.id
+            PersonalChatOwnerId: params.PersonalChatOwnerId
           })
         })
         if(!PersonalMessageData.ok || PersonalMessageData.status !== 200) 
@@ -87,7 +89,9 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
               {{
                 PersonalMessageRecipientId: params.PersonalMessageRecipientId, 
                 PersonalMessageSenderId: params.PersonalMessageSenderId, 
-                ContactId: params.ContactId
+                ContactId: params.ContactId, 
+                PersonalChatOwnerId: params.PersonalChatOwnerId
+                // PersonalMessageId: params.PersonalMessageId
               }}/>
             ) : ( <></> )}
             </div>
@@ -119,7 +123,9 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
                 {{
                   PersonalMessageRecipientId: params.ContactId, 
                   PersonalMessageSenderId: params.PersonalMessageSenderId, 
-                  ContactId: params.ContactId
+                  ContactId: params.ContactId, 
+                  PersonalChatOwnerId: params.PersonalChatOwnerId
+                  // PersonalMessageId: params.PersonalMessageId
                 }}/>
               ) : ( <></> )}
             </div>
