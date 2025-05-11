@@ -22,12 +22,13 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
     const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany()
     const FilteredPersonalMeessages = GetSenderPersonalMessage.flatMap(chat => 
     {   
-        const MyMessages = chat.My_Messages as unknown as PersonalMessageInterface[]
+        const MyMessages = chat.My_Messages as unknown as Array<PersonalMessageInterface>
         if(IsPersonalMessageArray(MyMessages)) 
         {
             return MyMessages.filter(Messages => 
                                      Messages.SenderPersonalMessageId !== null && 
-                                     Messages.PersonalMessage !== null && Messages.PersonalMessageId !== null).map((PersonalMessage) => 
+                                     Messages.PersonalMessage !== null && Messages.PersonalMessageId !== null
+            ).map((PersonalMessage) => 
             ({
                 PersonalMessageRecipientId: PersonalMessage.PersonalMessageRecipientId,
                 PersonalMessageText: PersonalMessage.PersonalMessage,
@@ -36,8 +37,7 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
         }
         return []
     })
-    if(FilteredPersonalMeessages !== null && FilteredPersonalMeessages.length > 0 
-        && GetSenderPersonalMessage[0].Personal_Chat_Owner_Id !== null) 
+    if(FilteredPersonalMeessages !== null && FilteredPersonalMeessages.length > 0 && GetSenderPersonalMessage[0].Personal_Chat_Owner_Id !== null) 
     {   
         return NextResponse.json(
             {

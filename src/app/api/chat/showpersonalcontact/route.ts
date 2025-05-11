@@ -3,6 +3,27 @@ import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 
+interface ContactInformationProperties 
+{
+  ContactId: string
+  SavedContactName?: string
+}
+
+interface PersonalContactInterace 
+{
+  // ContactInformation: Array<ContactInformationProperties>
+  ContactId: string
+  SavedContactName?: string
+  Contact_Id: string
+  MyId: string
+}
+
+function IsPersonalContactArray(value: unknown): value is Array<PersonalContactInterace>
+{
+  return Array.isArray(value) 
+  // && value.every(PersonalChatItem => )
+}
+
 export const GET = async (request: NextRequest, response: NextResponse) => 
 {   
     const session = await getServerSession(authOptions)
@@ -13,23 +34,80 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
             id: session?.user.id ?? ""
         }
     })
-    if(FindContactOwner) 
+
+    const ChekContactOwnerId = await prisma.user_Contacts.findMany(
     {
-        const ChekContactOwnerId = await prisma.user_Contacts.findMany(
+      where: 
+      {
+        MyId: 
         {
-          where: 
+          equals: session?.user.id ?? ""
+        }
+      },
+      select: 
+      {
+        ContactInformation: true,
+        Contact_Id: true, 
+        MyId: true
+      }
+    })
+
+    const FilteredPersonalContact = ChekContactOwnerId.flatMap(PersonalContact => 
+    {
+      const MyPersonalContact = PersonalContact.ContactInformation as unknown as Array<PersonalContactInterace>
+      if(IsPersonalContactArray(MyPersonalContact)) 
+      {
+        return MyPersonalContact.filter(PersonalContactData => PersonalContactData.ContactId !== null).map((AllPersonalContactData) => 
+        ({
+          ContactId: AllPersonalContactData.ContactId,
+          SavedContactName: AllPersonalContactData.SavedContactName,
+        }))
+        // return MyPersonalContact.map((AllPersonalContactData) => 
+        //             ({
+        //               ContactId: AllPersonalContactData.ContactId,
+        //               SavedContactName: AllPersonalContactData.SavedContactName,
+        //             }))
+      }
+      return []
+    })
+      
+    if(FindContactOwner !== null) 
+    {
+      if(FilteredPersonalContact.length > 0 && FilteredPersonalContact !== null && ChekContactOwnerId[0].MyId !== null) 
+      {
+        return NextResponse.json(
           {
-            MyId: 
-            {
-              equals: session?.user.id ?? ""
-            }
+            PersonalContactList: FilteredPersonalContact, 
+            PersonalContactOwnerId: ChekContactOwnerId[0].Contact_Id
           },
-          select: 
-          {
-            ContactInformation: true,
-            Contact_Id: true
-          }
-        })
-        return NextResponse.json({contact: ChekContactOwnerId}, {status: 200})
+          {status: 200}
+        )
+      }
     }
+    if(FindContactOwner === null) 
+    {
+      if(FilteredPersonalContact.length === 0 && FilteredPersonalContact === null && ChekContactOwnerId[0].MyId !== null) 
+      {
+        return NextResponse.json({error: "Kontak pribadi kosong!"}, {status: 400})
+      }
+    }
+    // if(FindContactOwner) 
+    // {
+    //     const ChekContactOwnerId = await prisma.user_Contacts.findMany(
+    //     {
+    //       where: 
+    //       {
+    //         MyId: 
+    //         {
+    //           equals: session?.user.id ?? ""
+    //         }
+    //       },
+    //       select: 
+    //       {
+    //         ContactInformation: true,
+    //         Contact_Id: true
+    //       }
+    //     })
+    //     return NextResponse.json({contact: ChekContactOwnerId}, {status: 200})
+    // }
 }
