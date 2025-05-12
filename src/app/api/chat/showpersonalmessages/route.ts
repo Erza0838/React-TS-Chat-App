@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/app/Database"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
-import { Turret_Road } from "next/font/google"
 
 interface PersonalMessageInterface 
 {

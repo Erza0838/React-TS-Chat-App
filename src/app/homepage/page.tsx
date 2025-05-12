@@ -22,14 +22,31 @@ interface ContactInfoEntry
   PersonalChatOwnerId: string
   SavedContactName?: string
   PersonalContactList: string
+  PersonalContactOwnerId: string
 }
 
-// interface ContactInfo 
-// {
-//   ContactInformation: ContactInfoEntry[]
+interface ContactInfo 
+{
+  ContactInformation: ContactInfoEntry[]
+}
+
+// interface FlattenedContact 
+// { 
+//   // Contact_Id: string
+//   ContactId: string
+//   PersonalMessageId: string
+//   PersonalChatOwnerId: string
+//   SavedContactName?: string
+//   // PersonalContactList: string
 // }
 
-interface FlattenedContact 
+interface PersonalContactListValue 
+{
+  key: number
+  value: string
+}
+
+type FlattenedContact =
 { 
   // Contact_Id: string
   ContactId: string
@@ -49,7 +66,6 @@ export default function Home()
     SelectedPersonalContactId: string
     SelectedSavedNameContact: string
   } | null>(null)
-  
 
   useEffect(() => 
   {
@@ -59,12 +75,23 @@ export default function Home()
       {
           const response = await fetch("/api/chat/showpersonalcontact")
           const FetchPersonalContactList: ContactInfoEntry = await response.json()
+          console.log("Data kontak pribadi : " + JSON.stringify(FetchPersonalContactList.PersonalContactList))
+          console.log("ID Pemilik kontak : " + FetchPersonalContactList.PersonalContactOwnerId)
+
           if(!response.ok) 
           {
             throw new Error("Gagal mendapatkan data kontak")
           }
           if(response.ok) 
-          {
+          { 
+          
+          // const PersonalContactList = FetchPersonalContactList[0].ContactInformation[0].SavedContactName
+          // const FilterPersonalContactList = (Object.keys(FetchPersonalContactList) as Array<keyof ContactInfoEntry>).forEach((key: number, value: string) => 
+          // {
+          //   console.log(FetchPersonalContactList[key].ContactInformation)
+          // })
+
+            // console.log(typeof FilterPersonalContactList)
             // const flattened = data.map((item) => 
             // {
             //   const info = item.ContactInformation[0]
@@ -75,8 +102,8 @@ export default function Home()
             //     SavedContactName: info.SavedContactName
             //   }
             // })
-            // console.log("Data api : " + typeof FetchPersonalContactList)
-            console.log("Data api : " + JSON.stringify(FetchPersonalContactList.PersonalContactList))
+            // const FilteredPersonalContactList = FetchPersonalContactList
+            // console.log("Data api : " + JSON.stringify(FetchPersonalContactList.PersonalContactList))
           }
       } 
       catch (error) 
