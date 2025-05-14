@@ -13,22 +13,44 @@ import DisplayPersonalContactComponent from "@/Components/DisplayPersonalContact
 import SidebarWrapperComponent from "@/Components/WrapperComponents/SidebarWrapperComponent"
 import SearchContactWrapperComponent from "@/Components/WrapperComponents/SearchContactWrapperComponent"
 
-
-interface ContactInfoEntry 
+interface PersonalContactProperty 
 {
-  MyId: string
-  // PersonalMessageId: string
   ContactId: string
-  PersonalChatOwnerId: string
   SavedContactName?: string
-  PersonalContactList: string
+}
+
+interface PersonalApiContactResponse 
+{
+  PersonalContactList: PersonalContactProperty[]
   PersonalContactOwnerId: string
 }
 
-interface ContactInfo 
+interface PersonalApiContactPropertyResponse 
 {
-  ContactInformation: ContactInfoEntry[]
+  PersonalContactDataList: PersonalApiContactResponse[]
 }
+
+interface FlattenedContact 
+{ 
+  PersonalContactList: PersonalContactProperty[]
+  PersonalContactOwnerId: string
+}
+
+// interface ContactInfoEntry 
+// {
+//   MyId: string
+//   // PersonalMessageId: string
+//   ContactId: string
+//   PersonalChatOwnerId: string
+//   SavedContactName?: string
+//   PersonalContactList: string
+//   PersonalContactOwnerId: string
+// }
+
+// interface ContactInfo 
+// {
+//   ContactInformation: ContactInfoEntry[]
+// }
 
 // interface FlattenedContact 
 // { 
@@ -40,27 +62,26 @@ interface ContactInfo
 //   // PersonalContactList: string
 // }
 
-interface PersonalContactListValue 
-{
-  key: number
-  value: string
-}
-
-type FlattenedContact =
-{ 
-  // Contact_Id: string
-  ContactId: string
-  PersonalMessageId: string
-  PersonalChatOwnerId: string
-  SavedContactName?: string
-  // PersonalContactList: string
-}
+// interface FlattenedContact 
+// { 
+//   // Contact_Id: string
+//   ContactId: string
+//   PersonalMessageId: string
+//   PersonalChatOwnerId: string
+//   SavedContactName?: string
+//   // PersonalContactList: string
+// }
 
 export default function Home() 
 { 
-  const [contacts, setContact] = useState<FlattenedContact[]>([])
+  // const [Personalcontacts, setPersonalContact] = useState<>([])
+  const [Personalcontacts, setPersonalContact] = useState<PersonalContactProperty[]>([])
+  // const [Personalcontacts, setPersonalContact] = useState<FlattenedContact>({
+  //   PersonalContactList: [], 
+  //   PersonalContactOwnerId: ""
+  // })
   // const [contacts, setContact] = useState<string>()
-  const [showPersonalContactState, setShowPersonalContact] = useState<boolean>(false)
+  const [Contacs, setContacts] = useState<boolean>(false)
   const [selectedContact, setSelectedContact] = useState<{
     SelectedContactId: string, 
     SelectedPersonalContactId: string
@@ -74,9 +95,10 @@ export default function Home()
       try 
       {
           const response = await fetch("/api/chat/showpersonalcontact")
-          const FetchPersonalContactList: ContactInfoEntry = await response.json()
-          console.log("Data kontak pribadi : " + JSON.stringify(FetchPersonalContactList.PersonalContactList))
-          console.log("ID Pemilik kontak : " + FetchPersonalContactList.PersonalContactOwnerId)
+          // const FetchPersonalContactList = await response.json() as PersonalApiContactResponse
+          const FetchPersonalContactList = await response.json() as PersonalApiContactPropertyResponse
+          // console.log("API RESPONSE : " + JSON.stringify(FetchPersonalContactList.PersonalContactDataList))
+          // console.log("API RESPONSE : " + JSON.stringify(FetchPersonalContactList.PersonalContactList))
 
           if(!response.ok) 
           {
@@ -84,14 +106,17 @@ export default function Home()
           }
           if(response.ok) 
           { 
-          
-          // const PersonalContactList = FetchPersonalContactList[0].ContactInformation[0].SavedContactName
-          // const FilterPersonalContactList = (Object.keys(FetchPersonalContactList) as Array<keyof ContactInfoEntry>).forEach((key: number, value: string) => 
-          // {
-          //   console.log(FetchPersonalContactList[key].ContactInformation)
-          // })
+            const ShowPersonalContactList = FetchPersonalContactList.PersonalContactDataList.map((PersonalContactInfo) => 
+            {
+              return {
+                ContactId: PersonalContactInfo.PersonalContactList[0].ContactId,
+                SavedContactName: PersonalContactInfo.PersonalContactList[0].ContactId,
+                Contact_Id: PersonalContactInfo.PersonalContactOwnerId
+              }
+            })
+            console.log("API RESPONSE : " + JSON.stringify(ShowPersonalContactList))
+            // setPersonalContact(ShowPersonalContactList)
 
-            // console.log(typeof FilterPersonalContactList)
             // const flattened = data.map((item) => 
             // {
             //   const info = item.ContactInformation[0]
@@ -102,8 +127,6 @@ export default function Home()
             //     SavedContactName: info.SavedContactName
             //   }
             // })
-            // const FilteredPersonalContactList = FetchPersonalContactList
-            // console.log("Data api : " + JSON.stringify(FetchPersonalContactList.PersonalContactList))
           }
       } 
       catch (error) 
@@ -114,16 +137,16 @@ export default function Home()
     FetchPersonalContact()
   }, [])
 
-  function ShowPersonalContact(SelectedContactId: string, SelectedSavedContactName: string, SelectedPersonalContactId: string) 
-  {
-    setSelectedContact(
-    {
-      SelectedContactId: SelectedContactId,
-      SelectedSavedNameContact: SelectedSavedContactName,
-      SelectedPersonalContactId: SelectedPersonalContactId
-    })
-    setShowPersonalContact(!showPersonalContactState)
-  }
+  // function ShowPersonalContact(SelectedContactId: string, SelectedSavedContactName: string, SelectedPersonalContactId: string) 
+  // {
+  //   setSelectedContact(
+  //   {
+  //     SelectedContactId: SelectedContactId,
+  //     SelectedSavedNameContact: SelectedSavedContactName,
+  //     SelectedPersonalContactId: SelectedPersonalContactId
+  //   })
+  //   setShowPersonalContact(!showPersonalContactState)
+  // }
 
   return (
       <div className="flex flex-row">
@@ -133,9 +156,9 @@ export default function Home()
                 <h4 className="text-zinc-400 font-bold">Obrolan</h4>
                 <SearchContactWrapperComponent/>
                 <div className="flex flex-col my-5 gap-6">
-                {Array.isArray(contacts) && contacts.length > 0 ? (
+                {Personalcontacts !== null ? (
                   <ul className="flex flex-col gap-6">
-                    {contacts.map((info) => (
+                    {Personalcontacts.map((info) => (
                       <li key={info.ContactId} className="text-white cursor-pointer">
                         <p>
                           {info.ContactId}
@@ -159,14 +182,12 @@ export default function Home()
                       </li>
                     ))}
                   </ul>
-                ) : (
-                  <p className="text-white">Kontak kosong</p>
-                )}
+                ) : (<p className="text-white">Kontak kosong</p>)}
                 </div>
             </div>
         </div>
         
-        {showPersonalContactState ? (
+        {/* {showPersonalContactState ? (
           <div className="mx-72 flex flex-row">
             <DisplayPersonalContactComponent params=
             {{
@@ -184,7 +205,7 @@ export default function Home()
               PersonalchatOwnerId: selectedContact?.SelectedPersonalContactId!
             }}/>
           </div>
-        )}
+        )} */}
       </div>
     )
 }

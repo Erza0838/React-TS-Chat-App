@@ -62,23 +62,33 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
           ContactId: AllPersonalContactData.ContactId,
           SavedContactName: AllPersonalContactData.SavedContactName,
         }))
-        // return MyPersonalContact.map((AllPersonalContactData) => 
-        //             ({
-        //               ContactId: AllPersonalContactData.ContactId,
-        //               SavedContactName: AllPersonalContactData.SavedContactName,
-        //             }))
       }
       return []
     })
       
+    console.log(FilteredPersonalContact)
+
     if(FindContactOwner !== null) 
     {
       if(FilteredPersonalContact.length > 0 && FilteredPersonalContact !== null && ChekContactOwnerId[0].MyId !== null) 
       {
+        // return NextResponse.json(
+        //   {
+        //     PersonalContactList: FilteredPersonalContact, 
+        //     PersonalContactOwnerId: ChekContactOwnerId[0].Contact_Id
+        //   },
+        //   {status: 200}
+        // )
         return NextResponse.json(
           {
-            PersonalContactList: FilteredPersonalContact, 
-            PersonalContactOwnerId: ChekContactOwnerId[0].Contact_Id
+            
+            PersonalContactDataList: 
+            [
+              {
+                PersonalContactList: FilteredPersonalContact, 
+                PersonalContactOwnerId: ChekContactOwnerId[0].Contact_Id
+              }
+            ]
           },
           {status: 200}
         )
