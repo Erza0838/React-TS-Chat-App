@@ -20,14 +20,12 @@ interface PageProps
     {
         PersonalMessageRecipientId: string
         PersonalMessageSenderId: string
-        // PersonalMessageId: string
         PersonalChatOwnerId: string
         ContactId: string
     }
 }
 
-const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) =>
-{
+const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
   const [PersonalMessagesFriendId, setPersonalMessagesFriendId] = useState<string>("")
   const [PersonalMessagesText, setPersonalMessagesText] = useState<string>("")
   const [PersonalMessagesId, setPersonalMessagesId] = useState<string>("")
@@ -47,7 +45,7 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) =>
           throw new Error("Gagal mengambil pesan pribadi")
         }
 
-        // console.log(FetchPersonalMessageData.PersonalChatOwnerId)
+        console.log("ID pemilik kontak pribadi : " + FetchPersonalMessageData.PersonalChatOwnerId)
 
         setPersonalMessagesId(FetchPersonalMessageData.PersonalChatOwnerId)
         setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageField)

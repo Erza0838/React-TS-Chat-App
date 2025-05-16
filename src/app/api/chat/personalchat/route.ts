@@ -7,7 +7,15 @@ import { authOptions } from "@/lib/auth"
 export const POST = async (request: NextRequest, response: NextResponse) => 
 {   
     const session = await getServerSession(authOptions)
-    const {SenderMessageId,SenderMessageContactName,PersonalMessageText,MessageRecipientId,PersonalChatOwnerId} = await request.json()
+    const 
+    {
+        SenderMessageId,
+        SenderMessageContactName,
+        PersonalMessageText,
+        MessageRecipientId,
+        PersonalContactOwner,
+        PersonalChatOwnerId
+    }  = await request.json() 
     const PersonalMessageInformation = 
     [
         {
