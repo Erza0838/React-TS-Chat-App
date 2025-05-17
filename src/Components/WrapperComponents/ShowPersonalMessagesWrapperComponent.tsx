@@ -20,7 +20,7 @@ interface PageProps
     {
         PersonalMessageRecipientId: string
         PersonalMessageSenderId: string
-        PersonalChatOwnerId: string
+        // PersonalChatOwnerId: string
         ContactId: string
     }
 }
@@ -38,15 +38,14 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
     {
       try 
       {
+        // const response = await fetch("/api/chat/showpersonalcontact")
+        // const FetchPersonalContactList = await response.json() as PersonalApiContactPropertyResponse
         const FetchPersonalMessageResponse = await fetch("/api/chat/showpersonalmessages")
         const FetchPersonalMessageData: PersonalMessageProperties = await FetchPersonalMessageResponse.json()
         if(!FetchPersonalMessageResponse.ok || FetchPersonalMessageResponse.status !== 200) 
         {
           throw new Error("Gagal mengambil pesan pribadi")
         }
-
-        console.log("ID pemilik kontak pribadi : " + FetchPersonalMessageData.PersonalChatOwnerId)
-
         setPersonalMessagesId(FetchPersonalMessageData.PersonalChatOwnerId)
         setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageField)
       } 
@@ -61,10 +60,8 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
 
   return (
     <>
-     {params.PersonalMessageSenderId === session.data?.user.id &&
-      params.PersonalMessageRecipientId !== session.data.user.id &&
-      PersonalMessagesId === params.PersonalChatOwnerId 
-      ? ( 
+     {/* {params.PersonalMessageSenderId === session.data?.user.id && PersonalMessagesId === params.PersonalChatOwnerId ? (  */}
+     {params.PersonalMessageSenderId === session.data?.user.id && PersonalMessagesText.length > 0 ? ( 
         <p className="text-white bg-cyan-700 rounded-md w-64 h-7 text-center">
           {PersonalMessagesText}
         </p>

@@ -1,11 +1,5 @@
 "use client"
 import { useEffect, useState,useRef } from "react"
-import { SidebarComponents } from "@/Components/SidebarComponents"
-import SearchContactComponent from "@/Components/SearchContactComponent"
-import { prisma } from "@/app/Database"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
-import Link from "next/link"
 import ShowPersonalContactPageComponent from "@/Components/ContactListComponent"
 import PersonalContactWrapper from "@/Components/WrapperComponents/PersonalChatWrapperComponent"
 import DisplayPersonalChatWrapperComponent from "@/Components/WrapperComponents/DisplayPersonalChatWrapperComponent"
@@ -17,7 +11,7 @@ interface PersonalContactProperty
 {
   ContactId: string
   SavedContactName?: string
-  PersonalContactOwner: string
+  // PersonalContactOwner: string
 }
 
 interface PersonalApiContactResponse 
@@ -35,7 +29,7 @@ interface SelectedPersonalContact
 {
   ContactId: string
   SavedContactName?: string
-  PersonalContactOwner: string
+  // PersonalContactOwner: string
 }
 
 export default function Home() 
@@ -61,11 +55,10 @@ export default function Home()
           { 
             const ShowPersonalContactList = FetchPersonalContactList.PersonalContactDataList.map((PersonalContactInfo) => 
             { 
-              console.log("ID Pemilik kontak pribadi : " + PersonalContactInfo.PersonalContactOwnerId)
               return {
                 ContactId: PersonalContactInfo.PersonalContactList[0].ContactId,
                 SavedContactName: PersonalContactInfo.PersonalContactList[0].SavedContactName,
-                PersonalContactOwner: PersonalContactInfo.PersonalContactList[0].PersonalContactOwner,
+                // PersonalContactOwner: PersonalContactInfo.PersonalContactList[0].PersonalContactOwner,
                 Contact_Id: PersonalContactInfo.PersonalContactOwnerId
               }
             })
@@ -83,13 +76,14 @@ export default function Home()
   function ShowPersonalContact(
     SelectedContactId: string, 
     SelectedSavedContactName: string, 
-    SelectedPersonalContactOwnerId: string) 
+    // SelectedPersonalContactOwnerId: string
+  ) 
   {
     setSelectedContact(
     {
       ContactId: SelectedContactId, 
       SavedContactName: SelectedSavedContactName,
-      PersonalContactOwner: SelectedPersonalContactOwnerId
+      // PersonalContactOwner: SelectedPersonalContactOwnerId
     })
     setContacts(!Contacs)
   }
@@ -109,27 +103,26 @@ export default function Home()
                         {ContactsInfo.SavedContactName ? (
                           <p onClick={() => 
                           {
-                            console.log(ContactsInfo.SavedContactName)
                             ShowPersonalContact(
                               ContactsInfo.ContactId, 
                               ContactsInfo.SavedContactName!, 
-                              ContactsInfo.PersonalContactOwner )}
+                              // ContactsInfo.PersonalContactOwner
+                             )}
                             } className="underline underline-offset-4">
                             {ContactsInfo.SavedContactName}
                           </p>
                         ) : (
                           <p onClick={() => ShowPersonalContact(
                                             ContactsInfo.ContactId, 
-                                            ContactsInfo.SavedContactName!, 
-                                            ContactsInfo.PersonalContactOwner, 
+                                            ContactsInfo.SavedContactName!
+                                            // ContactsInfo.PersonalContactOwner, 
                                       )} className="underline underline-offset-4">
                             {ContactsInfo.ContactId}
                           </p>
                         )}
                       </li>
                     ))}
-                  </ul>
-                ) : (<p className="text-white">Kontak kosong</p>)}
+                  </ul>) : (<p className="text-white">Kontak kosong</p>)}
                 </div>
             </div>
         </div>
@@ -140,7 +133,7 @@ export default function Home()
             {{
               ContactId: selectedContact?.ContactId!,
               SavedContactName: selectedContact?.SavedContactName!, 
-              PersonalcontactOwnerId: selectedContact?.PersonalContactOwner!
+              // PersonalcontactOwnerId: selectedContact?.PersonalContactOwner!
             }}/>
           </div>
         ) : (
@@ -149,7 +142,7 @@ export default function Home()
             {{
               ContactId: selectedContact?.ContactId!,
               SavedContactName: selectedContact?.SavedContactName!, 
-              PersonalcontactOwnerId: selectedContact?.PersonalContactOwner!
+              // PersonalcontactOwnerId: selectedContact?.PersonalContactOwner!
             }}/>
           </div>
         )}

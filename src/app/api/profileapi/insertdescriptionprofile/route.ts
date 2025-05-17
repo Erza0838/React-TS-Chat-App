@@ -20,7 +20,6 @@ export const POST = async (request: NextRequest,response: NextResponse) =>
     {
         data: 
         {
-            // UserDescription: ProfileDescription as string,
             UserDescription: UserDescription as string,
             UserIdReference: 
             {
