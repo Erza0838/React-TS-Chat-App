@@ -13,9 +13,9 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         SenderMessageContactName,
         PersonalMessageText,
         MessageRecipientId,
-        PersonalContactOwner,
         PersonalChatOwnerId
-    }  = await request.json() 
+    } = await request.json() 
+
     const PersonalMessageInformation = 
     [
         {
@@ -26,26 +26,41 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         }
     ] as Prisma.JsonArray   
 
-    console.log("Pesan pribadi : " + JSON.stringify(PersonalMessageInformation))
-
-    const InsertPersonalMessage = await prisma.personal_Chat_Model.create(
-    {
-        data:
-        { 
-            My_Messages: PersonalMessageInformation,
-            Messages_To_All: PersonalMessageInformation,
-            Personal_Chat_Owner_Id: PersonalChatOwnerId as string,
-            Create_Personal_Message: new Date()
-        }        
+    const FindPersonalContact = await prisma.user_Contacts.findUnique({
+        where: 
+        {
+            Contact_Id: PersonalChatOwnerId as string
+        }
     })
-    if(InsertPersonalMessage) 
+
+    if(FindPersonalContact === null && FindPersonalContact !== PersonalChatOwnerId) 
     {
-        console.log("Pesan berhasil dikirim")
-        return NextResponse.json({InsertPersonalMessage},{status: 200})
+        console.log("Kontak pribadi tidak ditemukan")
+        return NextResponse.json({error: "Kontak pribadi tidak ditemukan"},{status: 400})
     }
-    if(!InsertPersonalMessage) 
-    {
-        console.log("Pesan gagal dikirim")
-        return NextResponse.json({error: "Pesan gagal dikirim"},{status: 400})
+    if(FindPersonalContact !== null && FindPersonalContact === PersonalChatOwnerId) 
+    {   
+        const InsertPersonalMessage = await prisma.personal_Chat_Model.create(
+        {
+            data:
+            { 
+                My_Messages: PersonalMessageInformation,
+                Messages_To_All: PersonalMessageInformation,
+                Personal_Chat_Owner_Id: PersonalChatOwnerId as string,
+                Create_Personal_Message: new Date(), 
+            }        
+        })
+        if(InsertPersonalMessage) 
+        {
+            console.log("Pesan berhasil dikirim")
+            return NextResponse.json({InsertPersonalMessage},{status: 200})
+        }
+        if(!InsertPersonalMessage) 
+        {
+            console.log("Pesan gagal dikirim")
+            return NextResponse.json({error: "Pesan gagal dikirim"},{status: 400})
+        }
+        console.log("Kontak pribadi ditemukan : " + FindPersonalContact.Contact_Id)
+        return NextResponse.json({error: "Kontak pribadi ditemukan : " + FindPersonalContact.Contact_Id},{status: 400})
     }
 }

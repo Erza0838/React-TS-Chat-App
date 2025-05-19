@@ -11,7 +11,7 @@ interface PersonalContactProperty
 {
   ContactId: string
   SavedContactName?: string
-  // PersonalContactOwner: string
+  PersonalContactOwner: string
 }
 
 interface PersonalApiContactResponse 
@@ -29,7 +29,7 @@ interface SelectedPersonalContact
 {
   ContactId: string
   SavedContactName?: string
-  // PersonalContactOwner: string
+  PersonalContactOwner: string
 }
 
 export default function Home() 
@@ -46,7 +46,7 @@ export default function Home()
       {
           const response = await fetch("/api/chat/showpersonalcontact")
           const FetchPersonalContactList = await response.json() as PersonalApiContactPropertyResponse
-
+          console.log(FetchPersonalContactList)
           if(!response.ok) 
           {
             throw new Error("Gagal mendapatkan data kontak")
@@ -58,8 +58,8 @@ export default function Home()
               return {
                 ContactId: PersonalContactInfo.PersonalContactList[0].ContactId,
                 SavedContactName: PersonalContactInfo.PersonalContactList[0].SavedContactName,
-                // PersonalContactOwner: PersonalContactInfo.PersonalContactList[0].PersonalContactOwner,
-                Contact_Id: PersonalContactInfo.PersonalContactOwnerId
+                Contact_Id: PersonalContactInfo.PersonalContactOwnerId, 
+                PersonalContactOwner: PersonalContactInfo.PersonalContactOwnerId
               }
             })
             setPersonalContact(ShowPersonalContactList)
@@ -76,14 +76,14 @@ export default function Home()
   function ShowPersonalContact(
     SelectedContactId: string, 
     SelectedSavedContactName: string, 
-    // SelectedPersonalContactOwnerId: string
+    SelectedPersonalContactOwnerId: string
   ) 
   {
     setSelectedContact(
     {
       ContactId: SelectedContactId, 
       SavedContactName: SelectedSavedContactName,
-      // PersonalContactOwner: SelectedPersonalContactOwnerId
+      PersonalContactOwner: SelectedPersonalContactOwnerId
     })
     setContacts(!Contacs)
   }
@@ -106,7 +106,7 @@ export default function Home()
                             ShowPersonalContact(
                               ContactsInfo.ContactId, 
                               ContactsInfo.SavedContactName!, 
-                              // ContactsInfo.PersonalContactOwner
+                              ContactsInfo.PersonalContactOwner
                              )}
                             } className="underline underline-offset-4">
                             {ContactsInfo.SavedContactName}
@@ -114,8 +114,8 @@ export default function Home()
                         ) : (
                           <p onClick={() => ShowPersonalContact(
                                             ContactsInfo.ContactId, 
-                                            ContactsInfo.SavedContactName!
-                                            // ContactsInfo.PersonalContactOwner, 
+                                            ContactsInfo.SavedContactName!,
+                                            ContactsInfo.PersonalContactOwner
                                       )} className="underline underline-offset-4">
                             {ContactsInfo.ContactId}
                           </p>
@@ -133,7 +133,7 @@ export default function Home()
             {{
               ContactId: selectedContact?.ContactId!,
               SavedContactName: selectedContact?.SavedContactName!, 
-              // PersonalcontactOwnerId: selectedContact?.PersonalContactOwner!
+              PersonalcontactOwnerId: selectedContact?.PersonalContactOwner!
             }}/>
           </div>
         ) : (
@@ -142,7 +142,7 @@ export default function Home()
             {{
               ContactId: selectedContact?.ContactId!,
               SavedContactName: selectedContact?.SavedContactName!, 
-              // PersonalcontactOwnerId: selectedContact?.PersonalContactOwner!
+              PersonalcontactOwnerId: selectedContact?.PersonalContactOwner!
             }}/>
           </div>
         )}

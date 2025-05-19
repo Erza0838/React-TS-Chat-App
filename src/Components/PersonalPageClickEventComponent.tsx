@@ -14,7 +14,7 @@ interface PageProps
     SavedContactName: string
     PersonalMessageRecipientId: string
     PersonalMessageSenderId: string
-    // PersonalContactOwnerId: string
+    PersonalContactOwnerId: string
     // PersonalMessagesOwnerId: string
     // PersonalMessageId: string
   }
@@ -58,7 +58,7 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
             MessageRecipientId: params.ContactId,
             SenderMessageContactName: params.SavedContactName,
             PersonalMessageText: Personalmessage, 
-            // PersonalContactOwnerId: params.PersonalContactOwnerId
+            PersonalContactOwnerId: params.PersonalContactOwnerId
           })
         })
         if(!PersonalMessageData.ok || PersonalMessageData.status !== 200) 

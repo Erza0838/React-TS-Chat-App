@@ -55,14 +55,10 @@ model User_Contacts {
   MyId String 
 
   UserContactId  UserModel @relation(fields: [MyId], references: [id])
-  // PersonalMessagesIdReference Personal_Chat_Model @relation("Reference_Personal_ChatId", fields: [PersonalChatId], references: [Personal_Chat_Id], onDelete: NoAction, onUpdate: NoAction)
 
   PersonalChatOWnerReference Personal_Chat_Model[] @relation("Reference_Personal_Chat_Owner_Id")
-  // PersonalChatOWnerReference Personal_Chat_Model[] @relation("Reference_Personal_Chat_Owner_Id")
-  // PersonalChatOWnerReference Personal_Chat_Model[] @relation("ReferencePersonalChatOwnerId")
-  // @@index([MyId,PersonalChatId])
+
   @@map("contact_List")
-  // @@index([UserContactId])
 }
 
 
@@ -74,7 +70,9 @@ model Personal_Chat_Model {
   Personal_Chat_Owner_Id  String @unique
   Create_Personal_Message DateTime? @default(now())
   
-  Personal_Chat_Owner User_Contacts @relation("Reference_Personal_Chat_Owner_Id", fields: [Personal_Chat_Owner_Id], references: [Contact_Id],onDelete: NoAction, onUpdate: NoAction)
+  Personal_Chat_Owner User_Contacts @relation("Reference_Personal_Chat_Owner_Id", fields: [Personal_Chat_Owner_Id], references: [Contact_Id])
+
+
   // PersonalChatIdReference User_Contacts[] @relation("Reference_Personal_ChatId")
   @@map("personal_Chat")
 }

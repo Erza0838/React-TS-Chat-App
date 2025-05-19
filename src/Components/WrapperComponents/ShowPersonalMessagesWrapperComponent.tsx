@@ -38,8 +38,6 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
     {
       try 
       {
-        // const response = await fetch("/api/chat/showpersonalcontact")
-        // const FetchPersonalContactList = await response.json() as PersonalApiContactPropertyResponse
         const FetchPersonalMessageResponse = await fetch("/api/chat/showpersonalmessages")
         const FetchPersonalMessageData: PersonalMessageProperties = await FetchPersonalMessageResponse.json()
         if(!FetchPersonalMessageResponse.ok || FetchPersonalMessageResponse.status !== 200) 
@@ -60,12 +58,10 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
 
   return (
     <>
-     {/* {params.PersonalMessageSenderId === session.data?.user.id && PersonalMessagesId === params.PersonalChatOwnerId ? (  */}
      {params.PersonalMessageSenderId === session.data?.user.id && PersonalMessagesText.length > 0 ? ( 
         <p className="text-white bg-cyan-700 rounded-md w-64 h-7 text-center">
           {PersonalMessagesText}
-        </p>
-        ) : (<p></p>)} 
+        </p>) : (<p></p>)} 
     </>
   )
 }

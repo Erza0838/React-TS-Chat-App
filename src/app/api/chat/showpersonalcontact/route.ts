@@ -11,7 +11,6 @@ interface ContactInformationProperties
 
 interface PersonalContactInterace 
 {
-  // ContactInformation: Array<ContactInformationProperties>
   ContactId: string
   SavedContactName?: string
   Contact_Id: string
@@ -21,7 +20,6 @@ interface PersonalContactInterace
 function IsPersonalContactArray(value: unknown): value is Array<PersonalContactInterace>
 {
   return Array.isArray(value) 
-  // && value.every(PersonalChatItem => )
 }
 
 export const GET = async (request: NextRequest, response: NextResponse) => 
@@ -51,10 +49,11 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
         MyId: true
       }
     })
-
+  
     const FilteredPersonalContact = ChekContactOwnerId.flatMap(PersonalContact => 
     {
       const MyPersonalContact = PersonalContact.ContactInformation as unknown as Array<PersonalContactInterace>
+      console.log(PersonalContact)
       if(IsPersonalContactArray(MyPersonalContact)) 
       {
         return MyPersonalContact.filter(PersonalContactData => PersonalContactData.ContactId !== null).map((AllPersonalContactData) => 
@@ -65,28 +64,21 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
       }
       return []
     })
-      
-    console.log(FilteredPersonalContact)
+
+    // const GetContactOwnerId = 
 
     if(FindContactOwner !== null) 
     {
-      if(FilteredPersonalContact.length > 0 && FilteredPersonalContact !== null && ChekContactOwnerId[0].MyId !== null) 
+      if(FilteredPersonalContact.length > 0 && FilteredPersonalContact !== null) 
       {
-        // return NextResponse.json(
-        //   {
-        //     PersonalContactList: FilteredPersonalContact, 
-        //     PersonalContactOwnerId: ChekContactOwnerId[0].Contact_Id
-        //   },
-        //   {status: 200}
-        // )
-        return NextResponse.json(
+          return NextResponse.json(
           {
             
             PersonalContactDataList: 
             [
               {
                 PersonalContactList: FilteredPersonalContact, 
-                PersonalContactOwnerId: ChekContactOwnerId[0].Contact_Id
+                PersonalContactOwnerId:   ChekContactOwnerId[0].Contact_Id
               }
             ]
           },
