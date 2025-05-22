@@ -12,11 +12,9 @@ interface PageProps
   {
     ContactId: string
     SavedContactName: string
+    PersonalContactOwnerId: string
     PersonalMessageRecipientId: string
     PersonalMessageSenderId: string
-    PersonalContactOwnerId: string
-    // PersonalMessagesOwnerId: string
-    // PersonalMessageId: string
   }
 }
 

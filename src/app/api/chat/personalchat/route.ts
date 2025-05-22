@@ -13,7 +13,7 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         SenderMessageContactName,
         PersonalMessageText,
         MessageRecipientId,
-        PersonalChatOwnerId
+        PersonalContactOwnerId
     } = await request.json() 
 
     const PersonalMessageInformation = 
@@ -26,19 +26,21 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         }
     ] as Prisma.JsonArray   
 
-    const FindPersonalContact = await prisma.user_Contacts.findUnique({
+    // const FindPersonalContact = await prisma.user_Contacts.findFirst(
+    const FindPersonalContact = await prisma.user_Contacts.findUnique(
+    {
         where: 
         {
-            Contact_Id: PersonalChatOwnerId as string
+            Contact_Id: PersonalContactOwnerId as string 
         }
     })
 
-    if(FindPersonalContact === null && FindPersonalContact !== PersonalChatOwnerId) 
+    if(FindPersonalContact === null && FindPersonalContact !== PersonalContactOwnerId) 
     {
         console.log("Kontak pribadi tidak ditemukan")
         return NextResponse.json({error: "Kontak pribadi tidak ditemukan"},{status: 400})
     }
-    if(FindPersonalContact !== null && FindPersonalContact === PersonalChatOwnerId) 
+    if(FindPersonalContact !== null && FindPersonalContact === PersonalContactOwnerId) 
     {   
         const InsertPersonalMessage = await prisma.personal_Chat_Model.create(
         {
@@ -46,7 +48,7 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
             { 
                 My_Messages: PersonalMessageInformation,
                 Messages_To_All: PersonalMessageInformation,
-                Personal_Chat_Owner_Id: PersonalChatOwnerId as string,
+                Personal_Chat_Owner_Id: PersonalContactOwnerId as string,
                 Create_Personal_Message: new Date(), 
             }        
         })

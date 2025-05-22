@@ -1,41 +1,34 @@
 "use client"
 import { useEffect, useState,useRef } from "react"
-import ShowPersonalContactPageComponent from "@/Components/ContactListComponent"
-import PersonalContactWrapper from "@/Components/WrapperComponents/PersonalChatWrapperComponent"
-import DisplayPersonalChatWrapperComponent from "@/Components/WrapperComponents/DisplayPersonalChatWrapperComponent"
 import DisplayPersonalContactComponent from "@/Components/DisplayPersonalContactComponent"
 import SidebarWrapperComponent from "@/Components/WrapperComponents/SidebarWrapperComponent"
 import SearchContactWrapperComponent from "@/Components/WrapperComponents/SearchContactWrapperComponent"
+import { PersonalContactProperty } from "../Interface/PersonalChatPageInterface"
 
-interface PersonalContactProperty 
+interface PersonalContactState 
+{
+  PersonalContactList: PersonalContactStateObject[]
+}
+
+interface PersonalContactStateObject
 {
   ContactId: string
   SavedContactName?: string
-  PersonalContactOwner: string
+  Contact_Id: string
 }
 
-interface PersonalApiContactResponse 
-{
-  PersonalContactList: PersonalContactProperty[]
-  PersonalContactOwnerId: string
-}
-
-interface PersonalApiContactPropertyResponse 
-{
-  PersonalContactDataList: PersonalApiContactResponse[]
-}
 
 interface SelectedPersonalContact 
 {
   ContactId: string
   SavedContactName?: string
-  PersonalContactOwner: string
+  Contact_Id: string
 }
 
 export default function Home() 
 { 
   const [Contacs, setContacts] = useState<boolean>(false)
-  const [Personalcontacts, setPersonalContact] = useState<PersonalContactProperty[]>([])
+  const [Personalcontacts, setPersonalContact] = useState<PersonalContactState[]>([])
   const [selectedContact, setSelectedContact] = useState<SelectedPersonalContact | null>(null)
 
   useEffect(() => 
@@ -45,22 +38,25 @@ export default function Home()
       try 
       {
           const response = await fetch("/api/chat/showpersonalcontact")
-          const FetchPersonalContactList = await response.json() as PersonalApiContactPropertyResponse
-          console.log(FetchPersonalContactList)
+          const FetchPersonalContactList = await response.json() as PersonalContactProperty
           if(!response.ok) 
           {
             throw new Error("Gagal mendapatkan data kontak")
           }
           if(response.ok) 
           { 
-            const ShowPersonalContactList = FetchPersonalContactList.PersonalContactDataList.map((PersonalContactInfo) => 
-            { 
+            const ShowPersonalContactList = FetchPersonalContactList.PersonalContactList.map((PersonalContactInfo) =>
+            {
               return {
-                ContactId: PersonalContactInfo.PersonalContactList[0].ContactId,
-                SavedContactName: PersonalContactInfo.PersonalContactList[0].SavedContactName,
-                Contact_Id: PersonalContactInfo.PersonalContactOwnerId, 
-                PersonalContactOwner: PersonalContactInfo.PersonalContactOwnerId
-              }
+                PersonalContactList: 
+                [
+                  {
+                    ContactId: PersonalContactInfo.ContactId, 
+                    SavedContactName: PersonalContactInfo.SavedContactName, 
+                    Contact_Id: PersonalContactInfo.Contact_Id, 
+                  }
+                ]
+              }  
             })
             setPersonalContact(ShowPersonalContactList)
           }
@@ -83,7 +79,7 @@ export default function Home()
     {
       ContactId: SelectedContactId, 
       SavedContactName: SelectedSavedContactName,
-      PersonalContactOwner: SelectedPersonalContactOwnerId
+      Contact_Id: SelectedPersonalContactOwnerId
     })
     setContacts(!Contacs)
   }
@@ -99,25 +95,28 @@ export default function Home()
                 {Personalcontacts !== null ? (
                   <ul className="flex flex-col gap-6">
                     {Personalcontacts.map((ContactsInfo) => (
-                      <li key={ContactsInfo.ContactId} className="text-white cursor-pointer">
-                        {ContactsInfo.SavedContactName ? (
+                      <li key={ContactsInfo.PersonalContactList[0].ContactId} className="text-white cursor-pointer">
+                        {ContactsInfo.PersonalContactList[0].SavedContactName ? (
                           <p onClick={() => 
                           {
                             ShowPersonalContact(
-                              ContactsInfo.ContactId, 
-                              ContactsInfo.SavedContactName!, 
-                              ContactsInfo.PersonalContactOwner
+                              ContactsInfo.PersonalContactList[0].ContactId, 
+                              ContactsInfo.PersonalContactList[0].SavedContactName!, 
+                              ContactsInfo.PersonalContactList[0].Contact_Id
                              )}
                             } className="underline underline-offset-4">
-                            {ContactsInfo.SavedContactName}
+                            {ContactsInfo.PersonalContactList[0].SavedContactName}
                           </p>
                         ) : (
-                          <p onClick={() => ShowPersonalContact(
-                                            ContactsInfo.ContactId, 
-                                            ContactsInfo.SavedContactName!,
-                                            ContactsInfo.PersonalContactOwner
-                                      )} className="underline underline-offset-4">
-                            {ContactsInfo.ContactId}
+                           <p onClick={() => 
+                          {
+                            ShowPersonalContact(
+                              ContactsInfo.PersonalContactList[0].ContactId, 
+                              ContactsInfo.PersonalContactList[0].SavedContactName!, 
+                              ContactsInfo.PersonalContactList[0].Contact_Id
+                             )}
+                            } className="underline underline-offset-4">
+                            {ContactsInfo.PersonalContactList[0].ContactId}
                           </p>
                         )}
                       </li>
@@ -133,7 +132,7 @@ export default function Home()
             {{
               ContactId: selectedContact?.ContactId!,
               SavedContactName: selectedContact?.SavedContactName!, 
-              PersonalcontactOwnerId: selectedContact?.PersonalContactOwner!
+              PersonalcontactOwnerId: selectedContact?.ContactId!
             }}/>
           </div>
         ) : (
@@ -142,7 +141,7 @@ export default function Home()
             {{
               ContactId: selectedContact?.ContactId!,
               SavedContactName: selectedContact?.SavedContactName!, 
-              PersonalcontactOwnerId: selectedContact?.PersonalContactOwner!
+              PersonalcontactOwnerId: selectedContact?.ContactId!
             }}/>
           </div>
         )}

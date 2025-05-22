@@ -1,6 +1,17 @@
+export interface PersonalContactProperty 
+{
+  PersonalContactList: PersonalContact[]
+}
+
+interface PersonalContact
+{
+  ContactId: string
+  SavedContactName?: string
+  Contact_Id: string
+}
+
 export interface ContactInterface 
 {   
-    // ContactInformation: string
     ContactId: string
     SavedContactName: string
 }

@@ -2,6 +2,7 @@ import { NextRequest,NextResponse } from "next/server"
 import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+import { Check } from "lucide-react"
 
 interface ContactInformationProperties 
 {
@@ -49,23 +50,21 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
         MyId: true
       }
     })
-  
+
     const FilteredPersonalContact = ChekContactOwnerId.flatMap(PersonalContact => 
     {
       const MyPersonalContact = PersonalContact.ContactInformation as unknown as Array<PersonalContactInterace>
-      console.log(PersonalContact)
       if(IsPersonalContactArray(MyPersonalContact)) 
       {
         return MyPersonalContact.filter(PersonalContactData => PersonalContactData.ContactId !== null).map((AllPersonalContactData) => 
         ({
           ContactId: AllPersonalContactData.ContactId,
           SavedContactName: AllPersonalContactData.SavedContactName,
+          Contact_Id: PersonalContact.Contact_Id,
         }))
       }
       return []
     })
-
-    // const GetContactOwnerId = 
 
     if(FindContactOwner !== null) 
     {
@@ -73,14 +72,7 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
       {
           return NextResponse.json(
           {
-            
-            PersonalContactDataList: 
-            [
-              {
-                PersonalContactList: FilteredPersonalContact, 
-                PersonalContactOwnerId:   ChekContactOwnerId[0].Contact_Id
-              }
-            ]
+             PersonalContactList: FilteredPersonalContact
           },
           {status: 200}
         )
@@ -93,23 +85,4 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
         return NextResponse.json({error: "Kontak pribadi kosong!"}, {status: 400})
       }
     }
-    // if(FindContactOwner) 
-    // {
-    //     const ChekContactOwnerId = await prisma.user_Contacts.findMany(
-    //     {
-    //       where: 
-    //       {
-    //         MyId: 
-    //         {
-    //           equals: session?.user.id ?? ""
-    //         }
-    //       },
-    //       select: 
-    //       {
-    //         ContactInformation: true,
-    //         Contact_Id: true
-    //       }
-    //     })
-    //     return NextResponse.json({contact: ChekContactOwnerId}, {status: 200})
-    // }
 }
