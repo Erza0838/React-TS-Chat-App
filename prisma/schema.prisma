@@ -29,8 +29,7 @@ model UserModel {
 
   UserDescription_Reference    UserDescription[]
   UserContactIdReference      User_Contacts[]
-  // Default_Username_Reference    User_Contacts[] @relation("DefaultUsernameReference")
-  // User_Contacts_Id             User_Contacts[] @relation("UserContactIdReference")
+  Contact_Owner_Id_Reference Personal_Chat_Model[] @relation("Reference_Contact_Owner_Id")
   Add_Member_Grup_From_Contact Grup_List_Member_Model[] @relation("Add_Grup_Member_From_Contact")
 
   @@map("user")
@@ -67,13 +66,12 @@ model Personal_Chat_Model {
   Personal_Chat_Id        String  @id @default(uuid())
   My_Messages             Json?   @db.Json
   Messages_To_All         Json?   @db.Json
-  Personal_Chat_Owner_Id  String @unique
+  Personal_Chat_Recipient_Id  String @unique
   Create_Personal_Message DateTime? @default(now())
-  
-  Personal_Chat_Owner User_Contacts @relation("Reference_Personal_Chat_Owner_Id", fields: [Personal_Chat_Owner_Id], references: [Contact_Id])
+  Contact_Owner_Id       String
+  Personal_Chat_Recipient User_Contacts @relation("Reference_Personal_Chat_Owner_Id", fields: [Personal_Chat_Recipient_Id], references: [Contact_Id])
+  Personal_Contact_Owner_Id UserModel @relation("Reference_Contact_Owner_Id", fields: [Contact_Owner_Id], references: [id])
 
-
-  // PersonalChatIdReference User_Contacts[] @relation("Reference_Personal_ChatId")
   @@map("personal_Chat")
 }
 

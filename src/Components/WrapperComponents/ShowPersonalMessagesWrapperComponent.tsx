@@ -40,6 +40,7 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
       {
         const FetchPersonalMessageResponse = await fetch("/api/chat/showpersonalmessages")
         const FetchPersonalMessageData: PersonalMessageProperties = await FetchPersonalMessageResponse.json()
+        console.log("Pesan pribadi : " + FetchPersonalMessageData.PersonalMessageField)
         if(!FetchPersonalMessageResponse.ok || FetchPersonalMessageResponse.status !== 200) 
         {
           throw new Error("Gagal mengambil pesan pribadi")

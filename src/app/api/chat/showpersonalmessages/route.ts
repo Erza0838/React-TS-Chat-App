@@ -16,12 +16,6 @@ function IsPersonalMessageArray(value: unknown): value is Array<PersonalMessageI
 
 export const GET = async (request: NextRequest, response: NextResponse) => 
 {   
-    // const FilterPersonalMeesagesByContactOwnerId = await prisma.personal_Chat_Model.findUnique({
-    //     where: 
-    //     {
-            
-    //     }
-    // })
     const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany()
     const FilteredPersonalMeessages = GetSenderPersonalMessage.flatMap(chat => 
     {   
@@ -40,13 +34,15 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
         }
         return []
     })
-    if(FilteredPersonalMeessages !== null && FilteredPersonalMeessages.length > 0 && GetSenderPersonalMessage[0].Personal_Chat_Owner_Id !== null) 
+
+    if(FilteredPersonalMeessages !== null && FilteredPersonalMeessages.length > 0 && GetSenderPersonalMessage[0].Personal_Chat_Recipient_Id !== null) 
     {   
         return NextResponse.json(
             {
               PersonalMessageField: FilteredPersonalMeessages[0].PersonalMessageText, 
-              PersonalChatOwnerId: GetSenderPersonalMessage[0].Personal_Chat_Owner_Id,
-            }, {status: 200}
+              PersonalChatOwnerId: GetSenderPersonalMessage[0].Personal_Chat_Recipient_Id
+            }, 
+            {status: 200}
         )
     }
     if(FilteredPersonalMeessages === null) 

@@ -132,7 +132,7 @@ export default function Home()
             {{
               ContactId: selectedContact?.ContactId!,
               SavedContactName: selectedContact?.SavedContactName!, 
-              PersonalcontactOwnerId: selectedContact?.ContactId!
+              PersonalcontactOwnerId: selectedContact?.Contact_Id!
             }}/>
           </div>
         ) : (
@@ -141,7 +141,7 @@ export default function Home()
             {{
               ContactId: selectedContact?.ContactId!,
               SavedContactName: selectedContact?.SavedContactName!, 
-              PersonalcontactOwnerId: selectedContact?.ContactId!
+              PersonalcontactOwnerId: selectedContact?.Contact_Id!
             }}/>
           </div>
         )}

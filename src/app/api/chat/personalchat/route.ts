@@ -26,43 +26,25 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         }
     ] as Prisma.JsonArray   
 
-    // const FindPersonalContact = await prisma.user_Contacts.findFirst(
-    const FindPersonalContact = await prisma.user_Contacts.findUnique(
+    const InsertPersonalMessage = await prisma.personal_Chat_Model.create(
     {
-        where: 
-        {
-            Contact_Id: PersonalContactOwnerId as string 
-        }
+        data:
+        { 
+            My_Messages: PersonalMessageInformation,
+            Messages_To_All: PersonalMessageInformation,
+            Personal_Chat_Recipient_Id: PersonalContactOwnerId as string,
+            Contact_Owner_Id: session?.user.id as string,
+            Create_Personal_Message: new Date(), 
+        }        
     })
-
-    if(FindPersonalContact === null && FindPersonalContact !== PersonalContactOwnerId) 
+    if(InsertPersonalMessage) 
     {
-        console.log("Kontak pribadi tidak ditemukan")
-        return NextResponse.json({error: "Kontak pribadi tidak ditemukan"},{status: 400})
+        console.log("Pesan berhasil dikirim")
+        return NextResponse.json({InsertPersonalMessage},{status: 200})
     }
-    if(FindPersonalContact !== null && FindPersonalContact === PersonalContactOwnerId) 
-    {   
-        const InsertPersonalMessage = await prisma.personal_Chat_Model.create(
-        {
-            data:
-            { 
-                My_Messages: PersonalMessageInformation,
-                Messages_To_All: PersonalMessageInformation,
-                Personal_Chat_Owner_Id: PersonalContactOwnerId as string,
-                Create_Personal_Message: new Date(), 
-            }        
-        })
-        if(InsertPersonalMessage) 
-        {
-            console.log("Pesan berhasil dikirim")
-            return NextResponse.json({InsertPersonalMessage},{status: 200})
-        }
-        if(!InsertPersonalMessage) 
-        {
-            console.log("Pesan gagal dikirim")
-            return NextResponse.json({error: "Pesan gagal dikirim"},{status: 400})
-        }
-        console.log("Kontak pribadi ditemukan : " + FindPersonalContact.Contact_Id)
-        return NextResponse.json({error: "Kontak pribadi ditemukan : " + FindPersonalContact.Contact_Id},{status: 400})
+    if(!InsertPersonalMessage) 
+    {
+        console.log("Pesan gagal dikirim")
+        return NextResponse.json({error: "Pesan gagal dikirim"},{status: 400})
     }
 }
