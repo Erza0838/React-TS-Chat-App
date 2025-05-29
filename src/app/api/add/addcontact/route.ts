@@ -51,7 +51,6 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         MyId: session?.user.id! 
       }
     })
-    console.log(CheckContactExist)
 
     if(CheckContactExist.length > 0) 
     { 

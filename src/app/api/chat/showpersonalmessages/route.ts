@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/app/Database"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 
 interface PersonalMessageInterface 
 {
@@ -16,6 +18,16 @@ function IsPersonalMessageArray(value: unknown): value is Array<PersonalMessageI
 
 export const GET = async (request: NextRequest, response: NextResponse) => 
 {   
+    const session = await getServerSession(authOptions)
+    const FindPersonalMessageByContactOwnerId = await prisma.personal_Chat_Model.findMany({
+        where: 
+        {
+            Contact_Owner_Id: session?.user.id!
+        }
+    })
+    console.log("Pesan pribadi : " + JSON.stringify(FindPersonalMessageByContactOwnerId))
+
+    // const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany()
     const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany()
     const FilteredPersonalMeessages = GetSenderPersonalMessage.flatMap(chat => 
     {   

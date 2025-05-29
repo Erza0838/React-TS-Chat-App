@@ -10,8 +10,6 @@ interface PersonalMessageProperties
     PersonalMessageRecipientId: string
     PersonalMessageField: string
     PersonalChatOwnerId: string
-    // PersonalContactOwnerId: string
-    // PersonalMessageId: string
 }
 
 interface PageProps 
@@ -20,7 +18,6 @@ interface PageProps
     {
         PersonalMessageRecipientId: string
         PersonalMessageSenderId: string
-        // PersonalChatOwnerId: string
         ContactId: string
     }
 }
@@ -40,7 +37,6 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
       {
         const FetchPersonalMessageResponse = await fetch("/api/chat/showpersonalmessages")
         const FetchPersonalMessageData: PersonalMessageProperties = await FetchPersonalMessageResponse.json()
-        console.log("Pesan pribadi : " + FetchPersonalMessageData.PersonalMessageField)
         if(!FetchPersonalMessageResponse.ok || FetchPersonalMessageResponse.status !== 200) 
         {
           throw new Error("Gagal mengambil pesan pribadi")
