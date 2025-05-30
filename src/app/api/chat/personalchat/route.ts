@@ -15,13 +15,13 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         MessageRecipientId,
         PersonalContactOwnerId
     } = await request.json() 
-
+    
     const PersonalMessageInformation = 
     [
         {
-            SenderPersonalMessageId: SenderMessageId,
+            SenderPersonalMessageId: session?.user.id as string,
             PersonalMessageRecipientId: MessageRecipientId,
-            SenderPersonalMessageName: SenderMessageContactName,
+            SenderPersonalMessageName: session?.user.name as string,
             PersonalMessage: PersonalMessageText
         }
     ] as Prisma.JsonArray   

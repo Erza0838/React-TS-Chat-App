@@ -3,6 +3,8 @@ import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 
+type Params = Promise<{ slug: string }>
+
 interface PersonalMessageInterface 
 {
     SenderPersonalMessageId: string
@@ -16,19 +18,21 @@ function IsPersonalMessageArray(value: unknown): value is Array<PersonalMessageI
     return Array.isArray(value) && value.every(item => "PersonalMessage" in item && "SenderPersonalMessageId" in item)
 }
 
-export const GET = async (request: NextRequest, response: NextResponse) => 
+export const GET = async (request: Request, response: NextResponse, segmentData: {params: Params}) => 
 {   
     const session = await getServerSession(authOptions)
     const FindPersonalMessageByContactOwnerId = await prisma.personal_Chat_Model.findMany({
         where: 
         {
-            Contact_Owner_Id: session?.user.id!
+            Contact_Owner_Id: session?.user.id!,
+            Personal_Chat_Recipient_Id: "43a151ab-84f7-4539-b3df-dc80c211b97c"
         }
     })
-    console.log("Pesan pribadi : " + JSON.stringify(FindPersonalMessageByContactOwnerId))
 
-    // const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany()
     const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany()
+
+    console.log("ID : " + GetSenderPersonalMessage[0].Personal_Chat_Recipient_Id)
+
     const FilteredPersonalMeessages = GetSenderPersonalMessage.flatMap(chat => 
     {   
         const MyMessages = chat.My_Messages as unknown as Array<PersonalMessageInterface>
@@ -52,9 +56,12 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
         return NextResponse.json(
             {
               PersonalMessageField: FilteredPersonalMeessages[0].PersonalMessageText, 
-              PersonalChatOwnerId: GetSenderPersonalMessage[0].Personal_Chat_Recipient_Id
+              PersonalChatOwnerId: GetSenderPersonalMessage[0].Personal_Chat_Recipient_Id,
+            //   PersonalChatRecipientId: GetSenderPersonalMessage[0].Personal_Chat_Recipient_Id
             }, 
-            {status: 200}
+            {   
+                status: 200
+            }
         )
     }
     if(FilteredPersonalMeessages === null) 

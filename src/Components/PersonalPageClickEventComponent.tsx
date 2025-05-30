@@ -12,7 +12,8 @@ interface PageProps
   {
     ContactId: string
     SavedContactName: string
-    PersonalContactOwnerId: string
+    // PersonalContactOwnerId: string
+    PersonalChatOwnerId: string
     PersonalMessageRecipientId: string
     PersonalMessageSenderId: string
   }
@@ -56,7 +57,7 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
             MessageRecipientId: params.ContactId,
             SenderMessageContactName: params.SavedContactName,
             PersonalMessageText: Personalmessage, 
-            PersonalContactOwnerId: params.PersonalContactOwnerId
+            PersonalContactOwnerId: params.PersonalChatOwnerId
           })
         })
         if(!PersonalMessageData.ok || PersonalMessageData.status !== 200) 
@@ -66,7 +67,7 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
         if(PersonalMessageData.ok || PersonalMessageData.status === 200) 
         {
           setPersonalMessage("") 
-          const PersonalMessageResponse = await PersonalMessageData.json()
+          // const PersonalMessageResponse = await PersonalMessageData.json()
         }
       } 
       catch (error) 
@@ -81,15 +82,13 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
         <p className="text-white mx-5 my-2">{params.SavedContactName}</p>
          <div className="-z-10 w-[80vw] h-[100vh] translate-y-5 -translate-x-1 md:overflow-y-auto bg-slate-900">
             <div className="flex flex-col gap-5 mx-8 my-6">
-              {/* <ShowPersonalMessagesWrapperComponent params={{PersonalMessageRecipientId: params.ContactId, PersonalMessageSenderId: params.PersonalMessageSenderId}}/> */}
             {params.PersonalMessageSenderId && params.PersonalMessageSenderId == session.data?.user.id ? (
               <ShowPersonalMessagesWrapperComponent params=
               {{
                 PersonalMessageRecipientId: params.PersonalMessageRecipientId, 
                 PersonalMessageSenderId: params.PersonalMessageSenderId, 
-                ContactId: params.ContactId, 
-                // PersonalChatOwnerId: params.PersonalContactOwnerId
-                // PersonalMessageId: params.PersonalMessageId
+                ContactId: params.ContactId,
+                PersonalChatOwnerId: params.PersonalChatOwnerId!
               }}/>
             ) : ( <></> )}
             </div>
@@ -115,15 +114,13 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
         <p className="text-white mx-5 my-2">{params.ContactId}</p>
         <div className="-z-10 w-[80vw] h-[100vh] translate-y-4 -translate-x-1 md:overflow-y-auto bg-slate-900">
             <div className="flex flex-col gap-5 mx-[48vw] my-6">
-              {/* <ShowPersonalMessagesWrapperComponent params={{PersonalMessageRecipientId: params.ContactId, PersonalMessageSenderId: params.PersonalMessageSenderId}}/> */}
               {params.PersonalMessageSenderId && params.PersonalMessageSenderId == session.data?.user.id ? (
                 <ShowPersonalMessagesWrapperComponent params=
                 {{
                   PersonalMessageRecipientId: params.ContactId, 
                   PersonalMessageSenderId: params.PersonalMessageSenderId, 
-                  ContactId: params.ContactId, 
-                  // PersonalChatOwnerId: params.PersonalContactOwnerId
-                  // PersonalMessageId: params.PersonalMessageId
+                  ContactId: params.ContactId,
+                  PersonalChatOwnerId: params.PersonalChatOwnerId!
                 }}/>
               ) : ( <></> )}
             </div>

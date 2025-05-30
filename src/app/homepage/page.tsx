@@ -17,7 +17,6 @@ interface PersonalContactStateObject
   Contact_Id: string
 }
 
-
 interface SelectedPersonalContact 
 {
   ContactId: string
@@ -58,6 +57,7 @@ export default function Home()
                 ]
               }  
             })
+            // console.log("Data Kontak Pribadi : " + JSON.stringify(ShowPersonalContactList))
             setPersonalContact(ShowPersonalContactList)
           }
       } 
