@@ -36,13 +36,8 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
     {
       try 
       {
-        // const FetchPersonalMessageResponse = await fetch("/api/chat/showpersonalmessages")
-        const FetchPersonalMessageResponse = await fetch(`/api/chat/showpersonalmessages?PersonalChatRecipientId=${params.PersonalChatOwnerId}`)
+        const FetchPersonalMessageResponse = await fetch(`/api/chat/showpersonalmessages/${params.PersonalChatOwnerId}`)
         const FetchPersonalMessageData: PersonalMessageProperties = await FetchPersonalMessageResponse.json()
-
-        // console.log("Pesan Pribadi : " + JSON.stringify(FetchPersonalMessageData))
-        // console.log("Data params : " + params.PersonalChatOwnerId)
-
         if(!FetchPersonalMessageResponse.ok || FetchPersonalMessageResponse.status !== 200) 
         {
           throw new Error("Gagal mengambil pesan pribadi")

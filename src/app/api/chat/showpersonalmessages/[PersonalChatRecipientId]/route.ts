@@ -19,22 +19,27 @@ function IsPersonalMessageArray(value: unknown): value is Array<PersonalMessageI
     return Array.isArray(value) && value.every(item => "PersonalMessage" in item && "SenderPersonalMessageId" in item)
 }
 
-export const GET = async (request: Request, response: NextResponse, segmentData: {params: Params}) => 
+export const GET = async (request: Request, { params }: { params: { PersonalChatRecipientId: string } }) => 
 {   
-    const {searchParams} = new URL(request.url)
-    const recipientId = searchParams.get("PersonalChatRecipientId")
     const session = await getServerSession(authOptions)
+    const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany()
+
+    const { PersonalChatRecipientId } = params
     const FindPersonalMessageByContactOwnerId = await prisma.personal_Chat_Model.findMany({
         where: 
         {
             Contact_Owner_Id: session?.user.id!,
-            Personal_Chat_Recipient_Id: recipientId ?? ""
+            Personal_Chat_Recipient_Id: PersonalChatRecipientId!
+        }
+        , 
+        select: 
+        {
+            My_Messages: true,
+            Messages_To_All: true
         }
     })
-    console.log("Recipient ID: " + recipientId)
 
-    const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany()
-    const FilteredPersonalMeessages = GetSenderPersonalMessage.flatMap(chat => 
+    const FilteredPersonalMeessages = FindPersonalMessageByContactOwnerId.flatMap(chat => 
     {   
         const MyMessages = chat.My_Messages as unknown as Array<PersonalMessageInterface>
         if(IsPersonalMessageArray(MyMessages)) 
@@ -57,8 +62,7 @@ export const GET = async (request: Request, response: NextResponse, segmentData:
         return NextResponse.json(
             {
               PersonalMessageField: FilteredPersonalMeessages[0].PersonalMessageText, 
-              PersonalChatOwnerId: GetSenderPersonalMessage[0].Personal_Chat_Recipient_Id,
-            //   PersonalChatRecipientId: GetSenderPersonalMessage[0].Personal_Chat_Recipient_Id
+              PersonalChatRecipientId: GetSenderPersonalMessage[0].Personal_Chat_Recipient_Id
             }, 
             {   
                 status: 200
