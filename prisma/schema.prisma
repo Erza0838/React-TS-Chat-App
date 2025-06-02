@@ -52,11 +52,10 @@ model User_Contacts {
   Contact_Id String @id @default(uuid()) 
   ContactInformation Json? @db.Json
   MyId String 
-
+  ContactOwnerName String
   UserContactId  UserModel @relation(fields: [MyId], references: [id])
   @@map("contact_List")
 }
-
 
 // Model untuk menyimpan obrolan pribadi
 model Personal_Chat_Model {
@@ -65,7 +64,8 @@ model Personal_Chat_Model {
   Messages_To_All         Json?   @db.Json
   Create_Personal_Message DateTime? @default(now())
   Contact_Owner_Id       String
-  Personal_Chat_Recipient_Id String
+  ItsFriend              Boolean @default(false)
+  // Personal_Chat_Recipient_Id String
   Personal_Contact_Owner_Id UserModel @relation("Reference_Contact_Owner_Id", fields: [Contact_Owner_Id], references: [id])
 
   @@map("personal_Chat")

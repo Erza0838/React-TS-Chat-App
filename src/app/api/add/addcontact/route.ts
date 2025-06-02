@@ -54,7 +54,6 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
 
     if(CheckContactExist.length > 0) 
     { 
-      console.log(`Kontak id : ${UserContactId} sudah ada`)
       return NextResponse.json({error: `Kontak : ${UserContactId} sudah ada`}, {status: 400})
     }
 
@@ -71,7 +70,8 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
                 {
                   id: session?.user.id!
                 }
-              }
+              }, 
+              ContactOwnerName: session?.user.name!
           }
       })
       return NextResponse.json({success: AddNewContact}, {status: 200}) 

@@ -32,7 +32,7 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         { 
             My_Messages: PersonalMessageInformation,
             Messages_To_All: PersonalMessageInformation,
-            Personal_Chat_Recipient_Id: PersonalContactOwnerId as string,
+            // Personal_Chat_Recipient_Id: PersonalContactOwnerId as string,
             Contact_Owner_Id: session?.user.id as string,
             Create_Personal_Message: new Date(), 
         }        

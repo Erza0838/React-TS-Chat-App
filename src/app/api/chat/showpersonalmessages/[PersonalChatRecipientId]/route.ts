@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { ChartNoAxesColumnDecreasingIcon } from "lucide-react"
 
 type Params = Promise<{ slug: string }>
 
@@ -25,19 +24,19 @@ export const GET = async (request: Request, { params }: { params: { PersonalChat
     const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany()
 
     const { PersonalChatRecipientId } = params
-    const FindPersonalMessageByContactOwnerId = await prisma.personal_Chat_Model.findMany({
-        where: 
-        {
-            Contact_Owner_Id: session?.user.id!,
-            Personal_Chat_Recipient_Id: PersonalChatRecipientId!
-        }
-        , 
-        select: 
-        {
-            My_Messages: true,
-            Messages_To_All: true
-        }
-    })
+    // const FindPersonalMessageByContactOwnerId = await prisma.personal_Chat_Model.findMany({
+    //     where: 
+    //     {
+    //         Contact_Owner_Id: session?.user.id!,
+    //         Personal_Chat_Recipient_Id: PersonalChatRecipientId!
+    //     }, 
+    //     select: 
+    //     {
+    //         My_Messages: true,
+    //         Messages_To_All: true
+    //     }
+    // })
+    const FindPersonalMessageByContactOwnerId = await prisma.personal_Chat_Model.findMany({})
 
     const FilteredPersonalMeessages = FindPersonalMessageByContactOwnerId.flatMap(chat => 
     {   
@@ -49,7 +48,7 @@ export const GET = async (request: Request, { params }: { params: { PersonalChat
                                      Messages.PersonalMessage !== null && Messages.PersonalMessageId !== null
             ).map((PersonalMessage) => 
             ({
-                PersonalMessageRecipientId: PersonalMessage.PersonalMessageRecipientId,
+                // PersonalMessageRecipientId: PersonalMessage.PersonalMessageRecipientId,
                 PersonalMessageText: PersonalMessage.PersonalMessage,
                 PersonalMessageId: PersonalMessage.PersonalMessageId
             }))
@@ -57,12 +56,12 @@ export const GET = async (request: Request, { params }: { params: { PersonalChat
         return []
     })
 
-    if(FilteredPersonalMeessages !== null && FilteredPersonalMeessages.length > 0 && GetSenderPersonalMessage[0].Personal_Chat_Recipient_Id !== null) 
+    if(FilteredPersonalMeessages !== null && FilteredPersonalMeessages.length > 0) 
     {   
         return NextResponse.json(
             {
               PersonalMessageField: FilteredPersonalMeessages[0].PersonalMessageText, 
-              PersonalChatRecipientId: GetSenderPersonalMessage[0].Personal_Chat_Recipient_Id
+            //   PersonalChatRecipientId: GetSenderPersonalMessage[0].Personal_Chat_Recipient_Id
             }, 
             {   
                 status: 200
