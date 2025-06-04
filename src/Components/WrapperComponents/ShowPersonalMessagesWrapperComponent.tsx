@@ -36,7 +36,7 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
     {
       try 
       {
-        const FetchPersonalMessageResponse = await fetch(`/api/chat/showpersonalmessages/${params.PersonalChatOwnerId}`)
+        const FetchPersonalMessageResponse = await fetch(`/api/chat/showpersonalmessages/${session.data?.user.id}/${params.ContactId}`,)
         const FetchPersonalMessageData: PersonalMessageProperties = await FetchPersonalMessageResponse.json()
         if(!FetchPersonalMessageResponse.ok || FetchPersonalMessageResponse.status !== 200) 
         {
@@ -51,7 +51,7 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
       }
     }
     FetchPersonalMessages()
-  }, [params.PersonalChatOwnerId])
+  }, [params.ContactId, session.data?.user.id])
   
 
   return (

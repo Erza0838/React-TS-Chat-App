@@ -60,7 +60,6 @@ export default function AddContact()
       const result: AddNewContactResponse = await response.json()
       if(!response.ok)
       { 
-        // console.log(response.error)
         toast.error(result.error || "Tambah kontak gagal")
         reset()
         return 

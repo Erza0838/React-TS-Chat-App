@@ -57,7 +57,6 @@ export default function Home()
                 ]
               }  
             })
-            // console.log("Data Kontak Pribadi : " + JSON.stringify(ShowPersonalContactList))
             setPersonalContact(ShowPersonalContactList)
           }
       } 

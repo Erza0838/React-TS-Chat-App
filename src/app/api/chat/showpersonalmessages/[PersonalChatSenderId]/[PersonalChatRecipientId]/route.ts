@@ -18,12 +18,13 @@ function IsPersonalMessageArray(value: unknown): value is Array<PersonalMessageI
     return Array.isArray(value) && value.every(item => "PersonalMessage" in item && "SenderPersonalMessageId" in item)
 }
 
-export const GET = async (request: Request, { params }: { params: { PersonalChatRecipientId: string } }) => 
+export const GET = async (request: Request, 
+    { params }: { params: { PersonalChatSenderId: string,PersonalChatRecipientId: string } }) => 
 {   
     const session = await getServerSession(authOptions)
     const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany()
 
-    const { PersonalChatRecipientId } = params
+    const {  PersonalChatSenderId,PersonalChatRecipientId } = params
     // const FindPersonalMessageByContactOwnerId = await prisma.personal_Chat_Model.findMany({
     //     where: 
     //     {
@@ -36,7 +37,14 @@ export const GET = async (request: Request, { params }: { params: { PersonalChat
     //         Messages_To_All: true
     //     }
     // })
-    const FindPersonalMessageByContactOwnerId = await prisma.personal_Chat_Model.findMany({})
+    const FindPersonalMessageByContactOwnerId = await prisma.personal_Chat_Model.findMany({
+        where: 
+        {
+            Contact_Owner_Id: PersonalChatSenderId!,
+            FriendContactId: PersonalChatRecipientId!
+        }
+    })
+    console.log("Pesan pribadi : " + JSON.stringify(FindPersonalMessageByContactOwnerId))
 
     const FilteredPersonalMeessages = FindPersonalMessageByContactOwnerId.flatMap(chat => 
     {   

@@ -39,39 +39,36 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
       return NextResponse.json({error: `Kontak id : ${UserContactId} tidak ada`}, {status: 400})
     }
 
-    const CheckContactExist = await prisma.user_Contacts.findMany(
-    {
-      where:
-      {
-        ContactInformation: 
-        {
-          path: "$.ContactId",
-          equals: UserContactId as string
-        },
-        MyId: session?.user.id! 
-      }
-    })
+    // const CheckContactExist = await prisma.user_Contacts.findMany(
+    // {
+    //   where:
+    //   {
+    //     ContactInformation: 
+    //     {
+    //       path: "$.ContactId",
+    //       equals: UserContactId as string
+    //     },
+    //     IdPersonalContactEnhancer: session?.user.id! 
+    //   }
+    // })
 
-    if(CheckContactExist.length > 0) 
-    { 
-      return NextResponse.json({error: `Kontak : ${UserContactId} sudah ada`}, {status: 400})
-    }
+    // if(CheckContactExist.length > 0) 
+    // { 
+    //   return NextResponse.json({error: `Kontak : ${UserContactId} sudah ada`}, {status: 400})
+    // }
 
-    if(FindContactId && FindUser && CheckContactExist.length === 0) 
+    if(FindContactId && FindUser) 
     {   
       const AddNewContact = await prisma.user_Contacts.create(
       {
           data: 
           {
               ContactInformation: UserContactInformation,
-              UserContactId: 
-              {
-                connect: 
-                {
-                  id: session?.user.id!
-                }
-              }, 
-              ContactOwnerName: session?.user.name!
+              IdPersonalContactEnhancer: session?.user.id!,
+              NamePersonalContactEnhancer: session?.user.name!,
+              IdPersonalContactReceiver: UserContactId,
+              NamePersonalContactReceiver: SavedUsernameContact,
+              ItsFriend: true,
           }
       })
       return NextResponse.json({success: AddNewContact}, {status: 200}) 

@@ -34,24 +34,46 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
         }
     })
 
-    const ChekContactOwnerId = await prisma.user_Contacts.findMany(
+    const CheckIdPersonalContactEnhancer = await prisma.user_Contacts.findMany(
     {
       where: 
-      {
-        MyId: 
-        {
-          equals: session?.user.id ?? ""
-        }
+      { 
+        IdPersonalContactEnhancer: session?.user.id!,
+        ItsFriend: true
       },
       select: 
       {
         ContactInformation: true,
         Contact_Id: true, 
-        MyId: true
+        IdPersonalContactEnhancer: true
       }
     })
 
-    const FilteredPersonalContact = ChekContactOwnerId.flatMap(PersonalContact => 
+    const CheckIdPersonalContactReceiver = await prisma.user_Contacts.findMany(
+    {
+      where: 
+      { 
+        IdPersonalContactReceiver: session?.user.id!
+      },
+      select: 
+      {
+        ContactInformation: true,
+        Contact_Id: true, 
+        IdPersonalContactReceiver: true
+      }
+    })
+
+    if(CheckIdPersonalContactEnhancer[0].IdPersonalContactEnhancer === session?.user.id) 
+    {
+      console.log("Data Penambah kontak pribadi : " + JSON.stringify(CheckIdPersonalContactEnhancer))
+    }
+
+    // if(CheckIdPersonalContactReceiver[0].IdPersonalContactReceiver !== session?.user.id ) 
+    // {
+    //   console.log("Data Penerima kontak pribadi : " + JSON.stringify(CheckIdPersonalContactReceiver))
+    // }
+
+    const FilteredPersonalContact = CheckIdPersonalContactEnhancer.flatMap(PersonalContact => 
     {
       const MyPersonalContact = PersonalContact.ContactInformation as unknown as Array<PersonalContactInterace>
       if(IsPersonalContactArray(MyPersonalContact)) 
@@ -80,7 +102,7 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
     }
     if(FindContactOwner === null) 
     {
-      if(FilteredPersonalContact.length === 0 && FilteredPersonalContact === null && ChekContactOwnerId[0].MyId !== null) 
+      if(FilteredPersonalContact.length === 0 && FilteredPersonalContact === null) 
       {
         return NextResponse.json({error: "Kontak pribadi kosong!"}, {status: 400})
       }
