@@ -2,7 +2,6 @@ import { NextRequest,NextResponse } from "next/server"
 import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { Check } from "lucide-react"
 
 interface ContactInformationProperties 
 {
@@ -12,10 +11,15 @@ interface ContactInformationProperties
 
 interface PersonalContactInterace 
 {
-  ContactId: string
-  SavedContactName?: string
+  // ContactId: string
+  // SavedContactName?: string
+  // MyId: string
   Contact_Id: string
-  MyId: string
+  NamePersonalContactEnhancer: string
+  IdPersonalContactEnhancer: string
+  NamePersonalContactReceiver: string
+  IdPersonalContactReceiver: string
+  ItsFriend: boolean
 }
 
 function IsPersonalContactArray(value: unknown): value is Array<PersonalContactInterace>
@@ -39,13 +43,18 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
       where: 
       { 
         IdPersonalContactEnhancer: session?.user.id!,
+        // IdPersonalContactReceiver: session?.user.id!,
         ItsFriend: true
       },
       select: 
       {
         ContactInformation: true,
         Contact_Id: true, 
-        IdPersonalContactEnhancer: true
+        NamePersonalContactEnhancer: true,
+        IdPersonalContactEnhancer: true,
+        NamePersonalContactReceiver: true,
+        IdPersonalContactReceiver: true,
+        ItsFriend: true
       }
     })
 
@@ -53,40 +62,48 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
     {
       where: 
       { 
-        IdPersonalContactReceiver: session?.user.id!
+        IdPersonalContactReceiver: session?.user.id!,
+        ItsFriend: true
       },
       select: 
       {
         ContactInformation: true,
         Contact_Id: true, 
-        IdPersonalContactReceiver: true
+        NamePersonalContactReceiver: true,
+        IdPersonalContactReceiver: true,
+        ItsFriend: true
       }
     })
-
-    if(CheckIdPersonalContactEnhancer[0].IdPersonalContactEnhancer === session?.user.id) 
-    {
-      console.log("Data Penambah kontak pribadi : " + JSON.stringify(CheckIdPersonalContactEnhancer))
-    }
-
-    // if(CheckIdPersonalContactReceiver[0].IdPersonalContactReceiver !== session?.user.id ) 
-    // {
-    //   console.log("Data Penerima kontak pribadi : " + JSON.stringify(CheckIdPersonalContactReceiver))
-    // }
 
     const FilteredPersonalContact = CheckIdPersonalContactEnhancer.flatMap(PersonalContact => 
     {
       const MyPersonalContact = PersonalContact.ContactInformation as unknown as Array<PersonalContactInterace>
       if(IsPersonalContactArray(MyPersonalContact)) 
       {
-        return MyPersonalContact.filter(PersonalContactData => PersonalContactData.ContactId !== null).map((AllPersonalContactData) => 
+        return MyPersonalContact.filter(PersonalContactData => PersonalContactData.Contact_Id !== null && PersonalContact.IdPersonalContactEnhancer !== null).map((AllPersonalContactData) => 
         ({
-          ContactId: AllPersonalContactData.ContactId,
-          SavedContactName: AllPersonalContactData.SavedContactName,
+          IdPersonalContactEnhancer: PersonalContact.IdPersonalContactEnhancer,
+          NamePersonalContactEnhancer: PersonalContact.NamePersonalContactEnhancer,
+          NamePersonalContactReceiver: PersonalContact.NamePersonalContactReceiver,
+          IdPersonalContactReceiver: PersonalContact.IdPersonalContactReceiver,
           Contact_Id: PersonalContact.Contact_Id,
+          ItsFriend: PersonalContact.ItsFriend
         }))
       }
       return []
     })
+    
+    if(FilteredPersonalContact[0].IdPersonalContactEnhancer === session?.user.id && FilteredPersonalContact[0].ItsFriend === true) 
+    {
+      console.log("ID penambnah kontak pribadi : " + JSON.stringify(FilteredPersonalContact[0].IdPersonalContactEnhancer))
+      console.log("Nama penambnah kontak pribadi : " + JSON.stringify(FilteredPersonalContact[0].NamePersonalContactEnhancer))
+    }
+
+    // if(FilteredPersonalContact[0].IdPersonalContactReceiver === session?.user.id && FilteredPersonalContact[0].ItsFriend === true) 
+    // {
+    //   console.log("ID penerima kontak pribadi : " + JSON.stringify(FilteredPersonalContact[0].IdPersonalContactReceiver))
+    //   console.log("Nama penerima kontak pribadi : " + JSON.stringify(FilteredPersonalContact[0].NamePersonalContactReceiver))
+    // }
 
     if(FindContactOwner !== null) 
     {
