@@ -11,9 +11,7 @@ interface ContactInformationProperties
 
 interface PersonalContactInterace 
 {
-  // ContactId: string
-  // SavedContactName?: string
-  // MyId: string
+
   Contact_Id: string
   NamePersonalContactEnhancer: string
   IdPersonalContactEnhancer: string
@@ -82,36 +80,43 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
       }
     })
 
+    const FilteredPersonalContact = CheckIdPersonalContactEnhancer.map(PersonalContactData => 
+    ({
+          IdPersonalContactEnhancer: PersonalContactData.IdPersonalContactEnhancer,
+          NamePersonalContactEnhancer: PersonalContactData.NamePersonalContactEnhancer,
+          NamePersonalContactReceiver: PersonalContactData.NamePersonalContactReceiver,
+          IdPersonalContactReceiver: PersonalContactData.IdPersonalContactReceiver,
+          Contact_Id: PersonalContactData.Contact_Id,
+          ItsFriend: PersonalContactData.ItsFriend
+      }))
+      console.log("Data kontak : " + JSON.stringify(FilteredPersonalContact))
+      // const MyPersonalContact = PersonalContact as unknown as Array<PersonalContactInterace>
+      // if(IsPersonalContactArray(MyPersonalContact)) 
+      // { 
+      //   return MyPersonalContact.map(PersonalContactData => 
+      //   ({
+      //     IdPersonalContactEnhancer: PersonalContactData.IdPersonalContactEnhancer,
+      //     NamePersonalContactEnhancer: PersonalContactData.NamePersonalContactEnhancer,
+      //     NamePersonalContactReceiver: PersonalContactData.NamePersonalContactReceiver,
+      //     IdPersonalContactReceiver: PersonalContactData.IdPersonalContactReceiver,
+      //     Contact_Id: PersonalContactData.Contact_Id,
+      //     ItsFriend: PersonalContactData.ItsFriend
+      //   }))
+      // }
+      // return []
+
     if(CheckIdPersonalContactEnhancer[0].IdPersonalContactEnhancer !== null && 
        CheckIdPersonalContactEnhancer[0].IdPersonalContactEnhancer === session?.user.id && 
        CheckIdPersonalContactEnhancer[0].ItsFriend === true) 
     {
-      console.log("Kontak Id yang ditambahkan : " + JSON.stringify(CheckIdPersonalContactEnhancer[0].IdPersonalContactReceiver))
-      console.log("Nama kontak yang ditambahkan : " + JSON.stringify(CheckIdPersonalContactEnhancer[0].NamePersonalContactReceiver))
+      console.log("Kontak Id yang ditambahkan : " + JSON.stringify(FilteredPersonalContact[0].IdPersonalContactReceiver))
+      console.log("Nama kontak yang ditambahkan : " + JSON.stringify(FilteredPersonalContact[0].IdPersonalContactReceiver))
     }
     if(CheckIdPersonalContactEnhancer[0].IdPersonalContactReceiver !== null && CheckIdPersonalContactEnhancer[0].IdPersonalContactReceiver === session?.user.id) 
     {
       console.log("ID penambah kontak : " + JSON.stringify(CheckIdPersonalContactEnhancer[0].IdPersonalContactEnhancer))
       console.log("Nama penambah kontak : " + JSON.stringify(CheckIdPersonalContactEnhancer[0].NamePersonalContactEnhancer))
     }
-
-    const FilteredPersonalContact = CheckIdPersonalContactEnhancer.flatMap(PersonalContact => 
-    {
-      const MyPersonalContact = PersonalContact.ContactInformation as unknown as Array<PersonalContactInterace>
-      if(IsPersonalContactArray(MyPersonalContact)) 
-      {
-        return MyPersonalContact.filter(PersonalContactData => PersonalContactData.Contact_Id !== null && PersonalContact.IdPersonalContactEnhancer !== null).map((AllPersonalContactData) => 
-        ({
-          IdPersonalContactEnhancer: PersonalContact.IdPersonalContactEnhancer,
-          NamePersonalContactEnhancer: PersonalContact.NamePersonalContactEnhancer,
-          NamePersonalContactReceiver: PersonalContact.NamePersonalContactReceiver,
-          IdPersonalContactReceiver: PersonalContact.IdPersonalContactReceiver,
-          Contact_Id: PersonalContact.Contact_Id,
-          ItsFriend: PersonalContact.ItsFriend
-        }))
-      }
-      return []
-    })
 
     if(FindContactOwner !== null) 
     {

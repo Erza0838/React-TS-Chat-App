@@ -44,8 +44,6 @@ export const GET = async (request: Request,
             FriendContactId: PersonalChatRecipientId!
         }
     })
-    console.log("Pesan pribadi : " + JSON.stringify(FindPersonalMessageByContactOwnerId))
-
     const FilteredPersonalMeessages = FindPersonalMessageByContactOwnerId.flatMap(chat => 
     {   
         const MyMessages = chat.My_Messages as unknown as Array<PersonalMessageInterface>
@@ -53,7 +51,8 @@ export const GET = async (request: Request,
         {
             return MyMessages.filter(Messages => 
                                      Messages.SenderPersonalMessageId !== null && 
-                                     Messages.PersonalMessage !== null && Messages.PersonalMessageId !== null
+                                     Messages.PersonalMessage !== null && 
+                                     Messages.PersonalMessageId !== null
             ).map((PersonalMessage) => 
             ({
                 // PersonalMessageRecipientId: PersonalMessage.PersonalMessageRecipientId,
