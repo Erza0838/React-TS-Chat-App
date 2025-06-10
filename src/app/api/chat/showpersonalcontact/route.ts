@@ -38,27 +38,7 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
         }
     })
 
-    const CheckIdPersonalContactEnhancer = await prisma.user_Contacts.findMany(
-    {
-      where: 
-      { 
-        IdPersonalContactEnhancer: session?.user.id!,
-        // IdPersonalContactReceiver: session?.user.id!,
-        ItsFriend: true
-      },
-      select: 
-      {
-        ContactInformation: true,
-        Contact_Id: true, 
-        NamePersonalContactEnhancer: true,
-        IdPersonalContactEnhancer: true,
-        NamePersonalContactReceiver: true,
-        IdPersonalContactReceiver: true,
-        ItsFriend: true
-      }
-    })
-
-    const CheckIdPersonalContactReceiver = await prisma.user_Contacts.findMany(
+     const CheckIdPersonalContactReceiver = await prisma.user_Contacts.findMany(
     {
       where: 
       { 
@@ -74,6 +54,46 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
         ItsFriend: true
       }
     })
+
+    const CheckIdPersonalContactEnhancer = await prisma.user_Contacts.findMany(
+    {
+      where: 
+      { 
+        OR: 
+        [
+          {
+            IdPersonalContactEnhancer: session?.user.id!
+          },
+          {
+            IdPersonalContactReceiver: session?.user.id!
+          }
+        ],
+        ItsFriend: true
+      },
+      select: 
+      {
+        ContactInformation: true,
+        Contact_Id: true, 
+        NamePersonalContactEnhancer: true,
+        IdPersonalContactEnhancer: true,
+        NamePersonalContactReceiver: true,
+        IdPersonalContactReceiver: true,
+        ItsFriend: true
+      }
+    })
+
+    if(CheckIdPersonalContactEnhancer[0].IdPersonalContactEnhancer !== null && 
+       CheckIdPersonalContactEnhancer[0].IdPersonalContactEnhancer === session?.user.id && 
+       CheckIdPersonalContactEnhancer[0].ItsFriend === true) 
+    {
+      console.log("Kontak Id yang ditambahkan : " + JSON.stringify(CheckIdPersonalContactEnhancer[0].IdPersonalContactReceiver))
+      console.log("Nama kontak yang ditambahkan : " + JSON.stringify(CheckIdPersonalContactEnhancer[0].NamePersonalContactReceiver))
+    }
+    if(CheckIdPersonalContactEnhancer[0].IdPersonalContactReceiver !== null && CheckIdPersonalContactEnhancer[0].IdPersonalContactReceiver === session?.user.id) 
+    {
+      console.log("ID penambah kontak : " + JSON.stringify(CheckIdPersonalContactEnhancer[0].IdPersonalContactEnhancer))
+      console.log("Nama penambah kontak : " + JSON.stringify(CheckIdPersonalContactEnhancer[0].NamePersonalContactEnhancer))
+    }
 
     const FilteredPersonalContact = CheckIdPersonalContactEnhancer.flatMap(PersonalContact => 
     {
@@ -92,18 +112,6 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
       }
       return []
     })
-    
-    if(FilteredPersonalContact[0].IdPersonalContactEnhancer === session?.user.id && FilteredPersonalContact[0].ItsFriend === true) 
-    {
-      console.log("ID penambnah kontak pribadi : " + JSON.stringify(FilteredPersonalContact[0].IdPersonalContactEnhancer))
-      console.log("Nama penambnah kontak pribadi : " + JSON.stringify(FilteredPersonalContact[0].NamePersonalContactEnhancer))
-    }
-
-    // if(FilteredPersonalContact[0].IdPersonalContactReceiver === session?.user.id && FilteredPersonalContact[0].ItsFriend === true) 
-    // {
-    //   console.log("ID penerima kontak pribadi : " + JSON.stringify(FilteredPersonalContact[0].IdPersonalContactReceiver))
-    //   console.log("Nama penerima kontak pribadi : " + JSON.stringify(FilteredPersonalContact[0].NamePersonalContactReceiver))
-    // }
 
     if(FindContactOwner !== null) 
     {
