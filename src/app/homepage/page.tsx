@@ -4,11 +4,8 @@ import DisplayPersonalContactComponent from "@/Components/DisplayPersonalContact
 import SidebarWrapperComponent from "@/Components/WrapperComponents/SidebarWrapperComponent"
 import SearchContactWrapperComponent from "@/Components/WrapperComponents/SearchContactWrapperComponent"
 import { PersonalContactProperty } from "../Interface/PersonalChatPageInterface"
-
-interface PersonalContactState 
-{
-  PersonalContactList: PersonalContactStateObject[]
-}
+import { useSession } from "next-auth/react"
+import { User } from "lucide-react"
 
 interface PersonalContactStateObject
 {
@@ -17,47 +14,108 @@ interface PersonalContactStateObject
   Contact_Id: string
 }
 
+interface PersonalContactState 
+{
+  PersonalContactList: PersonalContactStateObject[]
+}
+
 interface SelectedPersonalContact 
 {
-  ContactId: string
-  SavedContactName?: string
-  Contact_Id: string
+  IdPersonalContactEnhancer: string,
+  NamePersonalContactEnhancer?: string,
+  NamePersonalContactReceiver?: string,
+  IdPersonalContactReceiver: string,
+  Contact_Id: string,
+  ItsFriend: boolean
+}
+
+interface FilteredPersonalContact
+{
+  IdPersonalContactEnhancer: string,
+  NamePersonalContactEnhancer: string,
+  NamePersonalContactReceiver: string,
+  IdPersonalContactReceiver: string,
+  Contact_Id: string,
+  ItsFriend: boolean
+}
+
+interface ListPersonalContacts 
+{
+  PersonalContactList: FilteredPersonalContact[]
 }
 
 export default function Home() 
 { 
   const [Contacs, setContacts] = useState<boolean>(false)
-  const [Personalcontacts, setPersonalContact] = useState<PersonalContactState[]>([])
+  const [Personalcontacts, setPersonalContact] = useState<ListPersonalContacts[]>([])
+  const [PersonalcontactsReciever, setPersonalContactReciever] = useState<{ 
+    NamePersonalContactReceiver: string,
+    IdPersonalContactReceiver: string,
+    IdPersonalContactEnhancer: string,
+    NamePersonalContactEnhancer: string,
+    ItsFriend: boolean
+  }[]>([])
   const [selectedContact, setSelectedContact] = useState<SelectedPersonalContact | null>(null)
-
+  const {data: session, update} = useSession()
   useEffect(() => 
   {
+    if(!session?.user.id) 
+    {
+      return 
+    }
     async function FetchPersonalContact() 
     {
       try 
       {
           const response = await fetch("/api/chat/showpersonalcontact")
-          const FetchPersonalContactList = await response.json() as PersonalContactProperty
+          const FetchPersonalContactList = await response.json() as ListPersonalContacts
           if(!response.ok) 
           {
             throw new Error("Gagal mendapatkan data kontak")
           }
           if(response.ok) 
           { 
-            const ShowPersonalContactList = FetchPersonalContactList.PersonalContactList.map((PersonalContactInfo) =>
+            const ShowPersonalContacts = FetchPersonalContactList.PersonalContactList.map((PersonalContactData) => 
             {
-              return {
-                PersonalContactList: 
-                [
-                  {
-                    ContactId: PersonalContactInfo.ContactId, 
-                    SavedContactName: PersonalContactInfo.SavedContactName, 
-                    Contact_Id: PersonalContactInfo.Contact_Id, 
-                  }
-                ]
-              }  
-            })
-            setPersonalContact(ShowPersonalContactList)
+              if(PersonalContactData.IdPersonalContactEnhancer && session?.user?.id && 
+                 PersonalContactData.IdPersonalContactEnhancer === session.user.id && 
+                 PersonalContactData.ItsFriend === true && 
+                 PersonalContactData.IdPersonalContactReceiver !== session.user.id) 
+              {
+                console.log("Penambah kontak : " + PersonalContactData.NamePersonalContactReceiver)
+                // return {
+                //   NamePersonalContactReceiver: PersonalContactData.NamePersonalContactReceiver,
+                //   IdPersonalContactReceiver: PersonalContactData.IdPersonalContactReceiver,
+                //   IdPersonalContactEnhancer: PersonalContactData.IdPersonalContactEnhancer,
+                //   NamePersonalContactEnhancer: PersonalContactData.IdPersonalContactEnhancer,
+                //   // ItsFriend: PersonalContactData.ItsFriend
+                // }
+              }
+              if(PersonalContactData.IdPersonalContactEnhancer && session?.user?.id && 
+                 PersonalContactData.IdPersonalContactEnhancer !== session.user.id && 
+                 PersonalContactData.ItsFriend === true && 
+                 PersonalContactData.IdPersonalContactReceiver === session.user.id) 
+              { 
+                console.log("Penambah kontak : " + PersonalContactData.NamePersonalContactEnhancer)
+                // return {
+                //   NamePersonalContactReceiver: PersonalContactData.NamePersonalContactReceiver,
+                //   IdPersonalContactReceiver: PersonalContactData.IdPersonalContactReceiver,
+                //   IdPersonalContactEnhancer: PersonalContactData.IdPersonalContactEnhancer,
+                //   NamePersonalContactEnhancer: PersonalContactData.IdPersonalContactEnhancer,
+                //   // ItsFriend: PersonalContactData.ItsFriend
+                // }
+              }
+                return null
+              })
+              .filter( (contact): contact is 
+              { 
+                NamePersonalContactReceiver: string, 
+                IdPersonalContactReceiver: string,
+                IdPersonalContactEnhancer: string,
+                NamePersonalContactEnhancer: string,
+                ItsFriend: boolean
+              } => contact !== null)
+            setPersonalContactReciever(ShowPersonalContacts)
           }
       } 
       catch (error) 
@@ -66,7 +124,7 @@ export default function Home()
       }
     }
     FetchPersonalContact()
-  }, [])
+  }, [session?.user.id])
 
   function ShowPersonalContact(
     SelectedContactId: string, 
@@ -91,10 +149,25 @@ export default function Home()
                 <h4 className="text-zinc-400 font-bold">Obrolan</h4>
                 <SearchContactWrapperComponent/>
                 <div className="flex flex-col my-5 gap-6">
-                {Personalcontacts !== null ? (
+                  <ul className="flex flex-col gap-6">
+                    {PersonalcontactsReciever.map((PersonalContactInfo) => (
+                      <li key={PersonalContactInfo.IdPersonalContactReceiver} className="text-white cursor-pointer">
+                        {PersonalContactInfo.IdPersonalContactEnhancer === session?.user.id && PersonalContactInfo.IdPersonalContactReceiver !== session?.user.id ? (
+                          <p className="underline underline-offset-4">
+                            {PersonalContactInfo.NamePersonalContactReceiver}
+                          </p>
+                        ) : (
+                          <p className="underline underline-offset-4">
+                            {PersonalContactInfo.NamePersonalContactEnhancer}
+                          </p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                {/* {Personalcontacts !== null ? (
                   <ul className="flex flex-col gap-6">
                     {Personalcontacts.map((ContactsInfo) => (
-                      <li key={ContactsInfo.PersonalContactList[0].ContactId} className="text-white cursor-pointer">
+                      <li key={ContactsInfo.PersonalContactList[0].Contact_Id} className="text-white cursor-pointer">
                         {ContactsInfo.PersonalContactList[0].SavedContactName ? (
                           <p onClick={() => 
                           {
@@ -104,7 +177,7 @@ export default function Home()
                               ContactsInfo.PersonalContactList[0].Contact_Id
                              )}
                             } className="underline underline-offset-4">
-                            {ContactsInfo.PersonalContactList[0].SavedContactName}
+                            {ContactsInfo.PersonalContactList[0].NamePersonalContactReceiver}
                           </p>
                         ) : (
                            <p onClick={() => 
@@ -120,7 +193,7 @@ export default function Home()
                         )}
                       </li>
                     ))}
-                  </ul>) : (<p className="text-white">Kontak kosong</p>)}
+                  </ul>) : (<p className="text-white">Kontak kosong</p>)} */}
                 </div>
             </div>
         </div>

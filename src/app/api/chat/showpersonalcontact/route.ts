@@ -36,23 +36,6 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
         }
     })
 
-     const CheckIdPersonalContactReceiver = await prisma.user_Contacts.findMany(
-    {
-      where: 
-      { 
-        IdPersonalContactReceiver: session?.user.id!,
-        ItsFriend: true
-      },
-      select: 
-      {
-        ContactInformation: true,
-        Contact_Id: true, 
-        NamePersonalContactReceiver: true,
-        IdPersonalContactReceiver: true,
-        ItsFriend: true
-      }
-    })
-
     const CheckIdPersonalContactEnhancer = await prisma.user_Contacts.findMany(
     {
       where: 
@@ -82,14 +65,13 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
 
     const FilteredPersonalContact = CheckIdPersonalContactEnhancer.map(PersonalContactData => 
     ({
-          IdPersonalContactEnhancer: PersonalContactData.IdPersonalContactEnhancer,
-          NamePersonalContactEnhancer: PersonalContactData.NamePersonalContactEnhancer,
-          NamePersonalContactReceiver: PersonalContactData.NamePersonalContactReceiver,
-          IdPersonalContactReceiver: PersonalContactData.IdPersonalContactReceiver,
-          Contact_Id: PersonalContactData.Contact_Id,
-          ItsFriend: PersonalContactData.ItsFriend
+        IdPersonalContactEnhancer: PersonalContactData.IdPersonalContactEnhancer,
+        NamePersonalContactEnhancer: PersonalContactData.NamePersonalContactEnhancer,
+        NamePersonalContactReceiver: PersonalContactData.NamePersonalContactReceiver,
+        IdPersonalContactReceiver: PersonalContactData.IdPersonalContactReceiver,
+        Contact_Id: PersonalContactData.Contact_Id,
+        ItsFriend: PersonalContactData.ItsFriend
       }))
-      console.log("Data kontak : " + JSON.stringify(FilteredPersonalContact))
       // const MyPersonalContact = PersonalContact as unknown as Array<PersonalContactInterace>
       // if(IsPersonalContactArray(MyPersonalContact)) 
       // { 
@@ -110,7 +92,7 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
        CheckIdPersonalContactEnhancer[0].ItsFriend === true) 
     {
       console.log("Kontak Id yang ditambahkan : " + JSON.stringify(FilteredPersonalContact[0].IdPersonalContactReceiver))
-      console.log("Nama kontak yang ditambahkan : " + JSON.stringify(FilteredPersonalContact[0].IdPersonalContactReceiver))
+      console.log("Nama kontak yang ditambahkan : " + JSON.stringify(FilteredPersonalContact[0].NamePersonalContactReceiver))
     }
     if(CheckIdPersonalContactEnhancer[0].IdPersonalContactReceiver !== null && CheckIdPersonalContactEnhancer[0].IdPersonalContactReceiver === session?.user.id) 
     {
