@@ -21,12 +21,13 @@ interface PersonalContactState
 
 interface SelectedPersonalContact 
 {
-  IdPersonalContactEnhancer: string,
   NamePersonalContactEnhancer?: string,
   NamePersonalContactReceiver?: string,
+  IdPersonalContactEnhancer: string,
   IdPersonalContactReceiver: string,
+  // SelectedContactId: string,
   Contact_Id: string,
-  ItsFriend: boolean
+  // ItsFriend: boolean
 }
 
 interface FilteredPersonalContact
@@ -47,7 +48,6 @@ interface ListPersonalContacts
 export default function Home() 
 { 
   const [Contacs, setContacts] = useState<boolean>(false)
-  const [Personalcontacts, setPersonalContact] = useState<ListPersonalContacts[]>([])
   const [PersonalcontactsEnhancer, setPersonalContactEnhancer] = useState<{ 
     NamePersonalContactReceiver: string,
     IdPersonalContactReceiver: string,
@@ -63,7 +63,14 @@ export default function Home()
     Contact_Id: string
     // ItsFriend: boolean
   }[]>([])
-  const [selectedContact, setSelectedContact] = useState<SelectedPersonalContact | null>(null)
+  const [selectedContact, setSelectedContact] = useState<{ 
+    NamePersonalContactReceiver: string,
+    IdPersonalContactReceiver: string,
+    IdPersonalContactEnhancer: string,
+    NamePersonalContactEnhancer: string,
+    Contact_Id: string
+    // ItsFriend: boolean
+  } | null>(null)
   const {data: session, update} = useSession()
   useEffect(() => 
   {
@@ -90,7 +97,6 @@ export default function Home()
                  PersonalContactData.ItsFriend === true && 
                  PersonalContactData.IdPersonalContactReceiver !== session.user.id) 
               {
-                // console.log("Kontak yang ditambah : " + PersonalContactData.NamePersonalContactReceiver)
                 return {
                   NamePersonalContactReceiver: PersonalContactData.NamePersonalContactReceiver,
                   IdPersonalContactReceiver: PersonalContactData.IdPersonalContactReceiver,
@@ -105,7 +111,6 @@ export default function Home()
                  PersonalContactData.ItsFriend === true && 
                  PersonalContactData.IdPersonalContactReceiver === session.user.id) 
               { 
-                // console.log("Penambah Kontak : " + PersonalContactData.NamePersonalContactEnhancer)
                 return {
                   NamePersonalContactReceiver: PersonalContactData.NamePersonalContactReceiver,
                   IdPersonalContactReceiver: PersonalContactData.IdPersonalContactReceiver,
@@ -138,18 +143,23 @@ export default function Home()
   }, [session?.user.id])
 
   function ShowPersonalContact(
-    SelectedContactId: string, 
-    SelectedSavedContactName: string, 
-    SelectedPersonalContactOwnerId: string
+    SelectedReceiverContactName: string, 
+    SelectedReceiverContactId: string, 
+    SelectedEnhancerContactName: string, 
+    SelectedEnhancerContactId: string, 
+    SelectedContactId: string
   ) 
   {
     setSelectedContact(
     {
-      ContactId: SelectedContactId, 
-      SavedContactName: SelectedSavedContactName,
-      Contact_Id: SelectedPersonalContactOwnerId
+      NamePersonalContactReceiver: SelectedReceiverContactName,
+      IdPersonalContactReceiver: SelectedReceiverContactId,
+      NamePersonalContactEnhancer: SelectedEnhancerContactName,
+      IdPersonalContactEnhancer: SelectedEnhancerContactId,
+      Contact_Id: SelectedContactId, 
+      // SelectedContactId: SelectedContactId, 
     })
-    setContacts(!Contacs)
+    setContacts(true)
   }
 
   return (
@@ -162,30 +172,36 @@ export default function Home()
                 <div className="flex flex-col my-5 gap-6">
                   <ul className="flex flex-col gap-6">
                     {PersonalcontactsReciever.map((PersonalContactInfo) => (
-                      <li key={PersonalContactInfo.IdPersonalContactReceiver} className="text-white cursor-pointer">
+                      <li key={PersonalContactInfo.Contact_Id} className="text-white cursor-pointer">
                         {
                          PersonalContactInfo.IdPersonalContactEnhancer === session?.user.id && 
                          PersonalContactInfo.IdPersonalContactReceiver !== session.user.id ? (
                           <p onClick={() => 
                           {
                             ShowPersonalContact(
-                              PersonalContactInfo.IdPersonalContactEnhancer, 
+                              PersonalContactInfo.NamePersonalContactReceiver,
+                              PersonalContactInfo.IdPersonalContactReceiver, 
                               PersonalContactInfo.NamePersonalContactEnhancer,
-
+                              PersonalContactInfo.IdPersonalContactEnhancer,
+                              PersonalContactInfo.Contact_Id,
                             )
                           }
-                          }>{PersonalContactInfo.NamePersonalContactReceiver}</p>
+                          }>
+                            {PersonalContactInfo.NamePersonalContactReceiver}
+                          </p>
                         ) : (
-                          //  <p onClick={() => 
-                          // {
-                          //   ShowPersonalContact(
-                          //     ContactsInfo.PersonalContactList[0].ContactId, 
-                          //     ContactsInfo.PersonalContactList[0].SavedContactName!, 
-                          //     ContactsInfo.PersonalContactList[0].Contact_Id
-                          //    )}
-                          //   } className="underline underline-offset-4">
-                          //   {ContactsInfo.PersonalContactList[0].ContactId}
-                          // </p>
+                           <p onClick={() => 
+                          {
+                            ShowPersonalContact(
+                              PersonalContactInfo.NamePersonalContactEnhancer,
+                              PersonalContactInfo.IdPersonalContactEnhancer,
+                              PersonalContactInfo.NamePersonalContactReceiver,
+                              PersonalContactInfo.IdPersonalContactReceiver,
+                              PersonalContactInfo.Contact_Id,
+                             )}
+                            }>
+                              {PersonalContactInfo.NamePersonalContactEnhancer}
+                          </p>
                         )}
                       </li>
                     ))}
@@ -193,26 +209,38 @@ export default function Home()
                 </div>
             </div>
         </div>
-{/*         
-        {Contacs === true ? (
+        {
+          Contacs === true ? (
           <div className="mx-72 flex flex-row">
-            <DisplayPersonalContactComponent params=
-            {{
-              ContactId: selectedContact?.ContactId!,
-              SavedContactName: selectedContact?.SavedContactName!, 
-              PersonalcontactOwnerId: selectedContact?.Contact_Id!
-            }}/>
+            {
+              selectedContact?.IdPersonalContactEnhancer === session?.user.id && 
+              selectedContact?.IdPersonalContactReceiver !== session?.user.id ? (
+                <DisplayPersonalContactComponent params=
+                {{
+                  ContactId: selectedContact?.IdPersonalContactReceiver!,
+                  NamePersonalContact: selectedContact?.NamePersonalContactReceiver!, 
+                  PersonalcontactOwnerId: selectedContact?.Contact_Id!
+                }}/>
+              ) : (
+                <DisplayPersonalContactComponent params=
+                {{
+                  ContactId: selectedContact?.IdPersonalContactEnhancer!,
+                  NamePersonalContact: selectedContact?.IdPersonalContactEnhancer!, 
+                  PersonalcontactOwnerId: selectedContact?.Contact_Id!
+                }}/>
+              )
+             }
           </div>
         ) : (
           <div className="mx-72 hidden flex-row">
             <DisplayPersonalContactComponent params=
             {{
-              ContactId: selectedContact?.ContactId!,
-              SavedContactName: selectedContact?.SavedContactName!, 
+              ContactId: selectedContact?.Contact_Id!,
+              NamePersonalContact: selectedContact?.NamePersonalContactEnhancer!, 
               PersonalcontactOwnerId: selectedContact?.Contact_Id!
             }}/>
           </div>
-        )} */}
+        )}
       </div>
     )
 }

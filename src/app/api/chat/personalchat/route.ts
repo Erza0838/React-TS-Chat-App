@@ -32,8 +32,8 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         { 
             My_Messages: PersonalMessageInformation,
             Messages_To_All: PersonalMessageInformation,
-            Contact_Owner_Id: session?.user.id as string,
-            FriendContactId: MessageRecipientId as string,
+            Personal_Contact_Enhancer_Id: session?.user.id as string,
+            Personal_Contact_Receiver_Id: MessageRecipientId as string,
             Create_Personal_Message: new Date(), 
         }        
     })

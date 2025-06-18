@@ -67,10 +67,10 @@ model Personal_Chat_Model {
   My_Messages             Json?   @db.Json
   Messages_To_All         Json?   @db.Json
   Create_Personal_Message DateTime? @default(now())
-  Contact_Owner_Id        String
-  FriendContactId         String
+  Personal_Contact_Enhancer_Id        String
+  Personal_Contact_Receiver_Id         String
   // Personal_Chat_Recipient_Id String
-  Personal_Contact_Owner_Id UserModel @relation("Reference_Contact_Owner_Id", fields: [Contact_Owner_Id], references: [id])
+  Personal_Contact_Owner_Id UserModel @relation("Reference_Contact_Owner_Id", fields: [Personal_Contact_Enhancer_Id], references: [id])
 
   @@map("personal_Chat")
 }
