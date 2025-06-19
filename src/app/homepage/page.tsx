@@ -157,7 +157,6 @@ export default function Home()
       NamePersonalContactEnhancer: SelectedEnhancerContactName,
       IdPersonalContactEnhancer: SelectedEnhancerContactId,
       Contact_Id: SelectedContactId, 
-      // SelectedContactId: SelectedContactId, 
     })
     setContacts(true)
   }
@@ -217,7 +216,7 @@ export default function Home()
               selectedContact?.IdPersonalContactReceiver !== session?.user.id ? (
                 <DisplayPersonalContactComponent params=
                 {{
-                  ContactId: selectedContact?.Contact_Id!,
+                  Contact_Id: selectedContact?.Contact_Id!,
                   NamePersonalContact: selectedContact?.NamePersonalContactReceiver!, 
                   FriendsContactId: selectedContact?.NamePersonalContactEnhancer!,
                   PersonalMessageReceiverId: selectedContact?.IdPersonalContactReceiver!
@@ -225,7 +224,7 @@ export default function Home()
               ) : (
                 <DisplayPersonalContactComponent params=
                 {{
-                  ContactId: selectedContact?.Contact_Id!,
+                  Contact_Id: selectedContact?.Contact_Id!,
                   NamePersonalContact: selectedContact?.NamePersonalContactEnhancer!, 
                   FriendsContactId: selectedContact?.NamePersonalContactReceiver!,
                   PersonalMessageReceiverId: selectedContact?.IdPersonalContactEnhancer!
@@ -237,7 +236,7 @@ export default function Home()
           <div className="mx-72 hidden flex-row">
             <DisplayPersonalContactComponent params=
             {{
-              ContactId: selectedContact?.Contact_Id!,
+              Contact_Id: selectedContact?.Contact_Id!,
               NamePersonalContact: selectedContact?.NamePersonalContactEnhancer!, 
               FriendsContactId: selectedContact?.Contact_Id!,
               PersonalMessageReceiverId: selectedContact?.IdPersonalContactReceiver!

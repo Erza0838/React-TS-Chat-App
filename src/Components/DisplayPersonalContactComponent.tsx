@@ -10,7 +10,7 @@ interface PageProps
 {
   params: 
   {
-    ContactId: string 
+    Contact_Id: string 
     NamePersonalContact: string 
     FriendsContactId: string
     PersonalMessageReceiverId: string
@@ -28,7 +28,7 @@ const DisplayPersonalContactComponent: React.FC<PageProps> = ({ params }: PagePr
     <>
         <PersonalChatPageComponent params=
         {{
-            ContactId: params.ContactId, 
+            Contact_Id: params.Contact_Id, 
             NamePersonalContact: params.NamePersonalContact,
             PersonalMessageSenderId: session.data?.user.id!,
             FriendsContactId: params.FriendsContactId!,

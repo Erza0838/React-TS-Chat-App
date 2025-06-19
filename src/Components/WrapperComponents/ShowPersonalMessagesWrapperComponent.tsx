@@ -16,7 +16,7 @@ interface PageProps
 {
     params:
     { 
-      ContactId: string
+      Contact_Id: string
       NamePersonalContact: string
       FriendsContactId: string
       PersonalMessageSenderId: string

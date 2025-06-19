@@ -10,11 +10,12 @@ interface PageProps
 {
   params: 
   {
-    ContactId: string
+    Contact_Id: string
     NamePersonalContact: string
     FriendsContactId: string
     PersonalMessageSenderId: string
     PersonalMessageReceiverId: string
+    
     // PersonalMessageRecipientId: string
     // PersonalChatOwnerId: string
     // SavedContactName: string
@@ -52,6 +53,7 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
             NamePersonalContact: params.NamePersonalContact,
             PersonalMessageText: Personalmessage, 
             PersonalMessageReceiverId: params.PersonalMessageReceiverId,
+            FriendsContactId: params.Contact_Id
             
             // SenderMessageId: session.data?.user.id,
             // PersonalMessageReceiverId: params.ContactId,
@@ -89,7 +91,7 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
               params.PersonalMessageSenderId && params.PersonalMessageSenderId == session.data?.user.id ? (
                 <ShowPersonalMessagesWrapperComponent params=
                 {{
-                  ContactId: params.ContactId,
+                  Contact_Id: params.Contact_Id,
                   NamePersonalContact: params.NamePersonalContact,
                   FriendsContactId: params.FriendsContactId,
                   PersonalMessageSenderId: params.PersonalMessageSenderId,

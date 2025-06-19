@@ -58,6 +58,8 @@ model User_Contacts {
   IdPersonalContactReceiver String
   ItsFriend Boolean @default(false)
   UserContactId  UserModel @relation(fields: [IdPersonalContactEnhancer], references: [id])
+
+  Personal_Contact_Friends_Id_References Personal_Chat_Model[] @relation("Reference_Friends_Contact_Id_Marked")
   @@map("contact_List")
 }
 
@@ -69,7 +71,8 @@ model Personal_Chat_Model {
   Create_Personal_Message DateTime? @default(now())
   Personal_Contact_Enhancer_Id        String
   Personal_Contact_Receiver_Id         String
-  // Personal_Chat_Recipient_Id String
+  Friends_Contact_Id String
+  Friends_Contact_Id_Marked User_Contacts @relation("Reference_Friends_Contact_Id_Marked", fields: [Friends_Contact_Id], references: [Contact_Id])
   Personal_Contact_Owner_Id UserModel @relation("Reference_Contact_Owner_Id", fields: [Personal_Contact_Enhancer_Id], references: [id])
 
   @@map("personal_Chat")

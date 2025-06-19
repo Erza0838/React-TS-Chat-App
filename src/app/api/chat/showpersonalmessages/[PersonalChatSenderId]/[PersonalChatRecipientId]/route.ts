@@ -7,10 +7,10 @@ type Params = Promise<{ slug: string }>
 
 interface PersonalMessageInterface 
 {
-    SenderPersonalMessageId: string
-    PersonalMessageRecipientId: string
-    PersonalMessage: string
-    PersonalMessageId: string
+    PersonalMessageSenderId : string,
+    NamePersonalContact : string,
+    PersonalMessageText : string,
+    PersonalMessageReceiverId : string
 }
 
 function IsPersonalMessageArray(value: unknown): value is Array<PersonalMessageInterface>
@@ -19,7 +19,7 @@ function IsPersonalMessageArray(value: unknown): value is Array<PersonalMessageI
 }
 
 export const GET = async (request: Request, 
-{ params }: { params: { PersonalChatSenderId: string,PersonalChatRecipientId: string } }) => 
+{ params }: { params: { IdPersonalContactEnhancer: string,IdPersonalContactReceiver: string } }) => 
 {   
     const session = await getServerSession(authOptions)
     const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany()

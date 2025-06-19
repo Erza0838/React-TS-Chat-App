@@ -9,7 +9,8 @@ interface PersonalMessageInterface
     PersonalMessageSenderId : string,
     NamePersonalContact : string,
     PersonalMessageText : string,
-    PersonalMessageReceiverId : string
+    PersonalMessageReceiverId : string,
+    FriendsContactId: string
 }
 
 export const POST = async (request: NextRequest, response: NextResponse) => 
@@ -20,7 +21,8 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         PersonalMessageSenderId,
         NamePersonalContact,
         PersonalMessageText,
-        PersonalMessageReceiverId
+        PersonalMessageReceiverId,
+        FriendsContactId
     } : PersonalMessageInterface = await request.json()
     
     const PersonalMessageInformation = 
@@ -29,11 +31,10 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
             PersonalMessageSenderId: PersonalMessageSenderId,
             NamePersonalContact: NamePersonalContact,
             PersonalMessageText: PersonalMessageText,
-            PersonalMessageReceiverId: PersonalMessageReceiverId
+            PersonalMessageReceiverId: PersonalMessageReceiverId,
+            FriendsContactId: FriendsContactId
         }
     ] as Prisma.JsonArray   
-
-    console.log("Pesan pribadi : " + JSON.stringify(PersonalMessageInformation)) 
 
     const InsertPersonalMessage = await prisma.personal_Chat_Model.create(
     {
@@ -43,7 +44,8 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
             Messages_To_All: PersonalMessageInformation,
             Personal_Contact_Enhancer_Id: PersonalMessageSenderId,
             Personal_Contact_Receiver_Id: PersonalMessageReceiverId,
-            Create_Personal_Message: new Date(), 
+            Friends_Contact_Id: FriendsContactId,
+            Create_Personal_Message: new Date(),
         }        
     })
     if(InsertPersonalMessage) 
