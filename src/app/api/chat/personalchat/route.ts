@@ -4,27 +4,36 @@ import { Prisma } from "@prisma/client"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 
+interface PersonalMessageInterface 
+{
+    PersonalMessageSenderId : string,
+    NamePersonalContact : string,
+    PersonalMessageText : string,
+    PersonalMessageReceiverId : string
+}
+
 export const POST = async (request: NextRequest, response: NextResponse) => 
 {   
     const session = await getServerSession(authOptions)
     const 
     {
-        SenderMessageId,
-        SenderMessageContactName,
+        PersonalMessageSenderId,
+        NamePersonalContact,
         PersonalMessageText,
-        MessageRecipientId,
-        PersonalContactOwnerId
-    } = await request.json() 
+        PersonalMessageReceiverId
+    } : PersonalMessageInterface = await request.json()
     
     const PersonalMessageInformation = 
     [
         {
-            SenderPersonalMessageId: session?.user.id as string,
-            PersonalMessageRecipientId: MessageRecipientId,
-            SenderPersonalMessageName: session?.user.name as string,
-            PersonalMessage: PersonalMessageText
+            PersonalMessageSenderId: PersonalMessageSenderId,
+            NamePersonalContact: NamePersonalContact,
+            PersonalMessageText: PersonalMessageText,
+            PersonalMessageReceiverId: PersonalMessageReceiverId
         }
     ] as Prisma.JsonArray   
+
+    console.log("Pesan pribadi : " + JSON.stringify(PersonalMessageInformation)) 
 
     const InsertPersonalMessage = await prisma.personal_Chat_Model.create(
     {
@@ -32,8 +41,8 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         { 
             My_Messages: PersonalMessageInformation,
             Messages_To_All: PersonalMessageInformation,
-            Personal_Contact_Enhancer_Id: session?.user.id as string,
-            Personal_Contact_Receiver_Id: MessageRecipientId as string,
+            Personal_Contact_Enhancer_Id: PersonalMessageSenderId,
+            Personal_Contact_Receiver_Id: PersonalMessageReceiverId,
             Create_Personal_Message: new Date(), 
         }        
     })

@@ -11,10 +11,13 @@ interface PageProps
   params: 
   {
     ContactId: string 
+    NamePersonalContact: string 
+    FriendsContactId: string
+    PersonalMessageReceiverId: string
+    
     // SavedContactName: string | null
     // PersonalMessageId: string
-    NamePersonalContact: string 
-    PersonalcontactOwnerId: string
+    // PersonalcontactOwnerId: string
   }
 }
 
@@ -27,9 +30,12 @@ const DisplayPersonalContactComponent: React.FC<PageProps> = ({ params }: PagePr
         {{
             ContactId: params.ContactId, 
             NamePersonalContact: params.NamePersonalContact,
-            PersonalMessageRecipientId: params.ContactId,
             PersonalMessageSenderId: session.data?.user.id!,
-            PersonalChatOwnerId: params.PersonalcontactOwnerId!,
+            FriendsContactId: params.FriendsContactId!,
+            PersonalMessageReceiverId: params.PersonalMessageReceiverId!
+
+            // PersonalChatOwnerId: params.PersonalcontactOwnerId!,
+            // PersonalMessageRecipientId: params.ContactId,
             // PersonalContactOwnerId: params.PersonalcontactOwnerId!,
             // PersonalMessageId: params.PersonalMessageId
         }}/>

@@ -15,11 +15,17 @@ interface PersonalMessageProperties
 interface PageProps 
 {
     params:
-    {
-        PersonalMessageRecipientId: string
-        PersonalMessageSenderId: string
-        ContactId: string
-        PersonalChatOwnerId: string
+    { 
+      ContactId: string
+      NamePersonalContact: string
+      FriendsContactId: string
+      PersonalMessageSenderId: string
+      PersonalMessageReceiverId: string
+
+      // PersonalMessageRecipientId: string
+      // PersonalMessageSenderId: string
+      // ContactId: string
+      // PersonalChatOwnerId: string
     }
 }
 
@@ -36,7 +42,7 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
     {
       try 
       {
-        const FetchPersonalMessageResponse = await fetch(`/api/chat/showpersonalmessages/${session.data?.user.id}/${params.ContactId}`,)
+        const FetchPersonalMessageResponse = await fetch(`/api/chat/showpersonalmessages/${session.data?.user.id}/${params.FriendsContactId}`,)
         const FetchPersonalMessageData: PersonalMessageProperties = await FetchPersonalMessageResponse.json()
         if(!FetchPersonalMessageResponse.ok || FetchPersonalMessageResponse.status !== 200) 
         {
@@ -51,7 +57,7 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
       }
     }
     FetchPersonalMessages()
-  }, [params.ContactId, session.data?.user.id])
+  }, [params.FriendsContactId, session.data?.user.id])
   
 
   return (

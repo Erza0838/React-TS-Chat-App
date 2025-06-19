@@ -19,7 +19,7 @@ function IsPersonalMessageArray(value: unknown): value is Array<PersonalMessageI
 }
 
 export const GET = async (request: Request, 
-    { params }: { params: { PersonalChatSenderId: string,PersonalChatRecipientId: string } }) => 
+{ params }: { params: { PersonalChatSenderId: string,PersonalChatRecipientId: string } }) => 
 {   
     const session = await getServerSession(authOptions)
     const GetSenderPersonalMessage = await prisma.personal_Chat_Model.findMany()

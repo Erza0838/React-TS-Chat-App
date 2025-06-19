@@ -11,20 +11,15 @@ interface PageProps
   params: 
   {
     ContactId: string
-    // SavedContactName: string
     NamePersonalContact: string
-    PersonalChatOwnerId: string
-    PersonalMessageRecipientId: string
+    FriendsContactId: string
     PersonalMessageSenderId: string
+    PersonalMessageReceiverId: string
+    // PersonalMessageRecipientId: string
+    // PersonalChatOwnerId: string
+    // SavedContactName: string
   }
 }
-
-// interface SenderPersonalMessage 
-// {
-//   SenderPersonalMessageId: string
-//   PersonalMessageText: string
-//   SenderPersonalMessageName: string
-// }
 
 const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
 { 
@@ -53,11 +48,16 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            SenderMessageId: session.data?.user.id,
-            PersonalMessageReceiverId: params.ContactId,
-            SenderMessageContactName: params.NamePersonalContact,
+            PersonalMessageSenderId: params.FriendsContactId,
+            NamePersonalContact: params.NamePersonalContact,
             PersonalMessageText: Personalmessage, 
-            PersonalContactOwnerId: params.PersonalChatOwnerId
+            PersonalMessageReceiverId: params.PersonalMessageReceiverId,
+            
+            // SenderMessageId: session.data?.user.id,
+            // PersonalMessageReceiverId: params.ContactId,
+            // SenderMessageContactName: params.NamePersonalContact,
+            // PersonalMessageText: Personalmessage, 
+            // PersonalContactOwnerId: params.PersonalChatOwnerId
           })
         })
         if(!PersonalMessageData.ok || PersonalMessageData.status !== 200) 
@@ -89,10 +89,16 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
               params.PersonalMessageSenderId && params.PersonalMessageSenderId == session.data?.user.id ? (
                 <ShowPersonalMessagesWrapperComponent params=
                 {{
-                  PersonalMessageRecipientId: params.PersonalMessageRecipientId, 
-                  PersonalMessageSenderId: params.PersonalMessageSenderId, 
                   ContactId: params.ContactId,
-                  PersonalChatOwnerId: params.PersonalChatOwnerId!
+                  NamePersonalContact: params.NamePersonalContact,
+                  FriendsContactId: params.FriendsContactId,
+                  PersonalMessageSenderId: params.PersonalMessageSenderId,
+                  PersonalMessageReceiverId: params.PersonalMessageReceiverId
+
+                  // PersonalMessageRecipientId: params.PersonalMessageRecipientId, 
+                  // PersonalMessageSenderId: params.PersonalMessageSenderId, 
+                  // ContactId: params.ContactId,
+                  // PersonalChatOwnerId: params.PersonalChatOwnerId!
                 }}/>
               ) : ( <></> )
             }

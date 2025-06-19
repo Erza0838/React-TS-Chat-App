@@ -217,16 +217,18 @@ export default function Home()
               selectedContact?.IdPersonalContactReceiver !== session?.user.id ? (
                 <DisplayPersonalContactComponent params=
                 {{
-                  ContactId: selectedContact?.IdPersonalContactReceiver!,
+                  ContactId: selectedContact?.Contact_Id!,
                   NamePersonalContact: selectedContact?.NamePersonalContactReceiver!, 
-                  PersonalcontactOwnerId: selectedContact?.Contact_Id!
+                  FriendsContactId: selectedContact?.NamePersonalContactEnhancer!,
+                  PersonalMessageReceiverId: selectedContact?.IdPersonalContactReceiver!
                 }}/>
               ) : (
                 <DisplayPersonalContactComponent params=
                 {{
-                  ContactId: selectedContact?.IdPersonalContactEnhancer!,
-                  NamePersonalContact: selectedContact?.IdPersonalContactEnhancer!, 
-                  PersonalcontactOwnerId: selectedContact?.Contact_Id!
+                  ContactId: selectedContact?.Contact_Id!,
+                  NamePersonalContact: selectedContact?.NamePersonalContactEnhancer!, 
+                  FriendsContactId: selectedContact?.NamePersonalContactReceiver!,
+                  PersonalMessageReceiverId: selectedContact?.IdPersonalContactEnhancer!
                 }}/>
               )
              }
@@ -237,7 +239,8 @@ export default function Home()
             {{
               ContactId: selectedContact?.Contact_Id!,
               NamePersonalContact: selectedContact?.NamePersonalContactEnhancer!, 
-              PersonalcontactOwnerId: selectedContact?.Contact_Id!
+              FriendsContactId: selectedContact?.Contact_Id!,
+              PersonalMessageReceiverId: selectedContact?.IdPersonalContactReceiver!
             }}/>
           </div>
         )}
