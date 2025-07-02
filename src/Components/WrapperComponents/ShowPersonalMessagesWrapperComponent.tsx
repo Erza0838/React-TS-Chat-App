@@ -21,11 +21,6 @@ interface PageProps
       FriendsContactId: string
       PersonalMessageSenderId: string
       PersonalMessageReceiverId: string
-
-      // PersonalMessageRecipientId: string
-      // PersonalMessageSenderId: string
-      // ContactId: string
-      // PersonalChatOwnerId: string
     }
 }
 
@@ -42,8 +37,10 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
     {
       try 
       {
-        const FetchPersonalMessageResponse = await fetch(`/api/chat/showpersonalmessages/${session.data?.user.id}/${params.FriendsContactId}`,)
-        const FetchPersonalMessageData: PersonalMessageProperties = await FetchPersonalMessageResponse.json()
+        const FetchPersonalMessageResponse = await fetch(`/api/chat/showpersonalmessages/${params.Contact_Id}`)
+        // const FetchPersonalMessageData: PersonalMessageProperties = await FetchPersonalMessageResponse.json()
+        const FetchPersonalMessageData = await FetchPersonalMessageResponse.json() as PersonalMessageProperties
+        console.log("Pesan pribadi : " + JSON.stringify(FetchPersonalMessageResponse))
         if(!FetchPersonalMessageResponse.ok || FetchPersonalMessageResponse.status !== 200) 
         {
           throw new Error("Gagal mengambil pesan pribadi")
@@ -57,16 +54,15 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
       }
     }
     FetchPersonalMessages()
-  }, [params.FriendsContactId, session.data?.user.id])
+  }, [params.Contact_Id])
   
-
   return (
     <>
-     {/* {params.PersonalMessageSenderId === session.data?.user.id && PersonalMessagesText.length > 0 ? (  */}
-     {PersonalMessagesText.length > 0 ? ( 
-        <p className="text-white bg-cyan-700 rounded-md w-64 h-7 text-center">
-          {PersonalMessagesText}
-        </p>) : (<p></p>)} 
+      <p className="text-white bg-cyan-700 rounded-md w-64 h-7 text-center">
+        {PersonalMessagesText}
+      </p>
+     {/* {PersonalMessagesText.length > 0 ? ( 
+      ) : (<p></p>)}  */}
     </>
   )
 }

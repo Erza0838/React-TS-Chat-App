@@ -3,15 +3,8 @@ import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 
-interface ContactInformationProperties 
-{
-  ContactId: string
-  SavedContactName?: string
-}
-
 interface PersonalContactInterace 
 {
-
   Contact_Id: string
   NamePersonalContactEnhancer: string
   IdPersonalContactEnhancer: string
@@ -72,33 +65,6 @@ export const GET = async (request: NextRequest, response: NextResponse) =>
         Contact_Id: PersonalContactData.Contact_Id,
         ItsFriend: PersonalContactData.ItsFriend
       }))
-      // const MyPersonalContact = PersonalContact as unknown as Array<PersonalContactInterace>
-      // if(IsPersonalContactArray(MyPersonalContact)) 
-      // { 
-      //   return MyPersonalContact.map(PersonalContactData => 
-      //   ({
-      //     IdPersonalContactEnhancer: PersonalContactData.IdPersonalContactEnhancer,
-      //     NamePersonalContactEnhancer: PersonalContactData.NamePersonalContactEnhancer,
-      //     NamePersonalContactReceiver: PersonalContactData.NamePersonalContactReceiver,
-      //     IdPersonalContactReceiver: PersonalContactData.IdPersonalContactReceiver,
-      //     Contact_Id: PersonalContactData.Contact_Id,
-      //     ItsFriend: PersonalContactData.ItsFriend
-      //   }))
-      // }
-      // return []
-
-    if(CheckIdPersonalContactEnhancer[0].IdPersonalContactEnhancer !== null && 
-       CheckIdPersonalContactEnhancer[0].IdPersonalContactEnhancer === session?.user.id && 
-       CheckIdPersonalContactEnhancer[0].ItsFriend === true) 
-    {
-      console.log("Kontak Id yang ditambahkan : " + JSON.stringify(FilteredPersonalContact[0].IdPersonalContactReceiver))
-      console.log("Nama kontak yang ditambahkan : " + JSON.stringify(FilteredPersonalContact[0].NamePersonalContactReceiver))
-    }
-    if(CheckIdPersonalContactEnhancer[0].IdPersonalContactReceiver !== null && CheckIdPersonalContactEnhancer[0].IdPersonalContactReceiver === session?.user.id) 
-    {
-      console.log("ID penambah kontak : " + JSON.stringify(CheckIdPersonalContactEnhancer[0].IdPersonalContactEnhancer))
-      console.log("Nama penambah kontak : " + JSON.stringify(CheckIdPersonalContactEnhancer[0].NamePersonalContactEnhancer))
-    }
 
     if(FindContactOwner !== null) 
     {

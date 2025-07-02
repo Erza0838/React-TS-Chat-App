@@ -48,13 +48,6 @@ interface ListPersonalContacts
 export default function Home() 
 { 
   const [Contacs, setContacts] = useState<boolean>(false)
-  const [PersonalcontactsEnhancer, setPersonalContactEnhancer] = useState<{ 
-    NamePersonalContactReceiver: string,
-    IdPersonalContactReceiver: string,
-    IdPersonalContactEnhancer: string,
-    NamePersonalContactEnhancer: string,
-    // ItsFriend: boolean
-  }[]>([])
   const [PersonalcontactsReciever, setPersonalContactReciever] = useState<{ 
     NamePersonalContactReceiver: string,
     IdPersonalContactReceiver: string,

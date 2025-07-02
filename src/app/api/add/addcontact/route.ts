@@ -3,7 +3,6 @@ import { prisma } from "@/app/Database"
 import { Prisma } from "@prisma/client"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import { randomUUID, UUID } from "crypto"
 
 export const POST = async (request: NextRequest, response: NextResponse) => 
 {   
@@ -35,27 +34,8 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
     
     if(!FindContactId) 
     { 
-      console.log(`Kontak id : ${UserContactId} tidak ada`)
       return NextResponse.json({error: `Kontak id : ${UserContactId} tidak ada`}, {status: 400})
     }
-
-    // const CheckContactExist = await prisma.user_Contacts.findMany(
-    // {
-    //   where:
-    //   {
-    //     ContactInformation: 
-    //     {
-    //       path: "$.ContactId",
-    //       equals: UserContactId as string
-    //     },
-    //     IdPersonalContactEnhancer: session?.user.id! 
-    //   }
-    // })
-
-    // if(CheckContactExist.length > 0) 
-    // { 
-    //   return NextResponse.json({error: `Kontak : ${UserContactId} sudah ada`}, {status: 400})
-    // }
 
     if(FindContactId && FindUser) 
     {   
