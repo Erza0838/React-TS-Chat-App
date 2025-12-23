@@ -3,6 +3,8 @@ import { prisma } from "@/app/Database"
 import { Prisma } from "@prisma/client"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+import { pusherServer } from "@/lib/pusher"
+import { toPusherKey } from "@/lib/utils"
 
 interface PersonalMessageInterface 
 {
@@ -25,6 +27,18 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         FriendsContactId
     } : PersonalMessageInterface = await request.json()
     
+    
+    pusherServer.trigger(
+        toPusherKey(`Id-pesan-pribadi-${FriendsContactId}`), 
+        "Mengirim pesan pribadi", 
+    {
+        PersonalMessageSenderId,
+        NamePersonalContact,
+        PersonalMessageText,
+        PersonalMessageReceiverId,
+        FriendsContactId
+    })
+
     const PersonalMessageInformation = 
     [
         {
@@ -48,6 +62,7 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
             Create_Personal_Message: new Date(),
         }        
     })
+    
     if(InsertPersonalMessage) 
     {
         console.log("Pesan berhasil dikirim")

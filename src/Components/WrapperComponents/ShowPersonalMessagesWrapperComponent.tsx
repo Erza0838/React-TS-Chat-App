@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import useSWR from "swr"
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
+import { pusherClient } from '@/lib/pusher'
 
 interface PersonalMessageProperties 
 {
@@ -32,7 +33,7 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
   const session = useSession()
 
   useEffect(() => 
-  {
+  { 
     async function FetchPersonalMessages(): Promise<void> 
     {
       try 
@@ -40,7 +41,6 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
         const FetchPersonalMessageResponse = await fetch(`/api/chat/showpersonalmessages/${params.Contact_Id}`)
         // const FetchPersonalMessageData: PersonalMessageProperties = await FetchPersonalMessageResponse.json()
         const FetchPersonalMessageData = await FetchPersonalMessageResponse.json() as PersonalMessageProperties
-        console.log("Pesan pribadi : " + JSON.stringify(FetchPersonalMessageResponse))
         if(!FetchPersonalMessageResponse.ok || FetchPersonalMessageResponse.status !== 200) 
         {
           throw new Error("Gagal mengambil pesan pribadi")
@@ -56,13 +56,23 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
     FetchPersonalMessages()
   }, [params.Contact_Id])
   
+  // UseEffect untuk pusher
+  // useEffect(() => 
+  // {
+  //   pusherClient.subscribe(`personal-messages-${params.Contact_Id}`)
+  // })
+
   return (
     <>
-      <p className="text-white bg-cyan-700 rounded-md w-64 h-7 text-center">
-        {PersonalMessagesText}
-      </p>
-     {/* {PersonalMessagesText.length > 0 ? ( 
-      ) : (<p></p>)}  */}
+     {PersonalMessagesText.length > 0 ? 
+     (
+       <p className="text-white bg-cyan-700 rounded-md w-64 h-7 text-center">
+         {PersonalMessagesText}
+       </p>
+     ) : 
+     (
+      <p></p>
+     )} 
     </>
   )
 }

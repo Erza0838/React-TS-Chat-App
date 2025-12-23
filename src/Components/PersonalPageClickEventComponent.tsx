@@ -5,6 +5,7 @@ import React, { createContext, FC, useContext, useState } from "react"
 import TextareaAutoSize from "react-textarea-autosize"
 import useSWR from "swr"
 import ShowPersonalMessagesWrapperComponent from "./WrapperComponents/ShowPersonalMessagesWrapperComponent"
+import { pusherClient } from "@/lib/pusher"
 
 interface PageProps 
 {
@@ -15,10 +16,6 @@ interface PageProps
     FriendsContactId: string
     PersonalMessageSenderId: string
     PersonalMessageReceiverId: string
-    
-    // PersonalMessageRecipientId: string
-    // PersonalChatOwnerId: string
-    // SavedContactName: string
   }
 }
 
@@ -30,6 +27,21 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
   } | null>(null)
   const [Personalmessage, setPersonalMessage] = useState<string>("")
   const session = useSession()
+  useEffect(() => 
+  { 
+    const SendPersonalMessagesHandler = () => 
+    {
+      console.log("Pesan pribadi baru")
+    }
+    pusherClient.subscribe(`Id-persan-pribadi-${params.Contact_Id}`)
+    pusherClient.bind(`Mengirim pesan pribadi`, SendPersonalMessagesHandler)
+    return () => 
+    {
+      pusherClient.unsubscribe(`Id persan pribadi ${params.Contact_Id}`)
+      pusherClient.unbind(`Mengirim pesan pribadi`, SendPersonalMessagesHandler)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const HandlePersonalMessageText = (event: React.ChangeEvent<HTMLTextAreaElement>) => 
   {

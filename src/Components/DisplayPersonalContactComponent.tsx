@@ -14,10 +14,6 @@ interface PageProps
     NamePersonalContact: string 
     FriendsContactId: string
     PersonalMessageReceiverId: string
-    
-    // SavedContactName: string | null
-    // PersonalMessageId: string
-    // PersonalcontactOwnerId: string
   }
 }
 

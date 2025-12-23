@@ -72,7 +72,7 @@ export const GET = async (request: Request,{ params }: { params: { Contact_Id: s
     else if(FilteredPersonalMeessages === null) 
     {
         return NextResponse.json({error: "Pesan pribadi kosong"}, {status: 400})
-    }
 
+    }
     // return NextResponse.json({fallback: true})
 }
