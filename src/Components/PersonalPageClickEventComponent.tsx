@@ -25,20 +25,21 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
     SelectedContactId: string, 
     SelectedSavedContactName? : string
   } | null>(null)
+  // const [Personalmessage, setPersonalMessage] = useState<string[]>([])
   const [Personalmessage, setPersonalMessage] = useState<string>("")
   const session = useSession()
+
   useEffect(() => 
   { 
-    const SendPersonalMessagesHandler = () => 
-    {
-      console.log("Pesan pribadi baru")
-    }
     pusherClient.subscribe(`Id-persan-pribadi-${params.Contact_Id}`)
-    pusherClient.bind(`Mengirim pesan pribadi`, SendPersonalMessagesHandler)
-    return () => 
-    {
-      pusherClient.unsubscribe(`Id persan pribadi ${params.Contact_Id}`)
-      pusherClient.unbind(`Mengirim pesan pribadi`, SendPersonalMessagesHandler)
+    pusherClient.bind("Pesan baru", (data: any) => {
+      console.log("Berhasil :", data)
+    })
+
+    // chanel.bind(`Mengirim pesan pribadi`, SendPersonalMessagesHandler)
+    return () => {
+      pusherClient.unsubscribe(`chat chanel`)
+      pusherClient.unbind("upcoming-message")
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
