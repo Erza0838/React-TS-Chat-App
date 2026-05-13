@@ -29,6 +29,8 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
   const [PersonalMessagesFriendId, setPersonalMessagesFriendId] = useState<string>("")
   const [PersonalMessagesText, setPersonalMessagesText] = useState<string>("")
   const [PersonalMessagesId, setPersonalMessagesId] = useState<string>("")
+  const [AllPersonalMessages, setAllPersonalMessages] = useState<any[]>([])
+
   const fetcher = (url: string) => fetch(url).then((res) => res.json())
   const session = useSession()
 
@@ -39,14 +41,23 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
       try 
       {
         const FetchPersonalMessageResponse = await fetch(`/api/chat/showpersonalmessages/${params.Contact_Id}`)
-        // const FetchPersonalMessageData: PersonalMessageProperties = await FetchPersonalMessageResponse.json()
         const FetchPersonalMessageData = await FetchPersonalMessageResponse.json() as PersonalMessageProperties
         if(!FetchPersonalMessageResponse.ok || FetchPersonalMessageResponse.status !== 200) 
         {
           throw new Error("Gagal mengambil pesan pribadi")
         }
         setPersonalMessagesId(FetchPersonalMessageData.PersonalChatOwnerId)
-        setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageField)
+        // setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageField)
+        const channelName = `Personal-Messages-Id-${params.Contact_Id}`
+        const channel = pusherClient.subscribe(channelName)
+        const HanndlePersonalMessages = () => 
+        {
+          // setAllPersonalMessages((prev) => [...prev, data]) 
+          setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageField)
+          // console.log(FetchPersonalMessageData.PersonalMessageField)
+        }
+        channel.unbind("Mengirim pesan pribadi", HanndlePersonalMessages)
+        pusherClient.unsubscribe(channelName)
       } 
       catch (error) 
       {
@@ -55,12 +66,6 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
     }
     FetchPersonalMessages()
   }, [params.Contact_Id])
-  
-  // UseEffect untuk pusher
-  // useEffect(() => 
-  // {
-  //   pusherClient.subscribe(`personal-messages-${params.Contact_Id}`)
-  // })
 
   return (
     <>

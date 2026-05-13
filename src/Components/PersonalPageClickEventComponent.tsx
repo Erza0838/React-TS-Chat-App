@@ -21,28 +21,32 @@ interface PageProps
 
 const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
 { 
+  const session = useSession()
   const [selectedContact, setSelectedContact] = useState<{
     SelectedContactId: string, 
     SelectedSavedContactName? : string
   } | null>(null)
   // const [Personalmessage, setPersonalMessage] = useState<string[]>([])
   const [Personalmessage, setPersonalMessage] = useState<string>("")
-  const session = useSession()
-
+  const [AllPersonalMessages, setAllPersonalMessages] = useState<any[]>([])
+  
   useEffect(() => 
   { 
-    pusherClient.subscribe(`Id-persan-pribadi-${params.Contact_Id}`)
-    pusherClient.bind("Pesan baru", (data: any) => {
-      console.log("Berhasil :", data)
-    })
-
-    // chanel.bind(`Mengirim pesan pribadi`, SendPersonalMessagesHandler)
-    return () => {
-      pusherClient.unsubscribe(`chat chanel`)
-      pusherClient.unbind("upcoming-message")
+    const channelName = `Personal-Messages-Id-${params.Contact_Id}`
+    const channel = pusherClient.subscribe(channelName)
+    const HandleIncomingPersonaleMessages = (data: string ) => 
+    {
+      console.log("Pesan berhasil : " + data)
+      setAllPersonalMessages((prev) => [...prev, data])        
+    }
+    channel.bind("Mengirim pesan pribadi", HandleIncomingPersonaleMessages)
+    return () => 
+    {
+     channel.unbind("Mengirim pesan pribadi", HandleIncomingPersonaleMessages)
+     pusherClient.unsubscribe(channelName)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  },[params.Contact_Id])
 
   const HandlePersonalMessageText = (event: React.ChangeEvent<HTMLTextAreaElement>) => 
   {
@@ -57,6 +61,7 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
         const PersonalMessageData = await fetch("/api/chat/personalchat", 
         {
           method: "POST",
+          // chatRoom: "Chat room",
           headers: 
           {
             "Content-Type": "application/json"
@@ -66,14 +71,9 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
             NamePersonalContact: params.NamePersonalContact,
             PersonalMessageText: Personalmessage, 
             PersonalMessageReceiverId: params.PersonalMessageReceiverId,
-            FriendsContactId: params.Contact_Id
-            
-            // SenderMessageId: session.data?.user.id,
-            // PersonalMessageReceiverId: params.ContactId,
-            // SenderMessageContactName: params.NamePersonalContact,
-            // PersonalMessageText: Personalmessage, 
-            // PersonalContactOwnerId: params.PersonalChatOwnerId
-          })
+            FriendsContactId: params.Contact_Id          
+          }
+        )
         })
         if(!PersonalMessageData.ok || PersonalMessageData.status !== 200) 
         {
@@ -109,11 +109,6 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
                   FriendsContactId: params.FriendsContactId,
                   PersonalMessageSenderId: params.PersonalMessageSenderId,
                   PersonalMessageReceiverId: params.PersonalMessageReceiverId
-
-                  // PersonalMessageRecipientId: params.PersonalMessageRecipientId, 
-                  // PersonalMessageSenderId: params.PersonalMessageSenderId, 
-                  // ContactId: params.ContactId,
-                  // PersonalChatOwnerId: params.PersonalChatOwnerId!
                 }}/>
               ) : ( <></> )
             }

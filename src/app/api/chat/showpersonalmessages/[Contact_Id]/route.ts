@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/app/Database"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
+import { pusherServer } from "@/lib/pusher"
+import { toPusherKey } from "@/lib/utils"
 
 type Params = Promise<{ slug: string }>
 

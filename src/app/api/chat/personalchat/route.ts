@@ -15,7 +15,7 @@ interface PersonalMessageInterface
     FriendsContactId: string
 }
 
-export const POST = async (request: NextRequest, response: NextResponse) => 
+export const POST = async (request: NextRequest) => 
 {   
     const session = await getServerSession(authOptions)
     const 
@@ -27,11 +27,10 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
         FriendsContactId
     } : PersonalMessageInterface = await request.json()
     
-    
-    pusherServer.trigger(
+    await pusherServer.trigger(
         toPusherKey(`Id-pesan-pribadi-${FriendsContactId}`), 
         "Mengirim pesan pribadi", 
-    {
+    {   
         PersonalMessageSenderId,
         NamePersonalContact,
         PersonalMessageText,
@@ -65,7 +64,7 @@ export const POST = async (request: NextRequest, response: NextResponse) =>
     
     if(InsertPersonalMessage) 
     {
-        console.log("Pesan berhasil dikirim")
+        console.log("Pesan berhasil dikirim : " + PersonalMessageText)
         return NextResponse.json({InsertPersonalMessage},{status: 200})
     }
     if(!InsertPersonalMessage) 
