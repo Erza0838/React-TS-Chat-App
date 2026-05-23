@@ -41,23 +41,32 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
       try 
       {
         const FetchPersonalMessageResponse = await fetch(`/api/chat/showpersonalmessages/${params.Contact_Id}`)
-        const FetchPersonalMessageData = await FetchPersonalMessageResponse.json() as PersonalMessageProperties
         if(!FetchPersonalMessageResponse.ok || FetchPersonalMessageResponse.status !== 200) 
         {
-          throw new Error("Gagal mengambil pesan pribadi")
+          console.error(`API Error! status ${FetchPersonalMessageResponse.status}`)
+          const ErrorText = await FetchPersonalMessageResponse.text()
+          console.error("Error dari backend : " + ErrorText)
+          return
         }
-        setPersonalMessagesId(FetchPersonalMessageData.PersonalChatOwnerId)
-        // setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageField)
-        const channelName = `Personal-Messages-Id-${params.Contact_Id}`
-        const channel = pusherClient.subscribe(channelName)
-        const HanndlePersonalMessages = () => 
+        else 
         {
-          // setAllPersonalMessages((prev) => [...prev, data]) 
+          const FetchPersonalMessageData = await FetchPersonalMessageResponse.json() as PersonalMessageProperties
+          console.log(FetchPersonalMessageData.PersonalMessageField)
           setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageField)
-          // console.log(FetchPersonalMessageData.PersonalMessageField)
         }
-        channel.unbind("Mengirim pesan pribadi", HanndlePersonalMessages)
-        pusherClient.unsubscribe(channelName)
+
+        // // setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageField)
+
+        // const channelName = `Personal-Messages-Id-${params.Contact_Id}`
+        // const channel = pusherClient.subscribe(channelName)
+        // const HanndlePersonalMessages = () => 
+        // {
+        //   // setAllPersonalMessages((prev) => [...prev, data]) 
+        //   setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageField)
+        //   // console.log(FetchPersonalMessageData.PersonalMessageField)
+        // }
+        // channel.unbind("Mengirim pesan pribadi", HanndlePersonalMessages)
+        // pusherClient.unsubscribe(channelName)
       } 
       catch (error) 
       {
@@ -65,7 +74,8 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
       }
     }
     FetchPersonalMessages()
-  }, [params.Contact_Id])
+  }, [PersonalMessagesText, params.Contact_Id])
+  // }, [params.Contact_Id, PersonalMessagesText])
 
   return (
     <>

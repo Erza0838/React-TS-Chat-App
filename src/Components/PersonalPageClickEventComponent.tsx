@@ -30,23 +30,23 @@ const PersonalChatPageComponent: FC<PageProps> = ({ params }: PageProps) =>
   const [Personalmessage, setPersonalMessage] = useState<string>("")
   const [AllPersonalMessages, setAllPersonalMessages] = useState<any[]>([])
   
-  useEffect(() => 
-  { 
-    const channelName = `Personal-Messages-Id-${params.Contact_Id}`
-    const channel = pusherClient.subscribe(channelName)
-    const HandleIncomingPersonaleMessages = (data: string ) => 
-    {
-      console.log("Pesan berhasil : " + data)
-      setAllPersonalMessages((prev) => [...prev, data])        
-    }
-    channel.bind("Mengirim pesan pribadi", HandleIncomingPersonaleMessages)
-    return () => 
-    {
-     channel.unbind("Mengirim pesan pribadi", HandleIncomingPersonaleMessages)
-     pusherClient.unsubscribe(channelName)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[params.Contact_Id])
+  // useEffect(() => 
+  // { 
+  //   const channelName = `Personal-Messages-Id-${params.Contact_Id}`
+  //   const channel = pusherClient.subscribe(channelName)
+  //   const HandleIncomingPersonaleMessages = (data: string ) => 
+  //   {
+  //     console.log("Pesan berhasil : " + data)
+  //     setAllPersonalMessages((prev) => [...prev, data])        
+  //   }
+  //   channel.bind("Mengirim pesan pribadi", HandleIncomingPersonaleMessages)
+  //   return () => 
+  //   {
+  //    channel.unbind("Mengirim pesan pribadi", HandleIncomingPersonaleMessages)
+  //    pusherClient.unsubscribe(channelName)
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // },[])
 
   const HandlePersonalMessageText = (event: React.ChangeEvent<HTMLTextAreaElement>) => 
   {
