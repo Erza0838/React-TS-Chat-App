@@ -1,5 +1,4 @@
 "use client"
-
 import React, { useEffect } from 'react'
 import useSWR from "swr"
 import { useSession } from 'next-auth/react'
@@ -54,19 +53,6 @@ const ShowPersonalMessagesWrapperComponent = ({params} : PageProps) => {
           console.log(FetchPersonalMessageData.PersonalMessageField)
           setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageField)
         }
-
-        // // setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageField)
-
-        // const channelName = `Personal-Messages-Id-${params.Contact_Id}`
-        // const channel = pusherClient.subscribe(channelName)
-        // const HanndlePersonalMessages = () => 
-        // {
-        //   // setAllPersonalMessages((prev) => [...prev, data]) 
-        //   setPersonalMessagesText(FetchPersonalMessageData.PersonalMessageField)
-        //   // console.log(FetchPersonalMessageData.PersonalMessageField)
-        // }
-        // channel.unbind("Mengirim pesan pribadi", HanndlePersonalMessages)
-        // pusherClient.unsubscribe(channelName)
       } 
       catch (error) 
       {

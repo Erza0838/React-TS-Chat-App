@@ -28,8 +28,8 @@ export const POST = async (request: NextRequest) =>
     } : PersonalMessageInterface = await request.json()
     
     await pusherServer.trigger(
-        toPusherKey(`Id-pesan-pribadi-${FriendsContactId}`), 
-        "Mengirim pesan pribadi", 
+        toPusherKey(`PersonalChat-${FriendsContactId}`), 
+        "PersonalMessageEvent", 
     {   
         PersonalMessageSenderId,
         NamePersonalContact,

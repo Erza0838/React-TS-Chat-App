@@ -28,26 +28,6 @@ function IsPersonalMessageArray(value: unknown): value is Array<PersonalMessageI
 export const GET = async (request: Request,{ params }: { params: { Contact_Id: string } }) => 
 {   
     const session = await getServerSession(authOptions)
-    // const 
-    // {
-    //     PersonalMessageSenderId,
-    //     NamePersonalContact,
-    //     PersonalMessageText,
-    //     PersonalMessageReceiverId,
-    //     FriendsContactId
-    // } : PersonalMessageInterface = await request.json()
-
-    // await pusherServer.trigger(
-    //     toPusherKey(`Id-pesan-pribadi-${FriendsContactId}`), 
-    //     "Mengirim pesan pribadi", 
-    // {   
-    //     PersonalMessageSenderId,
-    //     NamePersonalContact,
-    //     PersonalMessageText,
-    //     PersonalMessageReceiverId,
-    //     FriendsContactId
-    // })
-
     const { Contact_Id }  = params
     const FindPersonalMessageByContactOwnerId = await prisma.personal_Chat_Model.findMany(
     {
@@ -60,9 +40,6 @@ export const GET = async (request: Request,{ params }: { params: { Contact_Id: s
     const FilteredPersonalMeessages = FindPersonalMessageByContactOwnerId.flatMap(chat => 
     {   
         const MyMessages = chat.My_Messages as unknown as Array<PersonalMessageInterface>
-
-        console.log("DATA : " + MyMessages)
-
         if(Array.isArray(MyMessages)) 
         {   
             const Filtered = MyMessages.filter(Messages => 
